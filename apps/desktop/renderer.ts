@@ -16,6 +16,8 @@ const cleanError = error => String(error.message ?? error).replace(/^Error invok
 async function action(fn, message = '') { if (busy) return; busy = true; notice(message); refreshButtons(); try { await fn(); } catch (error) { notice(cleanError(error), true); } finally { busy = false; refreshButtons(); } }
 function refreshButtons() {
   const e = current();
+  $<HTMLButtonElement>('attestPrintedSource').disabled = busy || !e?.capture;
+  $<HTMLButtonElement>('exportPhysicalCandidate').disabled = busy || !e;
   $<HTMLSelectElement>('patient').disabled = busy;
   $<HTMLInputElement>('alias').disabled = busy;
   for (const button of $('encounters').querySelectorAll('button')) button.disabled = busy;
@@ -30,6 +32,7 @@ function refreshButtons() {
 }
 async function status() {
   const s = await call('status'); createVault = !s.exists; physicalObserving = s.physicalObserverEnabled === true;
+  $('exportPhysicalCandidate').hidden = !physicalObserving;
   $('unlockTitle').textContent = createVault ? 'Create your private vault' : 'Open your workspace';
   $('unlock').textContent = createVault ? 'Create encrypted vault' : 'Unlock vault';
   $('runtimeStatus').textContent = JSON.stringify(s.runtime, null, 2);
@@ -55,6 +58,7 @@ async function refresh() {
   $('encounterTitle').textContent = state.patients.find(p => p.id === patientId)?.alias ?? 'Choose a patient to begin';
   $('encounterStatus').textContent = e ? `${e.status.replaceAll('-', ' ')} · ${e.id.slice(0, 8)}` : 'Create a patient, then start an encounter.';
   if (e) {
+    $('attestPrintedSource').hidden = !physicalObserving || !e.capture;
     $('revision').textContent = String(e.source.revision);
     const edit = edits.get(e.id);
     const approved = state.records.find(r => r.encounterId === e.id && !r.supersededAt);
@@ -89,6 +93,7 @@ $('unlockForm').onsubmit = event => { event.preventDefault(); void action(async 
 $('lock').onclick = () => void call('lock');
 window.psyrec.onLock(() => {
   sessionGeneration++; state = null; edits.clear(); patientId = encounterId = lastCapture = pendingSource = pendingEncounter = ''; pendingRevision = 0;
+  $('attestPrintedSource').hidden = true;
   $('workspace').hidden = true; $('locked').hidden = false; $('lock').hidden = true; $('history').hidden = true;
   for (const id of ['sourceText', 'draftText', 'alias', 'passphrase']) $<HTMLInputElement>(id).value = '';
   for (const id of ['metrics', 'historyRecords', 'patient', 'encounters', 'encounterTitle', 'encounterStatus', 'consequenceText', 'pairStatus', 'revision', 'sourceState', 'draftLink']) $(id).replaceChildren();
@@ -124,6 +129,7 @@ $('pairPhone').onclick = () => void action(async () => { await status(); $('pair
 $('createInvite').onclick = () => void action(async () => { const invite = await call('pair', encounterId, $<HTMLSelectElement>('lanAddress').value); $<HTMLImageElement>('pairQr').src = invite.qr; $('pairQr').hidden = false; $('pairStatus').textContent = `Invitation expires ${new Date(invite.expiresAt).toLocaleTimeString()}. Bound to this encounter. Server identity: ${invite.certificateFingerprint.slice(0, 16)}…`; });
 $('closePair').onclick = () => $<HTMLDialogElement>('pairDialog').close();
 $('exportEvidence').onclick = () => void action(async () => { const result = await call('exportEvidence', $<HTMLInputElement>('syntheticOnly').checked); if (result) notice(`${result.count} complete synthetic run records exported.`); });
+$('exportPhysicalCandidate').onclick = () => void action(async () => { const result = await call('exportPhysicalCandidate', encounterId, $<HTMLInputElement>('syntheticOnly').checked); if (result) notice(`Workflow candidate exported for independent review. ${result.reviewFailures} outstanding evidence checks. Acceptance remains pending.`); });
 // Poll only capture receipt; never overwrite unsaved clinician edits.
 setInterval(async () => { if (!state || busy || !current() || current().capture) return; try { const next = await call('snapshot'); const e = next.encounters.find(e => e.id === encounterId); if (e?.capture?.id && e.capture.id !== lastCapture) { await refresh(); $<HTMLDialogElement>('pairDialog').close(); notice('Encrypted phone capture received.'); } } catch {} }, 2500);
 void status().catch(error => notice(cleanError(error), true));
@@ -133,6 +139,6 @@ void status().catch(error => notice(cleanError(error), true));
 for (const eventType of ['click', 'change']) document.addEventListener(eventType, event => {
   if (!physicalObserving) return;
   const control = (event.target as HTMLElement)?.closest<HTMLElement>('button,input,select')?.id;
-  if (!control || !['extract', 'reviewSource', 'confirmCorrection', 'cancelCorrection', 'draft', 'confirmApproval', 'approve', 'lock', 'patient', 'historyToggle', 'showSuperseded'].includes(control)) return;
+  if (!control || !['attestPrintedSource', 'extract', 'reviewSource', 'confirmCorrection', 'cancelCorrection', 'draft', 'confirmApproval', 'approve', 'lock', 'patient', 'historyToggle', 'showSuperseded'].includes(control)) return;
   window.psyrec.observe({ control, eventType, trusted: event.isTrusted, sourceText: $<HTMLTextAreaElement>('sourceText').value, draftText: $<HTMLTextAreaElement>('draftText').value, approvalChecked: $<HTMLInputElement>('confirmApproval').checked, patientId, encounterId });
 }, true);

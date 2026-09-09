@@ -67,3 +67,14 @@ test('assistant navigation is explicitly attributed and cannot replace human cli
   receipt.physicalObservations[3].details.trusted = false;
   assert.throws(() => validateHumanReview(annotated, extraction, draft), /trusted exact approval/);
 });
+
+test('a late paper confirmation cannot borrow an earlier draft and approval chain', () => {
+  const { receipt, extraction, draft } = observations();
+  const input = structuredClone(receipt.physicalObservations[0]);
+  const saved = structuredClone(receipt.physicalObservations[1]);
+  const latePaperIndex = receipt.physicalObservations.length - 1;
+  input.at = new Date(2000).toISOString();
+  saved.at = new Date(2001).toISOString();
+  receipt.physicalObservations.push(input, saved);
+  assert.throws(() => validateHumanReview(receipt, extraction, draft, latePaperIndex), /bounded draft completion/);
+});

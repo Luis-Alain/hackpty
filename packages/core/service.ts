@@ -1,4 +1,5 @@
-import type { TransportIdentity } from '../contracts/index.js';
+import type { TransportIdentity, PhoneLifecycleEvidence } from '../contracts/index.js';
+import { stablePhoneEvidence, validateStoredPhoneEvidence } from './phone-evidence.js';
 import type { Vault } from './vault.js';
 import type { VaultState, InferencePort, Encounter, Context } from './types.js';
 import type { RuntimeFailure } from '../runtime/types.js';
@@ -203,6 +204,27 @@ export class PsyRecService {
     });
   }
   async revokeDevice(deviceId) { return this.change(s => { const d = s.devices.find(d => d.id === deviceId); if (!d) throw new Error('Device not found.'); d.revoked = true; }); }
+  async receivePhoneEvidence({ deviceId, token, transferId, encounterId, evidence }: { deviceId: string; token: string; transferId: string; encounterId: string; evidence: PhoneLifecycleEvidence }) {
+    // Clone at the boundary so caller mutation cannot change a queued commit.
+    const report = structuredClone(evidence);
+    return this.change(s => {
+      const device = s.devices.find(d => d.id === deviceId);
+      if (!device || device.revoked || typeof token !== 'string' || !timingSafeEqual(Buffer.from(device.tokenHash), Buffer.from(digest(token)))) throw new Error('Device is not authorized.');
+      if (device.encounterId !== encounterId) throw new Error('This device authorization belongs to another encounter.');
+      const receipt = s.transfers.find(t => t.deviceId === deviceId && t.transferId === transferId && t.encounterId === encounterId);
+      if (!receipt) throw new Error('Phone evidence requires a matching durable capture receipt.');
+      validateStoredPhoneEvidence(report, receipt);
+      const previous = (s.phoneEvidence ?? []).filter(r => r.evidence.binding.deviceId === deviceId && r.evidence.binding.transferId === transferId).at(-1);
+      if (previous) {
+        const { events: oldEvents, ...oldIdentity } = previous.evidence;
+        const { events: nextEvents, ...nextIdentity } = report;
+        if (stablePhoneEvidence(oldIdentity) !== stablePhoneEvidence(nextIdentity) || oldEvents.length > nextEvents.length || oldEvents.some((event, index) => stablePhoneEvidence(event) !== stablePhoneEvidence(nextEvents[index]))) throw new Error('Phone evidence cannot rewrite a recorded identity or lifecycle event.');
+        if (oldEvents.length === nextEvents.length) return { stored: true, transferId, encounterId, eventCount: nextEvents.length, duplicate: true };
+      }
+      (s.phoneEvidence ??= []).push({ receivedAt: now(), evidence: report });
+      return { stored: true, transferId, encounterId, eventCount: report.events.length, duplicate: false };
+    });
+  }
   async receiveCapture({ deviceId, token, transferId, encounterId, bytes }) {
     const mime = imageType(bytes);
     if (typeof transferId !== 'string' || !/^[a-zA-Z0-9_-]{8,100}$/.test(transferId)) throw new Error('Invalid transfer id.');

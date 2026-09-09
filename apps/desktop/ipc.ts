@@ -16,7 +16,7 @@ export function validateRequest(method: unknown, args: unknown): asserts args is
     addPatient: [value => text(value, 80)], addEncounter: [id], captureData: [id], import: [id], extract: [id],
     previewSourceChange: [id, text], reviewSource: [id, text, revision], generateDraft: [id],
     approve: [id, id, revision, text], approvedNotes: [id, flag], revokeDevice: [id],
-    pair: [id, value => text(value, 64)], exportEvidence: [flag],
+    pair: [id, value => text(value, 64)], exportEvidence: [flag], exportPhysicalCandidate: [id, flag],
   };
   if (typeof method !== 'string' || !Object.hasOwn(signatures, method) || !Array.isArray(args)) throw new Error('Invalid request.');
   const shape = signatures[method];

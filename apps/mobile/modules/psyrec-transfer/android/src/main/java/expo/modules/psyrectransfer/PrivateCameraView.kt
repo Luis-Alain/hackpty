@@ -69,7 +69,7 @@ class PrivateCameraView(context: Context, appContext: AppContext) : ExpoView(con
           val id = UUID.randomUUID().toString()
           val queued = JSONObject().put("transferId", id).put("encounterId", encounterId).put("sha256", sha256(bytes))
             .put("createdAt", java.time.Instant.now().toString()).put("image", Base64.encodeToString(bytes, Base64.NO_WRAP))
-          try { PendingStore(context).save(queued) } finally { bytes.fill(0) }
+          try { PendingStore(context).createCapture(queued) } finally { bytes.fill(0) }
           promise.resolve(mapOf("transferId" to id, "encounterId" to encounterId, "sha256" to queued.getString("sha256"), "createdAt" to queued.getString("createdAt")))
         } catch (e: Exception) { promise.reject("CAPTURE_FAILED", "Capture could not be encrypted. No plaintext photo was saved.", null) }
         finally { image.close(); busy = false }

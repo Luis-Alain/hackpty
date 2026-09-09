@@ -50,6 +50,12 @@ function touch() { clearTimeout(idleTimer); idleTimer = setTimeout(() => void lo
 async function startDesktop() {
 await app.whenReady();
 await mkdir(privateDirectory, { recursive: true, mode: 0o700 });
+if (process.argv.includes('--prepare-fold')) {
+  if (!process.env.PSYREC_HOME?.includes('desktop-workflow') || !process.env.PSYREC_FOLD_ADDRESS || !process.env.PSYREC_FOLD_SESSION_ID) throw new Error('Use the fresh Fold session launcher.');
+  if (await new Vault(join(privateDirectory, 'psyrec.vault')).exists()) throw new Error('Fresh Fold preparation refuses an existing vault.');
+  const launch = JSON.parse(await readFile(join(privateDirectory, 'launch.json'), 'utf8'));
+  if (launch.sessionId !== process.env.PSYREC_FOLD_SESSION_ID || launch.address !== process.env.PSYREC_FOLD_ADDRESS || launch.physicalAcceptance !== false) throw new Error('Fresh Fold launch metadata is invalid.');
+}
 try {
   const module = await import(pathToFileURL(join(projectRoot, 'dist/packages/runtime/index.js')).href);
   runtime = new module.QvacRuntime({ projectRoot });
@@ -105,6 +111,25 @@ async function dispatch(method: string, args: any[]) {
       const invite = service.startPairing(args[0], receiverInfo.endpoint, receiverInfo.certificateFingerprint);
       return { ...invite, qr: await QRCode.toDataURL(JSON.stringify(invite), { width: 320, margin: 2 }) };
     }
+    case 'exportPhysicalCandidate': {
+      if (!physicalObserver || !process.env.PSYREC_FOLD_SESSION_ID || args[1] !== true) throw new Error('Confirm this fresh physical-session vault contains reviewed synthetic data only.');
+      const sessionGeneration = service.generation;
+      const checkpoint = await physicalObserver.checkpoint();
+      const output = await dialog.showSaveDialog(window, { defaultPath: 'psyrec-' + process.env.PSYREC_FOLD_SESSION_ID + '-candidate.json', filters: [{ name: 'Reviewed synthetic workflow candidate', extensions: ['json'] }] });
+      if (output.canceled || !output.filePath) return null;
+      const finalCheckpoint = await physicalObserver.checkpoint();
+      if (sessionGeneration !== service.generation || checkpoint.generation !== finalCheckpoint.generation || !service.vault.state) throw new Error('Vault session changed during export. Unlock and repeat the review export.');
+      await service.queue;
+      const { buildPhysicalCandidate } = await import('./physical-candidate.js');
+      const candidate = buildPhysicalCandidate(structuredClone(service.state()), {
+        encounterId: args[0], sessionId: process.env.PSYREC_FOLD_SESSION_ID, observerFailed: physicalObserver.failed,
+        vaultEnvelope: await readFile(service.vault.path, 'utf8'), reviewedSynthetic: true,
+      });
+      if (sessionGeneration !== service.generation || !service.vault.state) throw new Error('Vault session changed before export. No candidate was written.');
+      await writeFile(output.filePath, JSON.stringify(candidate, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
+      return { saved: true, reviewFailures: candidate.reviewPreview.failures.length, accepted: false };
+    }
+
     case 'exportEvidence': {
       if (args[0] !== true) throw new Error('Confirm this vault contains synthetic demo data only.');
       const runs = service.state().runs ?? [];
@@ -127,7 +152,9 @@ app.on('window-all-closed', () => { void lock().finally(() => app.quit()); });
 if (process.argv.includes('--prepare-fold')) {
   if (!process.env.PSYREC_HOME?.includes('desktop-workflow') || !process.env.PSYREC_FOLD_ADDRESS) throw new Error('Dedicated synthetic Fold vault and private LAN address required.');
   const { prepareFoldSession } = await import('./fold-session.js');
-  console.log(JSON.stringify(await prepareFoldSession(window, process.env.PSYREC_FOLD_ADDRESS)));
+  const prepared = await prepareFoldSession(window, process.env.PSYREC_FOLD_ADDRESS);
+  await service.recordPhysicalObservation('session-prepared', { ...prepared, sessionId: process.env.PSYREC_FOLD_SESSION_ID });
+  console.log(JSON.stringify(prepared));
 }
 if (process.argv.includes('--workflow-reload-evidence')) {
   const { captureReloadEvidence } = await import('./workflow-evidence.js');

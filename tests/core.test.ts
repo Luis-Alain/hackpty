@@ -229,3 +229,89 @@ test('same-document fragments retain trusted IPC while other documents and query
   assert.equal(isTrustedUiUrl(expected + '#history', expected), true);
   for (const url of [expected + '?other=1', expected + '.evil', 'https://example.test/index.html', 'not a URL']) assert.equal(isTrustedUiUrl(url, expected), false);
 });
+
+test('phone evidence authenticates durable binding, appends without rewriting, and stays encrypted across reload', async t => {
+  const { service, vault, encounter } = await setup(t);
+  const invite = service.startPairing(encounter.id, 'https://192.168.1.2:9443', 'test');
+  const paired = await service.pair(invite.secret, 'Synthetic Fold evidence');
+  const transferId = 'synthetic-lifecycle-001';
+  const receipt = await service.receiveCapture({ ...paired, transferId, bytes: image });
+  const report: import('../packages/contracts/index.js').PhoneLifecycleEvidence = {
+    schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'synthetic-instrumentation',
+    binding: { transferId, encounterId: encounter.id, imageSha256: receipt.sha256, deviceId: paired.deviceId, captureId: receipt.captureId },
+    build: { packageName: 'test.synthetic.psyrec', versionName: 'synthetic-test-only', versionCode: 1, apkSha256: 'a'.repeat(64) },
+    events: [{ sequence: 1, type: 'capture_encrypted', observedAt: '2026-09-09T20:00:00.000Z', processSessionId: 'test-only-process', apkSha256: 'a'.repeat(64), queueCiphertextSha256: 'b'.repeat(64), photoPresent: true }],
+  };
+  const request = { ...paired, transferId, evidence: report };
+  await assert.rejects(service.receivePhoneEvidence({ ...request, token: 'wrong' }), /authorized/);
+  await assert.rejects(service.receivePhoneEvidence({ ...request, transferId: 'missing-transfer' }), /durable/);
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: { ...report, binding: { ...report.binding, imageSha256: 'c'.repeat(64) } } }), /binding/);
+  assert.deepEqual(await service.receivePhoneEvidence(request), { stored: true, transferId, encounterId: encounter.id, eventCount: 1, duplicate: false });
+  assert.equal((await service.receivePhoneEvidence(request)).duplicate, true);
+  assert.equal(service.state().phoneEvidence.length, 1);
+  const extended = structuredClone(report);
+  extended.events.push({ sequence: 2, type: 'matching_receipt_received', observedAt: '2026-09-09T20:00:01.000Z', processSessionId: 'test-only-process', apkSha256: 'a'.repeat(64), receipt });
+  assert.equal((await service.receivePhoneEvidence({ ...request, evidence: extended })).duplicate, false);
+  assert.equal(service.state().phoneEvidence.length, 2);
+  assert.equal(service.state().phoneEvidence[0].evidence.events.length, 1);
+  await assert.rejects(service.receivePhoneEvidence(request), /rewrite/);
+  const changed = structuredClone(extended); changed.events[0].photoPresent = false;
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: changed }), /rewrite/);
+  const changedBuild = structuredClone(extended); changedBuild.build.apkSha256 = 'c'.repeat(64);
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: changedBuild }), /rewrite/);
+  const malformed = structuredClone(extended) as any; malformed.events[0].unexpectedText = 'do not accept arbitrary fields';
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: malformed }), /schema/);
+  assert.equal(JSON.stringify(service.snapshot()).includes('native-android-transfer-lifecycle'), false);
+  assert.equal((await readFile(vault.path, 'utf8')).includes('synthetic-test-only'), false);
+  await service.lock(); await vault.unlock(password);
+  assert.deepEqual(vault.state.phoneEvidence.at(-1).evidence, extended);
+  await service.revokeDevice(paired.deviceId);
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: extended }), /authorized/);
+});
+
+test('printed source attestation requires trusted input and binds the current canonical capture', async t => {
+  const { service, vault, patient, encounter } = await setup(t);
+  await service.importImage(encounter.id, image);
+  const fakeWindow = { isDestroyed: () => false, webContents: { executeJavaScript: async () => ({}) } };
+  const observer = new PhysicalObserver(service, fakeWindow as any);
+  const input = { control: 'attestPrintedSource', eventType: 'click', trusted: false, approvalChecked: false, sourceText: '', draftText: '', patientId: patient.id, encounterId: encounter.id, captureId: 'forged-capture', sha256: 'forged-hash' };
+  await observer.input(input);
+  assert.deepEqual(service.state().physicalObservations.map(e => e.event), ['renderer-input']);
+  await observer.input({ ...input, trusted: true });
+  observer.beginLock();
+  const events = service.state().physicalObservations;
+  assert.deepEqual(events.map(e => e.event), ['renderer-input', 'renderer-input', 'printed-source-attestation']);
+  const capture = service.encounter(service.state(), encounter.id).capture;
+  assert.equal(events[1].details.captureId, capture.id);
+  assert.equal(events[1].details.sha256, capture.sha256);
+  assert.equal(events[2].details.captureId, capture.id);
+  assert.equal(events[2].details.actor, 'human');
+  assert.equal(events[2].details.fixtureId, 'DEMO-001');
+  assert.equal(events[2].details.sourceMedium, 'paper');
+  assert.equal(events[2].details.method, 'physical-paper-observation');
+  assert.ok(Number.isFinite(Date.parse(String(events[2].details.observedAt))));
+  await service.lock(); await vault.unlock(password);
+  assert.equal(vault.state.physicalObservations.at(-1).event, 'printed-source-attestation');
+});
+
+test('observer checkpoint drains an in-flight view and records failure before export can inspect status', async t => {
+  const { service } = await setup(t);
+  let release: (value: unknown) => void;
+  let calls = 0;
+  const fakeWindow = { isDestroyed: () => false, webContents: { executeJavaScript: () => ++calls === 1 ? new Promise(resolve => { release = resolve; }) : Promise.resolve({ patientId: 'synthetic', historyText: '', canonicalApprovedRecords: [] }) } };
+  const observer = new PhysicalObserver(service, fakeWindow as any);
+  const view = observer.view();
+  let settled = false;
+  const checkpoint = observer.checkpoint().then(result => { settled = true; return result; });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(settled, false);
+  release({ patientId: 'synthetic', historyText: '', canonicalApprovedRecords: [] });
+  await view;
+  assert.equal((await checkpoint).failed, false);
+  assert.equal(service.state().physicalObservations.filter(e => e.event === 'renderer-view').length, 2);
+  observer.beginLock();
+  const failureWindow = { isDestroyed: () => false, webContents: { executeJavaScript: async () => { throw new Error('synthetic observation failure'); } } };
+  const failedObserver = new PhysicalObserver(service, failureWindow as any);
+  assert.equal((await failedObserver.checkpoint()).failed, true);
+  assert.equal(failedObserver.failed, true);
+});

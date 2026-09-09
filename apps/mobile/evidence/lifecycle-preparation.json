@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "android-lifecycle-preparation",
+  "observedAt": "2026-09-09T20:06:49.6815019Z",
+  "scope": "Implementation and local build evidence only; no physical phone observations or release acceptance",
+  "platform": "Windows local Android arm64-v8a Release build",
+  "buildCommand": "gradlew.bat app:assembleRelease psyrec-transfer:testReleaseUnitTest psyrec-transfer:assembleReleaseAndroidTest -PreactNativeArchitectures=arm64-v8a --console=plain",
+  "buildPassed": true,
+  "mobileTypeScriptCheckPassed": true,
+  "apk": {
+    "path": "android/app/build/outputs/apk/release/app-release.apk",
+    "bytes": 31497827,
+    "sha256": "6c7311593faf65a99e787b92cdb396b98866e984550dc372a838cae24780f8a5",
+    "signatureVerified": true,
+    "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+    "signingScope": "Android Debug development certificate, not publication signing",
+    "installed": null,
+    "installationStatus": "unverified"
+  },
+  "previousBuild": {
+    "sha256": "084e23b7a10899a472691c087460e4be91bf206280690b2386e1ade089716818",
+    "installationWasVerified": false,
+    "historicalEvidence": "build.json"
+  },
+  "nativeJvmTests": {
+    "passed": 3,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "scope": "Two actual Kotlin certificate/endpoint policy tests and one exact receipt policy test covering seven invalid field/date cases; no Android Keystore or phone networking execution"
+  },
+  "androidInstrumentation": {
+    "compiled": true,
+    "executed": false,
+    "scope": "Separate synthetic test UID: encrypted storage/tamper/completed guard and production sender retention on injected network/mismatched receipts. Injected outcomes are not physical TLS evidence."
+  },
+  "phoneConnection": {
+    "adbDevices": "empty",
+    "installedApkVerified": false,
+    "cameraOrPhoneActionsPerformed": false
+  },
+  "implemented": [
+    "Encrypted native lifecycle journal retained with capture and receipt",
+    "Actual APK SHA-256 per event and capture build",
+    "Process restart observation with reopened image SHA-256 check",
+    "Intentional incorrect-certificate verification over native pinned HTTPS",
+    "Intentional partial-upload disconnect and retained encrypted queue",
+    "Exact receipt validation in sender and storage before atomic photo replacement",
+    "Authenticated private-LAN observation upload to encrypted PC vault with retry",
+    "No reconstruction of lifecycle evidence for older captures"
+  ],
+  "byteMeasurement": {
+    "method": "application-output-stream-write-and-flush",
+    "units": "bytes",
+    "scope": "Application bytes handed to and flushed through HttpsURLConnection before an intentional disconnect; not packet-capture or server receipt counts"
+  },
+  "humanPhysicalChecksAccepted": false
+}

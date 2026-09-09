@@ -22,6 +22,18 @@ SDK and Gradle dependency downloads are provisioning. After provisioning, the ca
 
 With `JAVA_HOME` and `ANDROID_HOME` set, `./scripts/build-android.ps1` performs dependency installation, TypeScript validation, Expo generation and a self-contained arm64 Release build, then prints the APK size and SHA-256. Use `-Variant Debug` for a Metro-dependent build.
 
+## Prepared Android lifecycle verification
+
+The [September 9 lifecycle preparation](evidence/lifecycle-preparation.json) records the updated Release APK, three passing Kotlin/JVM policy tests and compiled Android instrumentation. The connected-device inventory was empty. **This APK has not been verified installed; no new physical capture or queue/network observation is claimed.** The previous [build evidence](evidence/build.json) remains historical.
+
+After connecting and authorizing the Fold, run `./scripts/install-verified-android.ps1` from this directory. It checks the package, replaces the APK with `adb install -r`, pulls the installed base APK and compares SHA-256. It never uninstalls or clears application data. Pass `-VerifyOnly` to inspect an existing installation. The command records private local identity evidence in `.local/mobile-install/` at the repository root. `ANDROID_HOME`, a PATH `adb.exe`, or the optional existing repository-local SDK can supply tooling.
+
+Use the [coordinator's prepared physical run](../../docs/handoffs/2026-09-09-prepared-physical-run.md) for the full human workflow. For the phone portion: photograph the newly printed synthetic English page; force-stop and relaunch the app while its photo is still pending; open **Synthetic verification steps**; run **Verify incorrect certificate rejection**, then **Verify interrupted upload**; finally select **Send / retry safely**. Do not capture a display or reuse earlier provisional evidence.
+
+The incorrect-certificate check deliberately changes the expected pin for one connection to the same PC. The interruption check disconnects a real native HTTPS upload after a partial body has been written and flushed. Its byte counters describe application output-stream bytes, not captured network packets. Both checks must retain the encrypted pending image. The native journal records observed results and process/APK identities inside the encrypted pending record; it does not assert those checks passed merely because a button exists.
+
+After receiving an exact matching PC receipt, the app atomically replaces its encrypted photo with an encrypted receipt and journal, then sends the journal through authenticated pinned HTTPS into the PC vault. **Retry saving transfer observations** repeats that final upload if needed, without resending the photo. Export/publication remains a separate reviewed-synthetic desktop operation. Existing captures without a journal are left without reconstructed history. A changed APK between capture and retry remains deliverable but fails the single-build acceptance evidence gate.
+
 ## Phone-to-PC walkthrough
 
 1. Connect phone and PC to the same private Wi-Fi. Unlock the PsyRec PC vault, select the intended patient and new encounter, and start the capture receiver using its private IPv4 address. Permit the Windows receiver through a private-network firewall prompt if required.

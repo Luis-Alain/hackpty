@@ -37,8 +37,9 @@ class EncryptedQueueTest {
       assertThrows(Exception::class.java) { PendingStore(context).read(id) }
       target.writeBytes(disk)
 
-      val receipt = JSONObject().put("transferId", id).put("encounterId", encounter).put("captureId", "SYNTHETIC-RECEIPT")
-      reopened.complete(queued, receipt)
+      val receipt = JSONObject().put("deviceId", "synthetic-device").put("transferId", id).put("encounterId", encounter).put("sha256", "a".repeat(64)).put("captureId", "SYNTHETIC-RECEIPT").put("receivedAt", "2026-09-09T00:00:01Z")
+      reopened.bindDevice(id, "synthetic-device")
+      reopened.complete(queued, receipt, "synthetic-test")
       val afterReceipt = PendingStore(context)
       assertTrue(afterReceipt.hasCapture(encounter)) // A second photo would be refused by native camera.
       assertTrue(afterReceipt.completed(encounter))

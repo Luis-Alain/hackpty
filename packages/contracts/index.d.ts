@@ -24,3 +24,28 @@ export interface RetrievalHit { patientId: string; recordId: string; sourceRevis
 export interface ApprovedNotesRetriever { retrieveApprovedNotes(request: RetrievalRequest): Promise<RetrievalHit[]>; }
 /** Future voice adapter supplies source text; it never approves records or changes patient binding. */
 export interface VoiceProcessor { transcribe(input: { localPath: string; signal: AbortSignal }): Promise<{ text: string; segments: { startMs: number; endMs: number; text: string }[]; metrics: RunMetrics }>; }
+/** Native phone observations are encrypted with the capture/receipt, never clinical text. */
+export interface PhoneLifecycleEvent {
+  sequence: number;
+  type: 'capture_encrypted' | 'queue_reopened' | 'send_started' | 'tls_pin_verified' | 'tls_pin_rejected' | 'send_failed_queue_retained' | 'receipt_rejected_queue_retained' | 'matching_receipt_received' | 'photo_replaced_by_encrypted_receipt';
+  observedAt: string;
+  processSessionId: string;
+  apkSha256: string;
+  attemptId?: string;
+  queueCiphertextSha256?: string;
+  imageSha256Verified?: boolean;
+  failureKind?: 'network' | 'certificate' | 'receipt' | 'other';
+  interruption?: { method: 'native-mid-upload-disconnect'; bytesWritten: number; totalBytes: number; byteCountMethod: 'application-output-stream-write-and-flush' };
+  receipt?: CaptureReceipt;
+  photoPresent?: boolean;
+  receiptPersisted?: boolean;
+}
+export interface PhoneLifecycleEvidence {
+  schemaVersion: 1;
+  kind: 'native-android-transfer-lifecycle';
+  platform: 'android';
+  provenance: 'native-camera-capture' | 'synthetic-instrumentation';
+  binding: { transferId: string; encounterId: string; imageSha256: string; deviceId: string | null; captureId: string | null };
+  build: { packageName: string; versionName: string; versionCode: number; apkSha256: string };
+  events: PhoneLifecycleEvent[];
+}

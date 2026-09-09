@@ -1,4 +1,4 @@
-import type { TransportIdentity, CaptureReceipt } from '../contracts/index.js';
+import type { TransportIdentity, CaptureReceipt, PhoneLifecycleEvidence } from '../contracts/index.js';
 import type { RunMetrics, RuntimeFailure } from '../runtime/types.js';
 
 // Test evidence is explicitly distinguishable and never passes the runtime export gate.
@@ -14,7 +14,7 @@ export interface ApprovedRecord { id: string; patientId: string; encounterId: st
 export interface Device { id: string; name: string; tokenHash: string; createdAt: string; revoked: boolean; encounterId: string }
 export type Receipt = CaptureReceipt;
 export type RunRecord = { encounterId: string; sourceRevision: number; operation: 'extract' | 'draft' } & ({ status?: 'succeeded'; metrics: Evidence; outputText?: string } | { status: 'failed'; evidence: RuntimeFailure; metrics?: never });
-export interface VaultState { version: 1; patients: Patient[]; encounters: Encounter[]; records: ApprovedRecord[]; devices: Device[]; transfers: Receipt[]; runs: RunRecord[]; transportIdentity?: TransportIdentity; physicalObservations?: { at: string; event: string; details: Record<string, unknown> }[] }
+export interface VaultState { version: 1; patients: Patient[]; encounters: Encounter[]; records: ApprovedRecord[]; devices: Device[]; transfers: Receipt[]; runs: RunRecord[]; phoneEvidence?: { receivedAt: string; evidence: PhoneLifecycleEvidence }[]; transportIdentity?: TransportIdentity; physicalObservations?: { at: string; event: string; details: Record<string, unknown> }[] }
 export interface InferencePort {
   extractImage(input: { bytes: Buffer; mime: string }): Promise<{ text: string; metrics: Evidence }>;
   draftFromSource(input: { text: string; sourceId: string; context: Excerpt[] }): Promise<{ text: string; metrics: Evidence }>;

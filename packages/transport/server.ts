@@ -23,7 +23,7 @@ export class CaptureServer {
       res.setHeader('Content-Type', 'application/json'); res.setHeader('Cache-Control', 'no-store');
       const reply = (status, body) => { if (!res.destroyed) { res.writeHead(status); res.end(JSON.stringify(body)); } };
       try {
-        if (req.method !== 'POST' || !['/pair', '/captures'].includes(req.url ?? '')) return reply(404, { error: 'Unknown endpoint.' });
+        if (req.method !== 'POST' || !['/pair', '/captures', '/phone-evidence'].includes(req.url ?? '')) return reply(404, { error: 'Unknown endpoint.' });
         if (!this.service.vault.state) return reply(423, { error: 'PC vault is locked. Unlock and retry.' });
         if (req.headers['content-type'] !== 'application/json') return reply(415, { error: 'JSON required.' });
         const peer = req.socket.remoteAddress ?? 'unknown';
@@ -34,7 +34,7 @@ export class CaptureServer {
           if (this.attempts.size > 256) this.attempts.delete(this.attempts.keys().next().value!);
           if (next.count > 10) return reply(429, { error: 'Too many pairing attempts. Try again in one minute.' });
         }
-        const limit = req.url === '/pair' ? 2048 : Math.ceil(MAX_IMAGE_BYTES * 4 / 3) + 4096;
+        const limit = req.url === '/pair' ? 2048 : req.url === '/phone-evidence' ? 128 * 1024 : Math.ceil(MAX_IMAGE_BYTES * 4 / 3) + 4096;
         let size = 0; const parts: Buffer[] = [];
         for await (const chunk of req) {
           size += chunk.length;
@@ -43,6 +43,7 @@ export class CaptureServer {
         }
         const body = JSON.parse(Buffer.concat(parts).toString('utf8'));
         if (req.url === '/pair') return reply(200, await this.service.pair(body.secret, body.deviceName));
+        if (req.url === '/phone-evidence') return reply(200, await this.service.receivePhoneEvidence({ deviceId: body.deviceId, token: req.headers.authorization?.replace(/^Bearer /, ''), transferId: body.transferId, encounterId: body.encounterId, evidence: body.evidence }));
         if (typeof body.image !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(body.image)) return reply(400, { error: 'Invalid capture encoding.' });
         const receipt = await this.service.receiveCapture({ deviceId: body.deviceId, token: req.headers.authorization?.replace(/^Bearer /, ''), transferId: body.transferId, encounterId: body.encounterId, bytes: Buffer.from(body.image, 'base64') });
         reply(200, receipt);

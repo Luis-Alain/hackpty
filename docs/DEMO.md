@@ -2,6 +2,8 @@
 
 Use only the [printable English note](../diagnostics/qvac-spike/fixtures/print-synthetic-note.html). Print it on paper for the physical Fold test. A desktop-import run is useful evidence of the PC workflow, but does not prove phone capture or transfer.
 
+For the new primary Fold run, first follow the [prepared physical checklist](handoffs/2026-09-09-prepared-physical-run.md), including native restart/failure observations and the trusted paper-source confirmation. The workflow below is the narration outline; it does not override those evidence gates.
+
 ## Run order
 
 1. Provision the pinned models while online, then start the Windows desktop. Create a separate synthetic vault with a passphrase of at least ten characters. Never record the passphrase.

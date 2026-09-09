@@ -14,6 +14,10 @@ A self-contained PsyRec submission: native Fold capture, local VisionPsy extract
 - [Shared component contract](issues/04-shared-contract.md): use an optional retrieval port and validate patient/revision ownership in the application.
 - [Approval and recovery rules](issues/05-approval-recovery.md): immutable approvals, source-change invalidation, encrypted atomic saves and idempotent transfers.
 
+## Current preparation
+
+Next: [fresh physical-run checklist](../../docs/handoffs/2026-09-09-prepared-physical-run.md). Human physical work is deferred by Jeff; no Fold is connected. The new APK is built but installation is unverified. Fresh-vault launch, trusted paper attestation, encrypted native phone observations and strict linked acceptance gates are prepared. The runtime/performance owner remains assigned; no real GPU run occurred during this preparation. README and Factory carry validation/build details.
+
 ## Current evidence and remaining acceptance
 Connected desktop performance and clinical review are verified in the [desktop workflow receipt](../../artifacts/evidence/desktop-workflow.json). Runtime quality review records an unreadable-line omission; image/source correction stays mandatory. The native Android APK builds locally; physical Fold capture and full release acceptance remain open. Follow Factory status for current evidence rather than the historical handoff's unfinished code inventory.
 

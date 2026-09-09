@@ -4,7 +4,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { assertCompleteMetrics } from '../packages/runtime/metrics.js';
 import type { RunMetrics } from '../packages/runtime/types.js';
-import { validateHumanReview } from './validate-human-review.js';
+import { validateHumanReview, validatePaperSource } from './validate-human-review.js';
+import { validatePhoneLifecycle } from './validate-phone-lifecycle.js';
 
 const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
 function requireEvidence(condition: unknown, message: string): asserts condition {
@@ -62,11 +63,13 @@ export function validateWorkflow(receipt: any, physical: boolean | 'exploratory'
     requireEvidence(receipt.kind === (primary ? 'physical-fold-review-workflow' : 'exploratory-physical-fold-review-workflow') && receipt.physicalFoldAcceptance === primary && receipt.clinicianHumanAcceptance === true, 'Physical Fold and human review acceptance remain missing; desktop automation is not a substitute.');
     const capture = step('paired-fold-photo-received');
     requireEvidence(capture.nativeAndroidBuild === true && capture.certificatePinVerified === true, 'Native Fold capture and certificate-pinned pairing required.');
-    if (primary) requireEvidence(capture.printedSyntheticEnglishNote === true, 'Primary release requires the printed synthetic English note.');
+    let paperObservationIndex = -1;
+    if (primary) paperObservationIndex = validatePaperSource(receipt, capture);
     else requireEvidence(capture.inputClassification === 'AI-generated handwriting-style synthetic note' && ['paper', 'screen', 'unconfirmed'].includes(capture.sourceMedium), 'Exploratory capture must accurately classify its synthetic source and observed medium.');
     requireEvidence(capture.receipt?.encounterId === draft.encounterId && capture.receipt?.sha256 === extraction.metrics.request.attachment?.sha256 && typeof capture.receipt?.transferId === 'string', 'Durable phone receipt must identify the actual extracted photo and encounter.');
     requireEvidence(capture.encryptedPendingQueue === true && capture.deletedOnlyAfterReceipt === true, 'Encrypted phone queue and receipt-before-deletion evidence required.');
-    validateHumanReview(receipt, extraction, draft);
+    validatePhoneLifecycle(receipt.phoneLifecycle, capture.receipt);
+    validateHumanReview(receipt, extraction, draft, paperObservationIndex);
   } else {
     requireEvidence(receipt.kind === 'automated-electron-renderer-import-workflow', 'Expected an actual automated Electron renderer receipt.');
     requireEvidence(step('imported-synthetic-image').sha256 === extraction.metrics.request.attachment?.sha256, 'Imported image and actual VisionPsy attachment differ.');

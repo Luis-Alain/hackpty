@@ -1,6 +1,6 @@
 /** Validate linked, ordered observations from the diagnostic encrypted ledger.
  * DOM isTrusted is evidence of UI input, not independent proof of identity. */
-export function validateHumanReview(receipt: any, extraction: any, draft: any) {
+export function validateHumanReview(receipt: any, extraction: any, draft: any, afterObservationIndex = -1) {
   const need = (ok: unknown, message: string) => { if (!ok) throw new Error(`Human review evidence: ${message}`); };
   need(receipt.physicalObservationFailed === false, 'explicit successful observer status required');
   need(extraction.outputText === receipt.source.extracted && draft.outputText === receipt.steps.find(s => s.operation === 'real-bounded-draft')?.evidence.text, 'raw extraction and draft outputs must survive encrypted recording');
@@ -16,7 +16,7 @@ export function validateHumanReview(receipt: any, extraction: any, draft: any) {
   const patientId = receipt.approval.patientId;
   const recordId = receipt.approval.recordId;
   need(typeof patientId === 'string' && patientId && typeof recordId === 'string' && recordId, 'canonical patient and approved record IDs required');
-  let cursor = -1;
+  let cursor = afterObservationIndex;
   const next = (label: string, predicate: (event: any) => boolean) => {
     const index = events.findIndex((event: any, i: number) => i > cursor && predicate(event));
     need(index >= 0, `missing ordered ${label}`);
@@ -50,4 +50,24 @@ export function validateHumanReview(receipt: any, extraction: any, draft: any) {
   next('locked renderer purge', e => e.event === 'lock-renderer-purge' && ['workspaceHidden', 'fields', 'content', 'images'].every(k => e.details[k] === true));
   next('encrypted record reload', e => operation(e, 'unlock') && e.details.result?.records?.some(r => r.id === recordId && target(r) && r.sourceRevision === draft.sourceRevision && r.text === receipt.approval.exactText));
   next('visible immutable approved record after reload', e => e.event === 'renderer-view' && e.details.patientId === patientId && e.details.approvedReadOnly === true && e.details.approvedText === receipt.approval.exactText);
+}
+
+/** Primary paper provenance is an explicit human observation bound to this photo. */
+export function validatePaperSource(receipt: any, capture: any) {
+  const need = (ok: unknown, message: string) => { if (!ok) throw new Error(`Paper source evidence: ${message}`); };
+  const attestation = capture?.sourceAttestation;
+  need(capture?.printedSyntheticEnglishNote === true && capture.sourceMedium === 'paper', 'printed synthetic paper source required');
+  need(attestation?.actor === 'human' && attestation.method === 'physical-paper-observation' && attestation.fixtureId === 'DEMO-001' && attestation.sourceMedium === 'paper' && Number.isFinite(Date.parse(attestation.observedAt)), 'explicit human DEMO-001 paper observation required');
+  const bound = (details: any) => details && details.patientId === receipt.approval?.patientId && details.encounterId === capture.receipt?.encounterId && details.captureId === capture.receipt?.captureId && details.sha256 === capture.receipt?.sha256;
+  need(bound(attestation), 'paper attestation must identify the actual received photo and selected patient');
+  const events = receipt.physicalObservations;
+  need(Array.isArray(events), 'encrypted observer events required');
+  const inputIndex = events.findIndex(e => e.event === 'renderer-input' && e.details?.control === 'attestPrintedSource' && e.details.trusted === true && bound(e.details));
+  need(inputIndex >= 0, 'trusted paper confirmation input required');
+  const recordedIndex = events.findIndex((e, index) => index > inputIndex && e.event === 'printed-source-attestation' && bound(e.details) &&
+    ['actor', 'method', 'fixtureId', 'sourceMedium', 'observedAt'].every(key => e.details[key] === attestation[key]));
+  need(recordedIndex > inputIndex, 'paper confirmation must be retained in the encrypted ledger');
+  need(events.some((e, index) => index > recordedIndex && e.event === 'renderer-input' && e.details?.trusted === true &&
+    ['reviewSource', 'confirmCorrection'].includes(e.details.control) && e.details.encounterId === capture.receipt.encounterId && e.details.patientId === receipt.approval.patientId), 'human source review must follow this paper confirmation');
+  return recordedIndex;
 }

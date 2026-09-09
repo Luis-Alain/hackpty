@@ -12,6 +12,8 @@ export const Transfer = requireNativeModule<{
   completed(encounterId: string): Promise<boolean>;
   pair(endpoint: string, pin: string, secret: string): Promise<string>;
   send(endpoint: string, pin: string, deviceId: string, token: string, encounterId: string, transferId: string): Promise<string>;
+  verifyPending?(endpoint: string, pin: string, deviceId: string, token: string, encounterId: string, transferId: string, mode: 'wrong-certificate' | 'interrupted-upload'): Promise<string>;
+  syncEvidence?(endpoint: string, pin: string, deviceId: string, token: string, encounterId: string): Promise<string>;
 }>('PsyRecTransfer');
 
 export function parseInvitation(text: string): Pairing {

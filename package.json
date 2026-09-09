@@ -17,6 +17,7 @@
     "check": "tsc -p tsconfig.json --noEmit",
     "check:release": "npm run build && node dist/scripts/validate-release.js",
     "check:desktop-evidence": "npm run build && node dist/scripts/validate-release.js --desktop-only",
+    "prepare:fold": "npm run build && node dist/apps/desktop/fold-launch.js",
     "check:mobile": "npm --prefix apps/mobile run check"
   },
   "main": "dist/apps/desktop/main.js",

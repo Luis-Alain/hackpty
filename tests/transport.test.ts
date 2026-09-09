@@ -71,3 +71,28 @@ test('partial TLS upload cannot create receipt; durable retry deduplicates after
   assert.equal((await post(restarted, identity.cert, '/captures', { ...payload, image: Buffer.concat([bytes, Buffer.from('altered')]).toString('base64') }, credentials.token)).status, 400);
   assert.equal((await post(restarted, identity.cert, '/captures', { ...payload, encounterId: 'different-encounter' }, credentials.token)).status, 400);
 });
+
+test('phone lifecycle HTTPS route requires the original device and durable capture and stores observations encrypted', async t => {
+  const { vault, service, address, encounter } = await setup(t);
+  const identity = service.getTransportIdentity()!;
+  const invitation = service.startPairing(encounter.id, address.endpoint, address.certificateFingerprint);
+  const { body: credentials } = await post(address, identity.cert, '/pair', { secret: invitation.secret, deviceName: 'Synthetic phone evidence' });
+  const transferId = 'synthetic-phone-evidence-transfer';
+  const capture = await post(address, identity.cert, '/captures', { deviceId: credentials.deviceId, encounterId: encounter.id, transferId, image: bytes.toString('base64') }, credentials.token);
+  assert.equal(capture.status, 200);
+  const evidence = { schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'synthetic-instrumentation',
+    binding: { transferId, encounterId: encounter.id, imageSha256: capture.body.sha256, deviceId: credentials.deviceId, captureId: capture.body.captureId },
+    build: { packageName: 'synthetic.test.only', versionName: '1.0', versionCode: 1, apkSha256: 'a'.repeat(64) },
+    events: [{ sequence: 1, type: 'capture_encrypted', observedAt: '2026-09-09T21:00:00Z', processSessionId: 'synthetic-process', apkSha256: 'a'.repeat(64), queueCiphertextSha256: 'b'.repeat(64) }] };
+  const payload = { deviceId: credentials.deviceId, transferId, encounterId: encounter.id, evidence };
+  assert.equal((await post(address, identity.cert, '/phone-evidence', payload, 'wrong-device-token')).status, 400);
+  assert.equal((await post(address, identity.cert, '/phone-evidence', { ...payload, evidence: { ...evidence, binding: { ...evidence.binding, captureId: 'wrong-capture' } } }, credentials.token)).status, 400);
+  const saved = await post(address, identity.cert, '/phone-evidence', payload, credentials.token);
+  assert.equal(saved.status, 200); assert.equal(saved.body.stored, true); assert.equal(saved.body.transferId, transferId); assert.equal(saved.body.encounterId, encounter.id);
+  assert.equal((await post(address, identity.cert, '/phone-evidence', payload, credentials.token)).body.duplicate, true);
+  assert.equal(vault.state.phoneEvidence.length, 1);
+  const disk = await readFile(vault.path, 'utf8');
+  assert.ok(!disk.includes('synthetic.test.only') && !disk.includes('synthetic-process') && !disk.includes(credentials.token));
+  await service.lock(); await vault.unlock('synthetic-transfer-password');
+  assert.deepEqual(vault.state.phoneEvidence[0].evidence, evidence);
+});

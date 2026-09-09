@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AppState, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { AppState, Button, Platform, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as SecureStore from 'expo-secure-store';
 import { CameraHandle, Credentials, NativeCamera, Pending, Transfer, parseInvitation } from './src/transfer';
@@ -15,6 +15,7 @@ export default function App() {
   const [preview, setPreview] = useState(false);
   const [active, setActive] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [showChecks, setShowChecks] = useState(false);
   const [status, setStatus] = useState('Loading encrypted capture queue…');
   const camera = useRef<CameraHandle>(null);
   const operation = useRef(false);
@@ -63,7 +64,32 @@ export default function App() {
       if (!credentials) throw new Error('Pair with the original PC encounter first.');
       setStatus('Sending over pinned TLS. Keep the PC vault unlocked.');
       await Transfer.send(credentials.endpoint, credentials.certificateFingerprint, credentials.deviceId, credentials.token, credentials.encounterId, item.transferId);
-      setCompleted(true); await refresh(); setStatus('PC confirmed a matching durable encrypted receipt. Phone queue copy removed. Continue source review on the PC.');
+      setCompleted(true); await refresh();
+      if (Transfer.syncEvidence) {
+        try {
+          await Transfer.syncEvidence(credentials.endpoint, credentials.certificateFingerprint, credentials.deviceId, credentials.token, credentials.encounterId);
+          setStatus('PC confirmed the matching encrypted receipt and saved native transfer observations. Phone photo removed. Continue source review on the PC.');
+        } catch {
+          setStatus('PC confirmed the matching receipt; phone photo removed. Transfer observations remain encrypted on this phone. Retry saving observations below.');
+        }
+      } else setStatus('PC confirmed a matching durable encrypted receipt. Phone photo removed. Continue source review on the PC.');
+    });
+  }
+  async function verifyPending(item: Pending, mode: 'wrong-certificate' | 'interrupted-upload') {
+    await perform(async () => {
+      if (!credentials || !Transfer.verifyPending) throw new Error('Android native verification is unavailable.');
+      setStatus(mode === 'wrong-certificate' ? 'Checking rejection of an intentionally incorrect certificate pin…' : 'Interrupting a real partial encrypted upload before completion…');
+      const result = JSON.parse(await Transfer.verifyPending(credentials.endpoint, credentials.certificateFingerprint, credentials.deviceId, credentials.token, credentials.encounterId, item.transferId, mode));
+      await refresh();
+      if (!result.queueRetained || !(result.rejected || result.interrupted)) throw new Error('Verification did not establish queue retention. Keep app data intact for review.');
+      setStatus(mode === 'wrong-certificate' ? 'Incorrect certificate rejected. The pending photo remains encrypted for retry.' : 'Partial upload interrupted. The pending photo remains encrypted. Send / retry safely to complete it.');
+    });
+  }
+  async function syncObservations() {
+    await perform(async () => {
+      if (!credentials || !Transfer.syncEvidence) throw new Error('Android native observations are unavailable.');
+      await Transfer.syncEvidence(credentials.endpoint, credentials.certificateFingerprint, credentials.deviceId, credentials.token, credentials.encounterId);
+      setStatus('PC acknowledged encrypted native transfer observations for this matching receipt.');
     });
   }
   if (!active) return <SafeAreaView style={styles.page}><Text style={styles.title}>PsyRec Capture locked</Text></SafeAreaView>;
@@ -80,8 +106,12 @@ export default function App() {
     {completed && <Text>This encounter’s photo has been received. Pair a new PC encounter before taking another photo.</Text>}
     {preview && <><NativeCamera ref={camera} style={styles.camera} /><Text>Fill the frame with one printed page. Check focus, lighting and orientation.</Text><Button title="Capture and encrypt" disabled={busy} onPress={() => void capture()} /></>}
     <Text style={styles.subtitle}>Encrypted pending captures ({pending.length})</Text>
+    {Platform.OS === 'android' && (pending.length > 0 || completed) && <Button title={showChecks ? 'Hide synthetic verification steps' : 'Synthetic verification steps'} disabled={busy} onPress={() => setShowChecks(!showChecks)} />}
+    {showChecks && <Text>For a new synthetic printed-note acceptance run: capture, stop and relaunch the app before sending, verify the incorrect certificate, verify an interrupted upload, then retry normally. These native observations remain encrypted and accompany the matching PC receipt. Paper provenance and human review are separate checks.</Text>}
+    {completed && Platform.OS === 'android' && <Button title="Retry saving transfer observations" disabled={busy} onPress={() => void syncObservations()} />}
     {pending.map(item => <View key={item.transferId} style={styles.card}><Text>Captured {new Date(item.createdAt).toLocaleString()}</Text><Text>Encounter: {item.encounterId}</Text>
       <Button title="Send / retry safely" disabled={busy || !credentials || item.encounterId !== credentials.encounterId} onPress={() => void send(item)} />
+      {showChecks && Platform.OS === 'android' && <><Button title="Verify incorrect certificate rejection" disabled={busy || !credentials || item.encounterId !== credentials.encounterId} onPress={() => void verifyPending(item, 'wrong-certificate')} /><Button title="Verify interrupted upload" disabled={busy || !credentials || item.encounterId !== credentials.encounterId} onPress={() => void verifyPending(item, 'interrupted-upload')} /></>}
       {item.encounterId !== credentials?.encounterId && <Text>Pair to this capture’s original encounter to send it.</Text>}</View>)}
     <Text>Interrupted sends remain encrypted for retry. A matching PC receipt is required before a queued capture is removed. Photos are never written to the gallery.</Text>
   </ScrollView></SafeAreaView>;

@@ -9,7 +9,20 @@ export class PhysicalObserver {
   private stopping = false;
   private pending: Promise<void> = Promise.resolve();
   private timers = new Set<ReturnType<typeof setTimeout>>();
+  private views = new Set<Promise<void>>();
   constructor(private service: PsyRecService, private window: BrowserWindow) {}
+
+  async drain() { await this.pending; }
+
+  async checkpoint() {
+    for (const timer of this.timers) clearTimeout(timer);
+    this.timers.clear();
+    const results = await Promise.allSettled([...this.views]);
+    if (results.some(result => result.status === 'rejected')) this.failed = true;
+    await this.view().catch(() => { this.failed = true; });
+    await this.pending;
+    return { generation: this.generation, failed: this.failed };
+  }
 
   beginLock() {
     this.stopping = true;
@@ -37,10 +50,20 @@ export class PhysicalObserver {
   async input(value: unknown) {
     if (!value || typeof value !== 'object' || !this.service.vault.state || this.stopping) return;
     const event = value as Record<string, unknown>;
-    const allowed = ['extract', 'reviewSource', 'confirmCorrection', 'cancelCorrection', 'draft', 'confirmApproval', 'approve', 'lock', 'patient', 'historyToggle', 'showSuperseded'];
+    const allowed = ['attestPrintedSource', 'extract', 'reviewSource', 'confirmCorrection', 'cancelCorrection', 'draft', 'confirmApproval', 'approve', 'lock', 'patient', 'historyToggle', 'showSuperseded'];
     if (!allowed.includes(String(event.control)) || !['click', 'change'].includes(String(event.eventType)) || typeof event.trusted !== 'boolean' || typeof event.approvalChecked !== 'boolean') return;
     for (const name of ['sourceText', 'draftText', 'patientId', 'encounterId']) if (typeof event[name] !== 'string' || String(event[name]).length > 30000) return;
-    await this.record('renderer-input', event);
+    if (event.control === 'attestPrintedSource') {
+      const encounter = this.service.state().encounters.find(e => e.id === event.encounterId && e.patientId === event.patientId);
+      if (!encounter?.capture) return;
+      const binding = { patientId: encounter.patientId, encounterId: encounter.id, captureId: encounter.capture.id, sha256: encounter.capture.sha256 };
+      await this.record('renderer-input', { ...event, ...binding });
+      if (event.trusted === true) {
+        await this.record('printed-source-attestation', {
+          actor: 'human', method: 'physical-paper-observation', fixtureId: 'DEMO-001', sourceMedium: 'paper', observedAt: new Date().toISOString(), ...binding,
+        });
+      }
+    } else await this.record('renderer-input', event);
     this.scheduleView();
   }
 
@@ -54,7 +77,14 @@ export class PhysicalObserver {
     }
   }
 
-  async view() {
+  view() {
+    const job = this.captureView();
+    this.views.add(job);
+    void job.then(() => this.views.delete(job), () => { this.views.delete(job); this.failed = true; });
+    return job;
+  }
+
+  private async captureView() {
     if (this.stopping || !this.service.vault.state || this.window.isDestroyed()) return;
     const generation = this.generation;
     const details = await this.window.webContents.executeJavaScript(`({
@@ -79,7 +109,7 @@ export class PhysicalObserver {
     const details = await this.window.webContents.executeJavaScript(`({
       workspaceHidden: document.getElementById('workspace').hidden,
       fields: ['sourceText','draftText','alias','passphrase'].every(id=>document.getElementById(id).value===''),
-      content: ['patient','encounters','historyRecords','metrics','consequenceText','pairStatus','encounterTitle','encounterStatus'].every(id=>document.getElementById(id).textContent===''),
+      content: ['patient','encounters','historyRecords','metrics','consequenceText','pairStatus','encounterTitle','encounterStatus','revision','sourceState','draftLink'].every(id=>document.getElementById(id).textContent===''),
       images: ['sourceImage','pairQr'].every(id=>!document.getElementById(id).hasAttribute('src'))
     })`);
     if (this.service.vault.state) await this.record('lock-renderer-purge', details);

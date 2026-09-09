@@ -1,6 +1,18 @@
 # Status: PsyRec QVAC Psy
 
-- Current continuation: [AIOS reconciliation at 14:40 Panama / 19:40 UTC](../../handoffs/2026-09-09-aios-continuation.md), implementation `98ce270` pushed and remote-verified. Release acceptance remains incomplete.
+## Current prepared checkpoint
+
+The [fresh physical-run checklist](../../handoffs/2026-09-09-prepared-physical-run.md) is the next operating procedure. Jeff explicitly chose to do the physical steps later; the Fold is absent from ADB. New code prepares a unique desktop vault with human passphrase entry and trusted paper attestation, an encrypted native Android lifecycle journal and authenticated PC evidence sink, and stricter model/lifecycle/human-chain gates. Implementation and native compilation are separate from physical acceptance.
+
+The new Release APK hash is `6c7311593faf65a99e787b92cdb396b98866e984550dc372a838cae24780f8a5`; installation is unverified. Android JVM checks pass and instrumentation compiles, but physical instrumentation is unexecuted. The dedicated runtime owner reviewed both native observation bindings and mandatory performance integrity. No new real GPU job, clinical approval, private vault export, old temporary-file cleanup, Expo link or iOS simulator validation was run.
+
+The physical slice remains open. Follow the current checklist for queue restart, incorrect-certificate rejection, interrupted upload/retry, receipt-bound photo removal, paper capture, exact human review/approval, encrypted reload/history and observer lock purge. Enforced offline proof, complete crash privacy, independent-machine setup and Spanish video remain open. The deadline and September 11 04:00–08:00 Panama buffer are unchanged.
+
+Validation: `npm test` passed 47 tests with zero failures/skips; mobile TypeScript passed; 3 native Kotlin/JVM policy tests passed and instrumentation compiled without device execution. The retained desktop/native/performance-binding verifiers passed their existing scopes. The absent primary receipt and failed SYN-HW-002 receipt still fail physical acceptance. No new inference was run.
+
+## Previous checkpoints
+
+- Historical AIOS continuation: [AIOS reconciliation at 14:40 Panama / 19:40 UTC](../../handoffs/2026-09-09-aios-continuation.md), implementation `98ce270` pushed and remote-verified. Release acceptance remains incomplete.
 - Product and architecture direction: APPROVED by Jeff's explicit implementation request, September 9, 2026.
 - Program design and slice sequence: implementing the approved plan; concrete contracts recorded alongside code. No fabricated separate approval events.
 - Later correction incorporated: approved patient-note browsing now; optional patient-scoped RAG adapter later, supplied by teammate.
