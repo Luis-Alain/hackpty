@@ -84,3 +84,5 @@ Synthetic English inputs; Spanish final demo video. No diagnosis, therapy, treat
 The September 8 architecture and a historical pre-event Whisper/Llama pilot informed this design. This branch began with its existing MIT licence. Current implementation is being written during the competition; no old pilot execution is reported as a Windows acceptance run. See [prior-base record](PRIOR-BASE.md).
 
 The [checkpoint validation receipt](artifacts/evidence/query-checkpoint-validation-20260909.json) records 68 passing tests, reviewed synthetic UI and installed APK evidence, and a successful read-only verification of 34 new plus six archived real-run records from an isolated Git index export. This does not establish independent-machine or physical human acceptance.
+
+AIOS handoff: [September 9 reconciliation](docs/handoffs/2026-09-09-accuracy-query-checkpoint.md#aios-reconciliation--september-9-1704-panama--2204-utc) records implementation 95bb7f1, independent evidence verification, the disconnected Fold, pending same-vault restart and preserved concurrent work. Release acceptance remains open.

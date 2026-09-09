@@ -33,3 +33,5 @@ The [earlier AIOS continuation](../../docs/handoffs/2026-09-09-aios-continuation
 
 ## Out of scope
 RAG backend/vector storage, external reference documents, cross-patient retrieval, diagnosis, therapy, full-session/background audio, handwriting guarantees, cloud inference, automatic patient sharing and other challenge applications.
+
+AIOS handoff: [September 9 reconciliation](../../docs/handoffs/2026-09-09-accuracy-query-checkpoint.md#aios-reconciliation--september-9-1704-panama--2204-utc) records implementation 95bb7f1, independent evidence verification, the disconnected Fold, pending same-vault restart and preserved concurrent work. Release acceptance remains open.

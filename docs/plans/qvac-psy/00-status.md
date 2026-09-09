@@ -59,3 +59,5 @@ Original [native feasibility](../../../artifacts/evidence/feasibility-summary.js
 Software Factory upstream: https://gist.github.com/Maciejdziuba/88890d7e0eeefa5a8738bbe9fd5e20b8#file-skill-md . Wayfinder was read from the existing Claude skill source; branch-local Markdown tracking selected by Jeff. No skills or AIOS runtime installed.
 
 The [checkpoint validation receipt](../../../artifacts/evidence/query-checkpoint-validation-20260909.json) records 68 passing tests, reviewed synthetic UI and installed APK evidence, and a successful read-only verification of 34 new plus six archived real-run records from an isolated Git index export. This does not establish independent-machine or physical human acceptance.
+
+AIOS handoff: [September 9 reconciliation](../../handoffs/2026-09-09-accuracy-query-checkpoint.md#aios-reconciliation--september-9-1704-panama--2204-utc) records implementation 95bb7f1, independent evidence verification, the disconnected Fold, pending same-vault restart and preserved concurrent work. Release acceptance remains open.
