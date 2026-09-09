@@ -27,6 +27,6 @@
     "permissions": ["android.permission.CAMERA", "android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE", "tech.adwen.psyrec.capture.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"]
   },
   "physicalWorkflowAccepted": false,
-  "physicalInstall": { "model": "SM_F966B", "adbInstallSucceeded": true, "launchCommandAccepted": true, "phoneUiObserved": true, "note": "See physical-receipt-observation.json for actual native successful receipt status and empty queue after user capture." },
-  "remaining": ["Phone-side interrupted retry", "Android encrypted pending queue restart before send", "PC full workflow chained from phone receipt"]
+  "physicalInstall": { "model": "SM_F966B", "adbInstallSucceeded": true, "launchCommandAccepted": true, "phoneUiObserved": true, "note": "Native app launch and successful receipt status observed. First image was later identified as handwriting with unconfirmed provenance, so no input/receipt observation is published or counted as the required printed synthetic workflow." },
+  "remaining": ["Printed synthetic English note capture and accepted provenance", "Phone-side interrupted retry", "Android encrypted pending queue restart before send", "PC full workflow chained from printed synthetic phone receipt"]
 }
