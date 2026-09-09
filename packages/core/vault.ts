@@ -34,7 +34,7 @@ export class Vault {
       decipher.setAuthTag(Buffer.from(envelope.tag, 'base64'));
       const clear = Buffer.concat([decipher.update(Buffer.from(envelope.data, 'base64')), decipher.final()]);
       const state = JSON.parse(clear.toString('utf8')); clear.fill(0);
-      if (state.version !== 1 || !Array.isArray(state.patients) || !Array.isArray(state.records) || !Array.isArray(state.encounters) || !Array.isArray(state.devices) || !Array.isArray(state.transfers) || (state.runs !== undefined && !Array.isArray(state.runs)) || (state.phoneEvidence !== undefined && !Array.isArray(state.phoneEvidence))) throw new Error('format');
+      if (state.version !== 1 || !Array.isArray(state.patients) || !Array.isArray(state.records) || !Array.isArray(state.encounters) || !Array.isArray(state.devices) || !Array.isArray(state.transfers) || (state.runs !== undefined && !Array.isArray(state.runs)) || (state.phoneEvidence !== undefined && !Array.isArray(state.phoneEvidence)) || (state.queryRuns !== undefined && !Array.isArray(state.queryRuns)) || (state.goldTranscriptions !== undefined && !Array.isArray(state.goldTranscriptions))) throw new Error('format');
       this.key = key; this.salt = salt; this.state = state;
       return state;
     } catch { key?.fill(0); throw new Error('Incorrect passphrase or damaged vault. No data was changed.'); }

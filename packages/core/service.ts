@@ -1,7 +1,12 @@
+import { isDeepStrictEqual } from 'node:util';
+import { queryHistory } from '../runtime/prompts.js';
+import { scoreTranscription, SCORING_METHODS } from '../runtime/transcription-scoring.js';
+import { selectApprovedQueryExcerpts, revalidateApprovedQuerySources, validateApprovedQueryOutput } from './approved-query.js';
+import { assertCompleteMetrics } from '../runtime/metrics.js';
 import type { TransportIdentity, PhoneLifecycleEvidence } from '../contracts/index.js';
 import { stablePhoneEvidence, validateStoredPhoneEvidence } from './phone-evidence.js';
 import type { Vault } from './vault.js';
-import type { VaultState, InferencePort, Encounter, Context } from './types.js';
+import type { VaultState, InferencePort, Encounter, Context, Evidence, ApprovedQueryAnswer, QueryRunRecord, HumanGoldTranscription } from './types.js';
 import type { RuntimeFailure } from '../runtime/types.js';
 import { randomUUID, createHash, timingSafeEqual, randomBytes } from 'node:crypto';
 
@@ -18,6 +23,19 @@ export function imageType(bytes) {
   if (bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) return 'image/jpeg';
   throw new Error('Only PNG and JPEG images are accepted.');
 }
+
+function queryPerformance(metrics: Evidence) {
+  if ('testDouble' in metrics) return { testDouble: true as const };
+  const { runId, model, sdkVersion, loadMs, durationMs, native, timings, modelDetails, measurementMethod, runtime } = metrics;
+  return { runId, model, sdkVersion, loadMs, durationMs, native, timings, modelDetails, measurementMethod, runtime };
+}
+function goldMetadata(reference: HumanGoldTranscription) {
+  const { text, accuracy, ...metadata } = reference;
+  if (accuracy.status === 'unavailable') return { ...metadata, accuracy };
+  const summarize = ({ alignment, ...score }: typeof accuracy.scores.wer) => score;
+  return { ...metadata, accuracy: { ...accuracy, scores: { ...accuracy.scores, wer: summarize(accuracy.scores.wer), cer: summarize(accuracy.scores.cer) } } };
+}
+
 export class PsyRecService {
   vault: Vault;
   runtime: InferencePort;
@@ -60,7 +78,7 @@ export class PsyRecService {
   snapshot() {
     const s = this.state();
     return { patients: s.patients, encounters: s.encounters.map(e => ({ ...e, capture: e.capture ? { ...e.capture, data: undefined } : null })),
-      records: s.records, devices: s.devices.map(({ tokenHash, ...device }) => device), ragEnabled: Boolean(this.retriever), voiceEnabled: false };
+      records: s.records, devices: s.devices.map(({ tokenHash, ...device }) => device), ragEnabled: Boolean(this.retriever), queryEnabled: Boolean(this.runtime.answerApprovedNotes), goldTranscriptions: (s.goldTranscriptions ?? []).map(goldMetadata), voiceEnabled: false };
   }
   async addPatient(alias) {
     alias = requiredText(alias, 'Patient alias', 80);
@@ -133,6 +151,88 @@ export class PsyRecService {
     return s.records.filter(r => r.patientId === patientId && (includeSuperseded || !r.supersededAt))
       .sort((a,b) => b.approvedAt.localeCompare(a.approvedAt));
   }
+
+  async queryApprovedNotes(patientId: string, question: string): Promise<ApprovedQueryAnswer> {
+    requiredText(question, 'Question', 1000); // Preserve exactly what was sent in the encrypted query ledger.
+    const startedAt = now(), generation = this.generation, id = randomUUID();
+    const records = structuredClone(this.approvedNotes(patientId));
+    const { sources, coverage } = selectApprovedQueryExcerpts(records, question, startedAt);
+    if (!sources.length) {
+      const answer: ApprovedQueryAnswer = { queryId: id, patientId, status: 'not-found', answer: 'No answer found in the searched notes.', citations: [], coverage, modelInvoked: false };
+      await this.change(s => { (s.queryRuns ??= []).push({ id, patientId, question, startedAt, completedAt: now(), sources, coverage, modelInvoked: false, status: 'not-found', citations: [] }); });
+      return answer;
+    }
+    if (!this.runtime.answerApprovedNotes) throw new Error('The local approved-note query runtime is unavailable.');
+    let result: { text: string; metrics: Evidence };
+    try {
+      result = await this.runtime.answerApprovedNotes({ question, sources: sources.map(source => ({ sourceId: source.sourceId, text: source.text })) });
+    } catch (error) {
+      if (generation === this.generation && this.vault.state) {
+        const failure = (error as { evidence?: RuntimeFailure }).evidence;
+        await this.change(s => { (s.queryRuns ??= []).push({ id, patientId, question, startedAt, completedAt: now(), sources, coverage, modelInvoked: true, status: 'failed', ...(failure?.status === 'failed' ? { failure } : {}), rejection: 'Local query inference failed; no answer was accepted.' }); });
+      }
+      throw new Error('Local query inference failed. No answer was accepted; available evidence remains encrypted.');
+    }
+    if (generation !== this.generation || !this.vault.state) throw new Error('Vault session changed; query output was discarded.');
+    const outcome = await this.change(s => {
+      const run: QueryRunRecord = { id, patientId, question, startedAt, completedAt: now(), sources, coverage, modelInvoked: true, status: 'rejected', rawOutput: result.text, metrics: result.metrics };
+      let answer: ApprovedQueryAnswer | undefined;
+      try {
+        if (!('testDouble' in result.metrics)) {
+          assertCompleteMetrics(result.metrics);
+          if (result.metrics.operation !== 'query' || result.metrics.output.sha256 !== digest(result.text)) throw new Error('Query output and native evidence do not match.');
+          const supplied = sources.map(source => ({ sourceId: source.sourceId, text: source.text }));
+          if (!isDeepStrictEqual(result.metrics.request.context, supplied) || !isDeepStrictEqual(result.metrics.request.history, queryHistory(question, supplied))) throw new Error('Query prompt evidence belongs to a different question or approved source set.');
+        }
+        revalidateApprovedQuerySources(s.records, patientId, sources);
+        const validated = validateApprovedQueryOutput(result.text, sources);
+        run.status = validated.status; run.citations = validated.citations;
+        answer = { queryId: id, patientId, ...validated, coverage, modelInvoked: true, metrics: queryPerformance(result.metrics) };
+      } catch (error) { run.rejection = (error as Error).message; }
+      (s.queryRuns ??= []).push(run);
+      return { answer, rejection: run.rejection };
+    });
+    if (!outcome.answer) throw new Error(outcome.rejection);
+    return outcome.answer;
+  }
+
+  resolveQueryCitation(patientId: string, queryId: string, citationIndex: number) {
+    if (!Number.isInteger(citationIndex) || citationIndex < 0 || citationIndex > 5) throw new Error('Invalid query citation.');
+    const run = this.state().queryRuns?.find(q => q.id === queryId && q.patientId === patientId && q.status === 'answered');
+    const citation = run?.citations?.[citationIndex];
+    if (!run || !citation) throw new Error('Query citation is unavailable for this patient.');
+    revalidateApprovedQuerySources(this.state().records, patientId, run.sources);
+    const record = this.approvedNotes(patientId).find(r => r.id === citation.recordId && r.sourceRevision === citation.sourceRevision);
+    if (!record || record.text.slice(citation.start, citation.end) !== citation.quote) throw new Error('This citation is no longer current.');
+    return { recordId: record.id, encounterId: record.encounterId, sourceRevision: record.sourceRevision, quote: citation.quote };
+  }
+
+  async recordHumanGoldTranscription(encounterId: string, text: string, confirmedSynthetic: boolean, trustedInput: boolean) {
+    requiredText(text, 'Human reference transcription');
+    if (confirmedSynthetic !== true || trustedInput !== true) throw new Error('A human must confirm this is a synthetic capture and save the reference directly.');
+    return this.change(s => {
+      const encounter = this.encounter(s, encounterId);
+      if (!encounter.capture) throw new Error('A captured source image is required for a reference transcription.');
+
+      let accuracy: HumanGoldTranscription['accuracy'] = { status: 'unavailable', reason: 'No original raw extraction output with a matching capture/run hash is retained. Corrected source is never used as a substitute.' };
+      const runs = (s.runs ?? []).filter(run => run.encounterId === encounterId && run.operation === 'extract' && run.status !== 'failed' && typeof run.outputText === 'string' && 'runId' in run.metrics && run.metrics.request.attachment?.sha256 === encounter.capture.sha256 && run.metrics.output.sha256 === digest(run.outputText));
+      if (runs.length === 1) {
+        const run = runs[0];
+        if (run.status !== 'failed' && 'runId' in run.metrics && typeof run.outputText === 'string') {
+          try {
+            let performanceEvidenceComplete = true;
+            try { assertCompleteMetrics(run.metrics); } catch { performanceEvidenceComplete = false; }
+            accuracy = { status: 'available', extractionRunId: run.metrics.runId, extractionOutputSha256: digest(run.outputText), performanceEvidenceComplete, scores: scoreTranscription(text, run.outputText), methods: SCORING_METHODS };
+          } catch (error) { accuracy = { status: 'unavailable', reason: (error as Error).message }; }
+        }
+      } else if (runs.length > 1) accuracy = { status: 'unavailable', reason: 'More than one matching original extraction exists; explicit run selection is required.' };
+
+      const reference: HumanGoldTranscription = { id: randomUUID(), encounterId, captureId: encounter.capture.id, captureSha256: encounter.capture.sha256, text, textSha256: digest(text), characterCount: text.length, createdAt: now(), referenceMethod: 'human-transcription-from-displayed-capture', actor: 'human', confirmedSynthetic: true, trustedInput: true, referenceConditions: 'May be authored after viewing model output; not a blinded or held-out reference.', accuracy };
+      (s.goldTranscriptions ??= []).push(reference);
+      return goldMetadata(reference);
+    });
+  }
+
   async retrieveContext(patientId: string, query: string, currentEncounterId: string): Promise<Context> {
     if (!this.retriever) return { status: 'disabled', excerpts: [] };
     const controller = new AbortController(); let timer;

@@ -108,8 +108,8 @@ export class PhysicalObserver {
     await new Promise(resolve => setTimeout(resolve, 100));
     const details = await this.window.webContents.executeJavaScript(`({
       workspaceHidden: document.getElementById('workspace').hidden,
-      fields: ['sourceText','draftText','alias','passphrase'].every(id=>document.getElementById(id).value===''),
-      content: ['patient','encounters','historyRecords','metrics','consequenceText','pairStatus','encounterTitle','encounterStatus','revision','sourceState','draftLink'].every(id=>document.getElementById(id).textContent===''),
+      fields: ['sourceText','draftText','alias','passphrase','queryQuestion','goldText'].every(id=>document.getElementById(id).value===''),
+      content: ['patient','encounters','historyRecords','metrics','consequenceText','pairStatus','encounterTitle','encounterStatus','revision','sourceState','draftLink','queryAnswer','queryCoverage','queryMetrics','goldStatus','goldScore'].every(id=>document.getElementById(id).textContent===''),
       images: ['sourceImage','pairQr'].every(id=>!document.getElementById(id).hasAttribute('src'))
     })`);
     if (this.service.vault.state) await this.record('lock-renderer-purge', details);

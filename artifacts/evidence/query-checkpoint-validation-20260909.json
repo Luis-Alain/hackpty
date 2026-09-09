@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "accuracy-query-checkpoint-validation",
+  "syntheticOnly": true,
+  "recordedAt": "2026-09-09T21:47:00.911Z",
+  "rootTests": {
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0,
+    "command": "npm test"
+  },
+  "finalCompilationPassed": true,
+  "evidence": {
+    "workingTreeVerified": true,
+    "indexExportVerified": true,
+    "exactStagedByteBindingsChecked": 54,
+    "newRealRunsChecked": 34,
+    "archivedBaselineRunsChecked": 6,
+    "method": "Compiled verifier from the staged source ran against a fresh checkout-index export on the same Windows machine. No model was loaded for verification; this is not independent-machine setup or a fresh inference rerun."
+  },
+  "desktopUi": "query-ui-20260909T2137Z/summary.json",
+  "android": "../../apps/mobile/evidence/capture-quality-candidate.json",
+  "transcriptionCandidatePromoted": false,
+  "query4bPromoted": false,
+  "handwritingAccuracyAccepted": false,
+  "queryReliabilityAccepted": false,
+  "physicalReleaseAccepted": false,
+  "privateVaultReadOrExported": false
+}

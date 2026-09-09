@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "qvac-query-model-challenger-provisioning",
+  "status": "verified",
+  "startedAt": "2026-09-09T21:34:18.5168852Z",
+  "verifiedAt": "2026-09-09T21:36:39.5536279Z",
+  "asset": {
+    "id": "qwen3-4b-q4-query-evaluation",
+    "role": "draft",
+    "constant": "QWEN3_4B_INST_Q4_K_M",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "url": "https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/bc640142c66e1fdd12af0bd68f40445458f3869b/Qwen3-4B-Q4_K_M.gguf",
+    "expectedBytes": 2497280256,
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "modelType": "llamacpp-completion",
+    "license": "Apache-2.0",
+    "modelCard": "https://huggingface.co/Qwen/Qwen3-4B-GGUF/blob/bc640142c66e1fdd12af0bd68f40445458f3869b/README.md"
+  },
+  "installedSdkRegistryHashMatched": true,
+  "productionModelChanged": false,
+  "inferenceRuns": 0,
+  "method": "Public publisher immutable revision download, exact size and SHA-256 verified against installed SDK 0.18.2 registry; no model loaded."
+}

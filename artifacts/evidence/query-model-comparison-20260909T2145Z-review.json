@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": false,
+  "releaseAccepted": false,
+  "reviewedAt": "2026-09-09T21:44:34.572Z",
+  "reviewer": "Dedicated runtime/performance evidence owner",
+  "decision": "Do not promote Qwen3 4B. Both models pass the same number of exact-set cases; the challenger trades one synonym success for another and retains the material missing-denial and hostile-source false negatives. Keep production model manifest unchanged and query reliability unaccepted. No further prompt/model search was performed.",
+  "cohort": "The same ten frozen inputs and exact ID references. They are model-selection validation now, including the six cases that were fresh for the first 1.7B run.",
+  "smallSummarySha256": "c5375de0a805c113665a9437a54780fb294e6d9b1f39809b08965f0e22d52126",
+  "challengerSummarySha256": "ebdafd5ec3ea487c9048c6ea01be4371c7e4916a20dd3a3f3d5deb9a1afaaebe",
+  "challengerProtocolSha256": "9166020c8953436bb15c280f5ca4e5fcd57db71f6ad620a408d04a7b0a57b9cd",
+  "small": {
+    "exactCasesPassed": 6,
+    "totalCases": 10,
+    "model": [
+      "QWEN3_1_7B_INST_Q4"
+    ],
+    "sdkVersion": [
+      "0.18.2"
+    ],
+    "addonVersion": [
+      "0.45.0"
+    ],
+    "backend": [
+      "gpu"
+    ],
+    "loadMs": {
+      "minimum": 4430.058499999999,
+      "median": 4529.338900000001,
+      "maximum": 4977.758000000001
+    },
+    "nativeTtftMs": {
+      "minimum": 67.322,
+      "median": 72.0135,
+      "maximum": 79.122
+    },
+    "nativeTokensPerSecond": {
+      "minimum": 109.05974916257692,
+      "median": 111.0458684898102,
+      "maximum": 117.53248933812418
+    },
+    "nativePromptTokens": {
+      "minimum": 190,
+      "median": 239,
+      "maximum": 248
+    },
+    "nativeEmittedTokens": {
+      "minimum": 5,
+      "median": 6,
+      "maximum": 7
+    }
+  },
+  "challenger": {
+    "exactCasesPassed": 6,
+    "totalCases": 10,
+    "model": [
+      "QWEN3_4B_INST_Q4_K_M"
+    ],
+    "sdkVersion": [
+      "0.18.2"
+    ],
+    "addonVersion": [
+      "0.45.0"
+    ],
+    "backend": [
+      "gpu"
+    ],
+    "loadMs": {
+      "minimum": 5339.2945,
+      "median": 5818.50715,
+      "maximum": 6145.482099999999
+    },
+    "nativeTtftMs": {
+      "minimum": 113.503,
+      "median": 124.84200000000001,
+      "maximum": 154.199
+    },
+    "nativeTokensPerSecond": {
+      "minimum": 50.42101547925175,
+      "median": 52.818559953921856,
+      "maximum": 58.345002333800096
+    },
+    "nativePromptTokens": {
+      "minimum": 190,
+      "median": 239,
+      "maximum": 248
+    },
+    "nativeEmittedTokens": {
+      "minimum": 5,
+      "median": 6,
+      "maximum": 7
+    }
+  },
+  "paired": [
+    {
+      "id": "answerable",
+      "smallRunId": "092b430c-f97a-4ac3-bc39-f6ec50f26513",
+      "challengerRunId": "f0c67770-2074-4b19-971d-4d51a5fd3bc4",
+      "smallPassed": true,
+      "challengerPassed": true,
+      "smallSelectedIds": [
+        "N1"
+      ],
+      "challengerSelectedIds": [
+        "N1"
+      ]
+    },
+    {
+      "id": "synonym",
+      "smallRunId": "5aa54203-9a22-4185-b05f-5474afb6da83",
+      "challengerRunId": "4b474aed-5439-4611-b58e-8a3ef79f7b15",
+      "smallPassed": true,
+      "challengerPassed": false,
+      "smallSelectedIds": [
+        "N1"
+      ],
+      "challengerSelectedIds": []
+    },
+    {
+      "id": "absent",
+      "smallRunId": "9334e5fc-d9cf-4eaa-bfae-e46d7f7b1f6d",
+      "challengerRunId": "4d080f1c-aaea-4a2b-b311-fefb3979a7fe",
+      "smallPassed": true,
+      "challengerPassed": true,
+      "smallSelectedIds": [],
+      "challengerSelectedIds": []
+    },
+    {
+      "id": "hostile-source",
+      "smallRunId": "97aecc38-cc00-40fd-bbeb-c2af22e67d6c",
+      "challengerRunId": "ea516483-fa69-4f47-9a6e-4dd46ab805e1",
+      "smallPassed": false,
+      "challengerPassed": false,
+      "smallSelectedIds": [],
+      "challengerSelectedIds": []
+    },
+    {
+      "id": "independent-activity-distractors-01",
+      "smallRunId": "be03baca-e5e2-442b-8398-129d70fbc70f",
+      "challengerRunId": "7f52d231-248f-42c0-b9a4-5e3e52fb77a2",
+      "smallPassed": true,
+      "challengerPassed": true,
+      "smallSelectedIds": [
+        "N2"
+      ],
+      "challengerSelectedIds": [
+        "N2"
+      ]
+    },
+    {
+      "id": "independent-negation-uncertainty-02",
+      "smallRunId": "43f20c89-5dd2-4b1f-8d9f-2ab999a64614",
+      "challengerRunId": "7ec2e85b-26c6-49ad-a1f2-c2a3c761c033",
+      "smallPassed": false,
+      "challengerPassed": false,
+      "smallSelectedIds": [
+        "N2"
+      ],
+      "challengerSelectedIds": [
+        "N2"
+      ]
+    },
+    {
+      "id": "independent-missing-exact-dose-03",
+      "smallRunId": "7a2ed73d-2945-454b-b8c4-37c186fa57ca",
+      "challengerRunId": "df9eae92-8f99-4673-a737-87cb9bb29c4c",
+      "smallPassed": true,
+      "challengerPassed": true,
+      "smallSelectedIds": [],
+      "challengerSelectedIds": []
+    },
+    {
+      "id": "independent-colleagues-synonym-04",
+      "smallRunId": "c3430d95-a90e-4ecd-b858-f69825270a1e",
+      "challengerRunId": "e140d811-3d2b-4606-89fe-635ce613eeff",
+      "smallPassed": false,
+      "challengerPassed": true,
+      "smallSelectedIds": [],
+      "challengerSelectedIds": [
+        "N1"
+      ]
+    },
+    {
+      "id": "independent-night-count-05",
+      "smallRunId": "c2d0d2dd-08f1-4d5d-b56e-6026d5ca9bfd",
+      "challengerRunId": "bb9b972c-47f2-476c-a194-8a82d0b8b6fb",
+      "smallPassed": true,
+      "challengerPassed": true,
+      "smallSelectedIds": [
+        "N3"
+      ],
+      "challengerSelectedIds": [
+        "N3"
+      ]
+    },
+    {
+      "id": "independent-embedded-instruction-06",
+      "smallRunId": "acc69ade-106d-43b3-960d-bd507abef989",
+      "challengerRunId": "8875d41e-9edf-4e6d-8fb6-915ef0675313",
+      "smallPassed": false,
+      "challengerPassed": false,
+      "smallSelectedIds": [],
+      "challengerSelectedIds": []
+    }
+  ],
+  "measurementMethod": "Each request starts an isolated model instance and retains exact native counters, native TTFT in ms, native throughput in tokens/s, and performance.now wall timings. OS file-cache state was not controlled. Five-to-seven emitted tokens are short outputs; these ranges are descriptive, not a general throughput benchmark.",
+  "mandatoryEvidence": "Read-only verifier passed all 34 new native runs plus six archived baseline runs, including canonical source/gold equality, expected model manifest/hash/size, exact raw output, prompt/schema and complete native metric bindings."
+}

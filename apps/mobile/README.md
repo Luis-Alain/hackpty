@@ -4,6 +4,8 @@ This Expo SDK 55 / React Native 0.83 app captures a printed synthetic English no
 
 The existing local app is linked to [@hackpty/psyrec-capture](https://expo.dev/accounts/hackpty/projects/psyrec-capture), project ID `b57b65cb-66a6-454f-8301-72259ee2a828`. Expo account membership was verified as Owner before linking. `app.json` records the account/project association; Android package identity and local build scripts are preserved. Linking the project did not run a cloud build, publish an update, or enable cloud inference. `eas project:info` verifies the association when signed in.
 
+The current source also includes a [capture detail candidate](docs/capture-quality-candidate.md): a 2048 × 1536 resolution preference, JPEG quality 100, encrypted dimensions/settings metadata and bounded image buffers. It is compiled, policy-tested, reviewed, packaged and verified installed by APK hash. Physical capture evaluation and OCR improvement remain unverified. The linked candidate record distinguishes the currently installed APK from the latest built APK; no OCR improvement is claimed.
+
 ## Local build
 
 Install Node 22.17+, JDK 17, Android SDK platform 36, build tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1 and Android platform tools. Set `JAVA_HOME` and `ANDROID_HOME` to your local installations. From this directory:

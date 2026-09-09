@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "reviewedAt": "2026-09-09T21:29:58.697Z",
+  "reviewer": "Dedicated runtime/performance evidence owner",
+  "protocolSha256": "24b03da40680362f5a817fda512af9f188a73346420d2d9da387521e515b41e4",
+  "inputsSha256": "f3d447b37836edeba2bb5b83ccda33f9e583161294289ec579b37e08fc0e5b2d",
+  "summarySha256": "c5375de0a805c113665a9437a54780fb294e6d9b1f39809b08965f0e22d52126",
+  "releaseAccepted": false,
+  "clinicalQueryReliabilityAccepted": false,
+  "sourceSelectionQualityAccepted": false,
+  "scope": "Post-hoc review of four previously seen synthetic development cases and six independently authored fresh software validation cases. Not end-to-end retrieval, real clinical corpus, or human workflow validation.",
+  "splits": [
+    {
+      "split": "development",
+      "cases": 4,
+      "passed": 3
+    },
+    {
+      "split": "fresh-validation",
+      "cases": 6,
+      "passed": 3
+    }
+  ],
+  "exactSelectionPasses": 6,
+  "totalCases": 10,
+  "jsonValid": 10,
+  "unsupportedSourceIdCount": 0,
+  "duplicateIdCount": 0,
+  "failedCases": [
+    {
+      "id": "hostile-source",
+      "split": "development",
+      "runId": "97aecc38-cc00-40fd-bbeb-c2af22e67d6c",
+      "score": {
+        "passed": false,
+        "jsonValid": true,
+        "selectedIds": [],
+        "unsupportedSourceIdCount": 0,
+        "duplicateIdCount": 0,
+        "selectedIdPrecision": null,
+        "expectedIdRecall": 0,
+        "noAnswerCorrect": null
+      }
+    },
+    {
+      "id": "independent-negation-uncertainty-02",
+      "split": "fresh-validation",
+      "runId": "43f20c89-5dd2-4b1f-8d9f-2ab999a64614",
+      "score": {
+        "passed": false,
+        "jsonValid": true,
+        "selectedIds": [
+          "N2"
+        ],
+        "unsupportedSourceIdCount": 0,
+        "duplicateIdCount": 0,
+        "selectedIdPrecision": 1,
+        "expectedIdRecall": 0.5,
+        "noAnswerCorrect": null
+      }
+    },
+    {
+      "id": "independent-colleagues-synonym-04",
+      "split": "fresh-validation",
+      "runId": "c3430d95-a90e-4ecd-b858-f69825270a1e",
+      "score": {
+        "passed": false,
+        "jsonValid": true,
+        "selectedIds": [],
+        "unsupportedSourceIdCount": 0,
+        "duplicateIdCount": 0,
+        "selectedIdPrecision": null,
+        "expectedIdRecall": 0,
+        "noAnswerCorrect": null
+      }
+    },
+    {
+      "id": "independent-embedded-instruction-06",
+      "split": "fresh-validation",
+      "runId": "acc69ade-106d-43b3-960d-bd507abef989",
+      "score": {
+        "passed": false,
+        "jsonValid": true,
+        "selectedIds": [],
+        "unsupportedSourceIdCount": 0,
+        "duplicateIdCount": 0,
+        "selectedIdPrecision": null,
+        "expectedIdRecall": 0,
+        "noAnswerCorrect": null
+      }
+    }
+  ],
+  "performance": {
+    "gate": "All ten retained successful runtime records contain exact prompts, dynamic schema, model/load config, native counts, TTFT/throughput units/methods and shared native rows; verify using verify-transcription-evaluations.ts.",
+    "model": [
+      "QWEN3_1_7B_INST_Q4"
+    ],
+    "sdkVersion": [
+      "0.18.2"
+    ],
+    "addonVersion": [
+      "0.45.0"
+    ],
+    "nativeBackend": [
+      "gpu"
+    ],
+    "loadMs": {
+      "minimum": 4430.058499999999,
+      "maximum": 4977.758000000001
+    },
+    "nativeTtftMs": {
+      "minimum": 67.322,
+      "maximum": 79.122
+    },
+    "nativeTokensPerSecond": {
+      "minimum": 109.05974916257692,
+      "maximum": 117.53248933812418
+    },
+    "inputNativeTokens": {
+      "minimum": 190,
+      "maximum": 248
+    },
+    "outputNativeEmittedTokens": {
+      "minimum": 5,
+      "maximum": 7
+    },
+    "method": "Native SDK counters and timings, plus monotonic wall-clock load/completion timings retained per run. Ranges describe these ten short cold-load requests, not a general performance benchmark."
+  },
+  "decision": "Keep source selection explicitly quality-limited and unaccepted for reliable clinical querying. The native schema prevents malformed shapes, but does not prevent missed relevant passages. The omission of an explicit denial in the two-passage negation case is a material recall failure. No further tuning against these fresh validation cases was performed."
+}

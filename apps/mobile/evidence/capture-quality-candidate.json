@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "kind": "android-capture-quality-candidate",
+  "recordedAt": "2026-09-09T21:13:09.4575998Z",
+  "status": "reviewed-built-and-installation-verified-physical-evaluation-pending",
+  "requestedCapture": {
+    "width": 2048,
+    "height": 1536,
+    "resolutionMeaning": "CameraX selection preference, not a fixed output dimension or sensor maximum",
+    "cameraJpegQuality": 100,
+    "emittedJpegQuality": 100,
+    "maxEncodedBytes": 8388608,
+    "normalization": "decode-rotate-reencode",
+    "lossless": false
+  },
+  "validation": {
+    "mobileTypeScriptPassed": true,
+    "kotlinCompilationPassed": true,
+    "androidInstrumentationCompiled": true,
+    "androidInstrumentationExecuted": false,
+    "nativeJvmTests": {
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "newTests": "Three rotation/encoded-byte-limit/wiping checks; three prior certificate/receipt checks also pass"
+  },
+  "installedObservation": {
+    "observedBy": "coordinator",
+    "observedAt": "2026-09-09T21:11:54.781345Z",
+    "method": "adb install -r followed by pm path, adb pull of installed base APK and host SHA-256 comparison; no uninstall or data clear",
+    "model": "SM-F966B",
+    "packageName": "tech.adwen.psyrec.capture",
+    "versionName": "0.1.0",
+    "versionCode": 1,
+    "firstInstallTime": "2026-09-09 13:15:05",
+    "lastUpdateTime": "2026-09-09 16:11:54",
+    "apkSha256": "283425bdd88a6a01fc6c71baea8d9455bdcf04d7b6906e4d1c492d8650bc416b",
+    "installedHashMatchesBuild": true,
+    "replacementInstallPerformed": true
+  },
+  "latestBuiltBeforeCandidate": {
+    "apkSha256": "6c7311593faf65a99e787b92cdb396b98866e984550dc372a838cae24780f8a5",
+    "containsCaptureQualityCandidate": false,
+    "installedAtCoordinatorObservation": false
+  },
+  "candidateApkBuilt": true,
+  "deviceActionsByThisCell": false,
+  "inferenceRuns": 0,
+  "measuredOcrGain": null,
+  "handwritingAccepted": false,
+  "metadataStorage": "Encrypted phone pending/completed record only; no root contracts or transmitted lifecycle schema changed",
+  "candidateApk": {
+    "path": "android/app/build/outputs/apk/release/app-release.apk",
+    "sha256": "283425bdd88a6a01fc6c71baea8d9455bdcf04d7b6906e4d1c492d8650bc416b",
+    "bytes": 31497827,
+    "buildCommand": "gradlew.bat app:assembleRelease -PreactNativeArchitectures=arm64-v8a --console=plain",
+    "buildPassed": true,
+    "signatureVerified": true,
+    "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+    "signingScope": "Existing Android Debug development certificate, not publication signing",
+    "candidateModeAndPolicyFoundIn": "classes2.dex",
+    "installed": true,
+    "installationStatus": "verified-with-installed-apk-hash"
+  },
+  "preInstallObservation": {
+    "observedBy": "coordinator",
+    "method": "Read-only ADB device-side SHA-256 of installed base APK and package identity",
+    "model": "SM_F966B",
+    "packageName": "tech.adwen.psyrec.capture",
+    "versionName": "0.1.0",
+    "versionCode": 1,
+    "lastUpdateTime": "2026-09-09 13:54:31",
+    "apkSha256": "084e23b7a10899a472691c087460e4be91bf206280690b2386e1ade089716818"
+  },
+  "physicalCaptureEvaluated": false,
+  "phoneLifecycleAccepted": false
+}

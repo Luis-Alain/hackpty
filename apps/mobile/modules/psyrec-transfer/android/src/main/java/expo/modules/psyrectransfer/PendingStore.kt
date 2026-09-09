@@ -117,6 +117,7 @@ internal class PendingStore(private val context: Context) {
       ReceiptFields(receipt.getString("deviceId"), receipt.getString("transferId"), receipt.getString("encounterId"), receipt.getString("sha256"), receipt.getString("captureId"), receipt.getString("receivedAt")))
     val completed = JSONObject().put("transferId", id).put("encounterId", latest.getString("encounterId"))
       .put("sha256", latest.getString("sha256")).put("createdAt", latest.getString("createdAt")).put("receipt", receipt)
+    latest.optJSONObject("captureMetadata")?.let { completed.put("captureMetadata", it) }
     latest.optJSONObject("lifecycle")?.let { lifecycle ->
       lifecycle.getJSONObject("binding").put("deviceId", receipt.getString("deviceId")).put("captureId", receipt.getString("captureId"))
       completed.put("lifecycle", lifecycle)

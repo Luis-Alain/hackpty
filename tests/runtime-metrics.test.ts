@@ -138,3 +138,27 @@ test('shared performance rows must bind the same native run, model, request and 
   }
   const m=actualMetrics();m.sharedRuntime.performanceRows.push(structuredClone(m.sharedRuntime.performanceRows[0]));assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError,'duplicate successful load');
 });
+
+// Query fixtures below adapt retained draft metadata for gate-unit testing only.
+// They are not claimed as actual query inference evidence.
+test('query operation requires exact approved source context, frozen prompt and bounded native context',needsEvidence,async()=>{
+  const {queryHistory}=await import('../packages/runtime/prompts.js');
+  const sources=[{sourceId:'N1',text:'Sleep duration was not recorded.'}];
+  const make=()=>{const m=actualMetrics('draft');m.operation='query';m.request.promptTemplateVersion='psyrec-approved-query-v1';delete m.request.sourceId;m.request.context=sources;m.request.history=queryHistory('Was duration recorded?',sources,'psyrec-approved-query-v1');m.sharedRuntime.performanceRows.find(row=>row.stage==='completion').history=structuredClone(m.request.history);return m;};
+  assertCompleteMetrics(make());
+  for(const mutate of [(m:any)=>{m.request.context[0]={sourceId:'N2',text:'Other note'};},(m:any)=>{m.request.history[0].content='Different system prompt';},(m:any)=>{m.modelDetails.assets[0].role='query';},(m:any)=>{m.output.stopReason='length';},(m:any)=>{m.native.promptTokens=4000;m.inputTokens=4000;}]){const m=make();m.request.context=structuredClone(m.request.context);mutate(m);assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError);}
+});
+
+test('query v2 requires the exact native JSON Schema constraint and shared-row binding',needsEvidence,async()=>{
+  const {queryHistory,QUERY_RESPONSE_FORMAT}=await import('../packages/runtime/prompts.js');
+  const make=()=>{const m=actualMetrics('draft');m.operation='query';m.request.promptTemplateVersion='psyrec-approved-query-v2';delete m.request.sourceId;m.request.context=[{sourceId:'N1',text:'No diagnosis recorded.'}];m.request.history=queryHistory('What is recorded?',m.request.context,'psyrec-approved-query-v2');m.request.responseFormat=structuredClone(QUERY_RESPONSE_FORMAT);const row=m.sharedRuntime.performanceRows.find(row=>row.stage==='completion');row.history=structuredClone(m.request.history);row.response_format=structuredClone(QUERY_RESPONSE_FORMAT);return m;};
+  assertCompleteMetrics(make());for(const mutate of [(m:any)=>{delete m.request.responseFormat;},(m:any)=>{m.request.responseFormat.json_schema.schema.additionalProperties=true;},(m:any)=>{m.sharedRuntime.performanceRows.find(row=>row.stage==='completion').response_format='text';}]){const m=make();mutate(m);assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError);}
+  for(const operation of ['extract','draft']){const m=actualMetrics(operation);m.request.responseFormat=structuredClone(QUERY_RESPONSE_FORMAT);assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError);}
+});
+
+test('query v3 evidence binds the exact dynamic supplied-ID schema and shared request',needsEvidence,async()=>{
+  const {queryHistory,queryResponseFormat}=await import('../packages/runtime/prompts.js');
+  const make=()=>{const m=actualMetrics('draft');m.operation='query';m.request.promptTemplateVersion='psyrec-approved-query-v3';delete m.request.sourceId;m.request.context=[{sourceId:'N2',text:'No diagnosis recorded.'},{sourceId:'N5',text:'Sleep improved.'}];m.request.history=queryHistory('What is recorded?',m.request.context);m.request.responseFormat=queryResponseFormat(m.request.context);const row=m.sharedRuntime.performanceRows.find(row=>row.stage==='completion');row.history=structuredClone(m.request.history);row.response_format=structuredClone(m.request.responseFormat);return m;};
+  assertCompleteMetrics(make());
+  for(const mutate of [(m:any)=>{m.request.responseFormat.json_schema.schema.properties.sourceIds.items.enum=['N1'];m.sharedRuntime.performanceRows.find(row=>row.stage==='completion').response_format=structuredClone(m.request.responseFormat);},(m:any)=>{m.request.responseFormat.json_schema.schema.properties.sourceIds.maxItems=6;m.sharedRuntime.performanceRows.find(row=>row.stage==='completion').response_format=structuredClone(m.request.responseFormat);},(m:any)=>{delete m.request.responseFormat;},(m:any)=>{m.sharedRuntime.performanceRows.find(row=>row.stage==='completion').response_format='text';}]){const m=make();mutate(m);assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError);}
+});

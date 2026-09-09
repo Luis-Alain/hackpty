@@ -5,6 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { assertWithin, manifest } from './models.js';
 import { assertCompleteMetrics } from './metrics.js';
+import { validateQueryInput } from './prompts.js';
+import type { QuerySource } from './types.js';
 import { OWNER_MARKER, recoverAbandonedTemporaryFiles } from './temporary-files.js';
 import { RuntimeEvidenceError, type RuntimeResult, type JobRequest, type Operation, type RuntimeFailure } from './types.js';
 export { assertCompleteMetrics, IncompleteEvidenceError } from './metrics.js';
@@ -37,16 +39,28 @@ export class QvacRuntime {
     const models = await Promise.all(data.models.map(async asset => ({id:asset.id,model:asset.constant,filename:asset.filename,expectedBytes:asset.expectedBytes,present:await stat(path.join(this.modelDirectory,asset.filename)).then(s=>s.size===asset.expectedBytes).catch(()=>false)})));
     return {sdk:'@qvac/sdk',sdkVersion:data.sdk.version,localOnly:true,ready:models.every(m=>m.present),integrityCheck:'Full SHA-256 is checked before every load',models,activeRuns:this.active.size,ragEnabled:false,voiceEnabled:false};
   }
-  async extractImage({bytes,mime,signal}:{bytes:Buffer | Uint8Array;mime:string;signal?:AbortSignal}): Promise<RuntimeResult> {
+  async extractImage(input:{bytes:Buffer | Uint8Array;mime:string;signal?:AbortSignal}): Promise<RuntimeResult> {
+    return this.extractWithProfile(input);
+  }
+  /** Explicit diagnostic experiment; not used by the clinician capture path. */
+  async extractImageForEvaluation(input:{bytes:Buffer | Uint8Array;mime:string;signal?:AbortSignal}): Promise<RuntimeResult> {
+    return this.extractWithProfile(input,'psyrec-extract-lines-v3');
+  }
+  private async extractWithProfile({bytes,mime,signal}:{bytes:Buffer | Uint8Array;mime:string;signal?:AbortSignal},extractionPromptProfile?:'psyrec-extract-lines-v3'): Promise<RuntimeResult> {
     if (!(bytes instanceof Uint8Array) || bytes.length < 12 || bytes.length > 8*1024*1024 || !['image/png','image/jpeg'].includes(mime)) throw new Error('Use a local PNG or JPEG image no larger than 8 MB.');
     const b=Buffer.from(bytes);
     if (mime === 'image/png' ? !b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])) : !(b[0]===255 && b[1]===216 && b[2]===255)) throw new Error('Image signature does not match MIME type.');
-    return this.enqueue({operation:'extract',imageBase64:b.toString('base64'),mime,context:[]},signal);
+    return this.enqueue({operation:'extract',imageBase64:b.toString('base64'),mime,context:[],...(extractionPromptProfile?{extractionPromptProfile}:{})},signal);
   }
   async draftFromSource({text,sourceId,context=[],signal}:{text:string;sourceId:string;context?:unknown[];signal?:AbortSignal}):Promise<RuntimeResult> {
     if (typeof text!=='string' || !text.trim() || text.length>30000 || typeof sourceId!=='string' || !sourceId.trim() || sourceId.length>300) throw new Error('A reviewed source and source ID are required.');
     if (!Array.isArray(context) || context.length) throw new Error('RAG context is disabled for this release.');
     return this.enqueue({operation:'draft',text,sourceId,context:[]},signal);
+  }
+  async answerApprovedNotes({question,sources,signal}:{question:string;sources:QuerySource[];signal?:AbortSignal}):Promise<RuntimeResult> {
+    validateQueryInput(question,sources);
+    const retained=sources.map(source=>({sourceId:source.sourceId,text:source.text}));
+    return this.enqueue({operation:'query',text:question,querySources:retained,context:retained},signal);
   }
   private enqueue(input: Pick<JobRequest,'operation'|'context'> & Partial<JobRequest>,signal?:AbortSignal): Promise<RuntimeResult> {
     const generation=this.generation;

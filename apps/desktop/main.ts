@@ -1,6 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, session } from 'electron';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { readFile, writeFile, mkdir, mkdtemp } from 'node:fs/promises';
+import { join, resolve, relative } from 'node:path';
 import { networkInterfaces } from 'node:os';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Vault } from '../../packages/core/vault.js';
@@ -10,6 +10,8 @@ import QRCode from 'qrcode';
 import { validateRequest, isTrustedUiUrl } from './ipc.js';
 import { PhysicalObserver } from './physical-observer.js';
 
+// Keep the isolated UI check off the inference GPU as well as out of QVAC.
+if (process.argv.includes('--query-ui-check')) app.disableHardwareAcceleration();
 const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
 const uiPath = join(projectRoot, 'apps/desktop/ui/index.html');
 const uiUrl = pathToFileURL(uiPath).href;
@@ -20,7 +22,7 @@ let runtime: any;
 let receiverInfo: any = null;
 let physicalObserver: PhysicalObserver | null = null;
 let idleTimer: ReturnType<typeof setTimeout>;
-const privateDirectory = process.env.PSYREC_HOME ? resolve(process.env.PSYREC_HOME) : join(app.getPath('userData'), 'private');
+let privateDirectory = process.env.PSYREC_HOME ? resolve(process.env.PSYREC_HOME) : join(app.getPath('userData'), 'private');
 const sameUiDocument = (url: string) => isTrustedUiUrl(url, uiUrl);
 const ownFrame = event => event.senderFrame === window.webContents.mainFrame && sameUiDocument(event.senderFrame.url);
 function addresses() { return Object.values(networkInterfaces()).flat().filter(a => a && a.family === 'IPv4' && !a.internal && /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(a.address)).map(a => a!.address); }
@@ -49,6 +51,11 @@ function touch() { clearTimeout(idleTimer); idleTimer = setTimeout(() => void lo
 
 async function startDesktop() {
 await app.whenReady();
+if (process.argv.includes('--query-ui-check')) {
+  if (process.argv.some(arg => ['--prepare-fold', '--workflow-evidence', '--workflow-reload-evidence', '--smoke'].includes(arg))) throw new Error('The isolated query check cannot be combined with other desktop modes.');
+  await mkdir(join(projectRoot, '.local'), { recursive: true });
+  privateDirectory = await mkdtemp(join(projectRoot, '.local', 'query-ui-check-'));
+}
 await mkdir(privateDirectory, { recursive: true, mode: 0o700 });
 if (process.argv.includes('--prepare-fold')) {
   if (!process.env.PSYREC_HOME?.includes('desktop-workflow') || !process.env.PSYREC_FOLD_ADDRESS || !process.env.PSYREC_FOLD_SESSION_ID) throw new Error('Use the fresh Fold session launcher.');
@@ -56,7 +63,12 @@ if (process.argv.includes('--prepare-fold')) {
   const launch = JSON.parse(await readFile(join(privateDirectory, 'launch.json'), 'utf8'));
   if (launch.sessionId !== process.env.PSYREC_FOLD_SESSION_ID || launch.address !== process.env.PSYREC_FOLD_ADDRESS || launch.physicalAcceptance !== false) throw new Error('Fresh Fold launch metadata is invalid.');
 }
-try {
+if (process.argv.includes('--query-ui-check')) {
+  const testRelative = relative(join(projectRoot, '.local'), privateDirectory);
+  if (!/^query-ui-check-[a-zA-Z0-9-]+$/.test(testRelative) || await new Vault(join(privateDirectory, 'psyrec.vault')).exists()) throw new Error('Query UI checks require a fresh dedicated test directory.');
+  const { createQueryUiRuntime } = await import('./query-ui-check.js');
+  runtime = createQueryUiRuntime();
+} else try {
   const module = await import(pathToFileURL(join(projectRoot, 'dist/packages/runtime/index.js')).href);
   runtime = new module.QvacRuntime({ projectRoot });
 } catch {
@@ -64,7 +76,7 @@ try {
 }
 service = new PsyRecService(new Vault(join(privateDirectory, 'psyrec.vault')), runtime);
 receiver = new CaptureServer(service, privateDirectory);
-window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--smoke') && !process.argv.includes('--workflow-evidence'), webPreferences: { backgroundThrottling: false, preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
+window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--query-ui-check') && !process.argv.includes('--smoke') && !process.argv.includes('--workflow-evidence'), webPreferences: { offscreen: process.argv.includes('--query-ui-check'), backgroundThrottling: false, preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
 window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
 window.webContents.on('will-navigate', (event, url) => { if (!sameUiDocument(url)) event.preventDefault(); });
 session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
@@ -103,6 +115,9 @@ async function dispatch(method: string, args: any[]) {
     case 'generateDraft': return service.generateDraft(args[0]);
     case 'approve': return service.approve(args[0], args[1], args[2], args[3]);
     case 'approvedNotes': return service.approvedNotes(args[0], args[1]);
+    case 'queryApprovedNotes': return service.queryApprovedNotes(args[0], args[1]);
+    case 'resolveQueryCitation': return service.resolveQueryCitation(args[0], args[1], args[2]);
+    case 'recordHumanGoldTranscription': return service.recordHumanGoldTranscription(args[0], args[1], args[2], args[3]);
     case 'revokeDevice': return service.revokeDevice(args[0]);
     case 'pair': {
       if (!addresses().includes(args[1])) throw new Error('Select this PC’s private LAN address.');
@@ -155,6 +170,11 @@ if (process.argv.includes('--prepare-fold')) {
   const prepared = await prepareFoldSession(window, process.env.PSYREC_FOLD_ADDRESS);
   await service.recordPhysicalObservation('session-prepared', { ...prepared, sessionId: process.env.PSYREC_FOLD_SESSION_ID });
   console.log(JSON.stringify(prepared));
+}
+if (process.argv.includes('--query-ui-check')) {
+  const { runQueryUiCheck } = await import('./query-ui-check.js');
+  const summary = await runQueryUiCheck(window, service, projectRoot, privateDirectory); console.log(JSON.stringify({ ...summary, privateTestDirectory: privateDirectory }));
+  await lock(); app.quit();
 }
 if (process.argv.includes('--workflow-reload-evidence')) {
   const { captureReloadEvidence } = await import('./workflow-evidence.js');

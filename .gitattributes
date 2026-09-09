@@ -1,0 +1,14 @@
+# Preserve exact bytes in newly published, hash-bound synthetic evaluation records.
+/artifacts/evidence/query-*.json -text
+/artifacts/evidence/transcription-*.json -text
+# Frozen query protocols bind this source module byte-for-byte.
+/packages/runtime/prompts.ts text eol=lf
+# Existing archived evidence already matches its Git blobs; protect future checkouts without changing it.
+/artifacts/evidence/synthetic-extract.json -text
+/artifacts/evidence/quality-ambiguous-extract.json -text
+/artifacts/evidence/quality-missing-extract.json -text
+/artifacts/evidence/quality-unreadable-extract.json -text
+/artifacts/evidence/handwriting-exploratory-SYN-HW-001.json -text
+/artifacts/evidence/handwriting-exploratory-SYN-HW-002.json -text
+# This provisioning receipt was emitted with CRLF; retain those original bytes.
+/artifacts/evidence/query-4b-model-provisioning.json whitespace=trailing-space,space-before-tab,cr-at-eol

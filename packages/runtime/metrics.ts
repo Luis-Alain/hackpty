@@ -1,6 +1,7 @@
 import { basename, isAbsolute } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import type { RunMetrics } from './types.js';
+import { QUERY_PROMPT_VERSION, QUERY_LEGACY_PROMPT_VERSION, QUERY_STRUCTURED_PROMPT_VERSION, queryResponseFormat, queryHistory, validateQueryInput } from './prompts.js';
 
 export class IncompleteEvidenceError extends Error {
   constructor(public field: string) {
@@ -25,7 +26,7 @@ function object(value: unknown, field: string): asserts value is Record<string, 
 export function assertCompleteMetrics(candidate: unknown): asserts candidate is RunMetrics {
   object(candidate, 'metrics'); const m = candidate;
   if (m.schemaVersion !== 1 || m.status !== 'succeeded') fail('schemaVersion/status');
-  if (!['extract', 'draft'].includes(m.operation)) fail('operation');
+  if (!['extract', 'draft', 'query'].includes(m.operation)) fail('operation');
   for (const key of ['runId', 'requestId', 'model', 'sdkVersion', 'measurementMethod', 'startedAt', 'endedAt']) text(m[key], key);
   if (!Number.isFinite(Date.parse(m.startedAt)) || !Number.isFinite(Date.parse(m.endedAt)) || Date.parse(m.endedAt) < Date.parse(m.startedAt)) fail('timestamps');
   for (const key of ['loadMs', 'durationMs', 'ttftMs', 'tokensPerSecond']) number(m[key], key, Number.MIN_VALUE);
@@ -56,12 +57,12 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
     digest(asset.sha256, 'asset.sha256'); digest(asset.actualSha256, 'asset.actualSha256');
     if (asset.sha256 !== asset.actualSha256 || asset.expectedBytes !== asset.actualBytes) fail('asset.integrity');
   }
-  const primary = assets.filter(asset => asset.role === m.operation);
+  const primary = assets.filter(asset => asset.role === (m.operation === 'query' ? 'draft' : m.operation));
   const projectors = assets.filter(asset => asset.role === 'projector');
   if (primary.length !== 1 || projectors.length !== (m.operation === 'extract' ? 1 : 0) || new Set(assets.map(asset => asset.path)).size !== assets.length) fail('modelDetails.assets.roles');
   if (m.model !== primary[0].constant || loaded.path !== primary[0].path) fail('loadedModelInfo.assetBinding');
   object(m.request, 'request');
-  if (m.request.kvCache !== false || m.request.stream !== true || !Array.isArray(m.request.context) || m.request.context.length!==0) fail('request.configuration');
+  if (m.request.kvCache !== false || m.request.stream !== true || !Array.isArray(m.request.context) || (m.operation!=='query'&&m.request.context.length!==0)) fail('request.configuration');
   text(m.request.promptTemplateVersion, 'request.promptTemplateVersion');
   if (!Array.isArray(m.request.history) || !m.request.history.length) fail('request.history');
   for (const message of m.request.history) {
@@ -76,13 +77,28 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
     object(m.request.attachment, 'request.attachment'); digest(m.request.attachment.sha256, 'attachment.sha256'); number(m.request.attachment.bytes, 'attachment.bytes', 1, true);
     if (!['image/png','image/jpeg'].includes(m.request.attachment.mime) || !m.request.history.some(message => message.attachments?.length)) fail('attachment');
     if ('image_no_upscale' in config || typeof config.projectionModelSrc!=='string' || !isAbsolute(config.projectionModelSrc) || config['mmproj-use-gpu']!==true || !assets.some(asset=>asset.role==='projector'&&asset.path===config.projectionModelSrc)) fail('base.projector.config');
-  } else {text(m.request.sourceId, 'request.sourceId');if(config.reasoning_budget!==0||m.request.generationParams.reasoning_budget!==0)fail('draft.reasoning_budget');}
+  } else {
+    if(config.reasoning_budget!==0||m.request.generationParams.reasoning_budget!==0)fail('text.reasoning_budget');
+    if(m.request.attachment||m.request.history.some(message=>message.attachments?.length))fail('text.attachment');
+    if(m.operation==='query') {
+      if(![QUERY_PROMPT_VERSION,QUERY_STRUCTURED_PROMPT_VERSION,QUERY_LEGACY_PROMPT_VERSION].includes(m.request.promptTemplateVersion)||m.request.sourceId!==undefined||m.request.history.length!==2)fail('query.profile');
+      const user=m.request.history[1];
+      const prefix='Select exact supporting quotations for this JSON-encoded question and source data:\n';
+      const suffix='\n/no_think';
+      let payload:any;
+      try {if(user.role!=='user'||!user.content.startsWith(prefix)||!user.content.endsWith(suffix))fail('query.history');payload=JSON.parse(user.content.slice(prefix.length,-suffix.length));validateQueryInput(payload.question,payload.sources);} catch {fail('query.sources');}
+      if(!isDeepStrictEqual(m.request.responseFormat,queryResponseFormat(payload.sources,m.request.promptTemplateVersion)))fail('query.responseFormat');
+      if(!isDeepStrictEqual(payload.sources,m.request.context)||!isDeepStrictEqual(queryHistory(payload.question,payload.sources,m.request.promptTemplateVersion),m.request.history))fail('query.contextBinding');
+    } else text(m.request.sourceId, 'request.sourceId');
+  }
+  if(m.operation!=='query'&&m.request.responseFormat!==undefined)fail('request.unexpectedResponseFormat');
   object(m.native, 'native');
   for (const key of ['promptTokens','generatedTokens','emittedTokens']) number(m.native[key], `native.${key}`, 1, true);
   number(m.native.cacheTokens, 'native.cacheTokens', 0, true);
   for (const key of ['timeToFirstToken','tokensPerSecond']) number(m.native[key], `native.${key}`, Number.MIN_VALUE);
   if (!['cpu','gpu'].includes(m.native.backendDevice)) fail('native.backendDevice');
   if (m.inputTokens !== m.native.promptTokens || m.outputTokens !== m.native.emittedTokens || m.tokensPerSecond !== m.native.tokensPerSecond || m.ttftMs !== m.native.timeToFirstToken) fail('native.aliases');
+  if(m.operation==='query'&&(m.native.promptTokens+m.request.generationParams.predict>config.ctx_size||m.output?.stopReason==='length'))fail('query.contextOrOutputTruncated');
   object(m.output, 'output'); digest(m.output.sha256, 'output.sha256'); number(m.output.characters, 'output.characters', 1, true); number(m.output.contentDeltaCount, 'output.contentDeltaCount', 1, true);
   if (m.output.stopReason !== undefined && !['eos','length','stopSequence'].includes(m.output.stopReason)) fail('output.stopReason');
   if(m.output.completionDoneObserved!==true || m.output.finalPromiseResolved!==true)fail('output.termination');
@@ -106,5 +122,6 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   for (const row of [load,completion]) if(row.run_id!==m.runId || row.sdk_version!==m.sdkVersion || row.model!==m.model || row.execution_mode!=='local') fail('sharedRuntime.runBinding');
   if (load.load_ms!==m.loadMs || load.model_id!==m.modelDetails.modelId || load.model_source!==primary[0].path || load.fallback_a_local!==false || !isDeepStrictEqual(load.model_config,config) || !isDeepStrictEqual(load.loaded_model_info,loaded)) fail('sharedRuntime.loadBinding');
   if (completion.request_id!==m.requestId || completion.input_tokens!==m.inputTokens || completion.output_tokens!==m.outputTokens || completion.generated_tokens!==m.native.generatedTokens || completion.emitted_tokens!==m.native.emittedTokens || completion.cache_tokens!==m.native.cacheTokens || completion.token_count_source!=='sdk' || completion.backend_actual!==m.native.backendDevice || completion.throughput_tps!==m.tokensPerSecond || completion.ttft_ms_sdk!==m.ttftMs || completion.ttft_ms!==m.timings.timeToFirstContent.value || completion.end_to_end_ms!==m.durationMs || completion.kv_cache!==false || !isDeepStrictEqual(completion.native_stats,m.native) || !isDeepStrictEqual(completion.generation_params,m.request.generationParams) || !isDeepStrictEqual(completion.history,m.request.history)) fail('sharedRuntime.completionBinding');
+  if(!isDeepStrictEqual(completion.response_format,m.request.responseFormat??'text'))fail('sharedRuntime.responseFormatBinding');
   text(completion.output_count_method,'sharedRuntime.output_count_method');
 }

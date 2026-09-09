@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "automated-desktop-query-ui-check",
+  "completedAt": "2026-09-09T21:37:08.453Z",
+  "passed": true,
+  "testDouble": true,
+  "realGpu": false,
+  "humanWorkflowAcceptance": false,
+  "physicalCaptureAcceptance": false,
+  "checks": [
+    "gold starts blank and stays blank after opening a source",
+    "query uses complete canonical passage including denial",
+    "display contains canonical text only; source-ID-only model output",
+    "query UI contains performance summary only",
+    "citation opens the canonical current approved note",
+    "caller-supplied trusted boolean rejected",
+    "programmatic gold click rejected",
+    "no human reference created by automation",
+    "query question/result/metrics purged on patient change",
+    "query and gold fields purged on lock"
+  ],
+  "screenshots": [
+    "query-panel.png",
+    "gold-panel.png"
+  ],
+  "review": {
+    "actor": "assistant-coordinator-and-desktop-cell",
+    "syntheticOnly": true,
+    "visualReviewPassed": true,
+    "notes": "Explicit SYNTHETIC TEST DOUBLE screenshots. Source context and experimental notice visually inspected; no human reference/approval was created by automation. No private user vault opened.",
+    "screenshots": [
+      {
+        "filename": "query-panel.png",
+        "sha256": "a0362ded5c5d5d7add1a1d37937d8a9b52e53dc530449fafe2f556fae5b17803"
+      },
+      {
+        "filename": "gold-panel.png",
+        "sha256": "93cc33fa169781098f2033111882e5dc1331aa210682e73513c9929fb4a352a8"
+      }
+    ]
+  }
+}

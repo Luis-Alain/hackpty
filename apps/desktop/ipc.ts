@@ -16,6 +16,7 @@ export function validateRequest(method: unknown, args: unknown): asserts args is
     addPatient: [value => text(value, 80)], addEncounter: [id], captureData: [id], import: [id], extract: [id],
     previewSourceChange: [id, text], reviewSource: [id, text, revision], generateDraft: [id],
     approve: [id, id, revision, text], approvedNotes: [id, flag], revokeDevice: [id],
+    queryApprovedNotes: [id, value => text(value, 1000)], resolveQueryCitation: [id, id, revision], recordHumanGoldTranscription: [id, text, flag, flag],
     pair: [id, value => text(value, 64)], exportEvidence: [flag], exportPhysicalCandidate: [id, flag],
   };
   if (typeof method !== 'string' || !Object.hasOwn(signatures, method) || !Array.isArray(args)) throw new Error('Invalid request.');

@@ -1,21 +1,78 @@
+import type { ApprovedQueryAnswer } from '../../packages/core/types.js';
 import type { PsyRecService } from '../../packages/core/service.js';
 export {};
-declare global { interface Window { psyrec: { call(method: string, ...args: any[]): Promise<any>; onLock(callback: () => void): void; observe(observation: unknown): void } } }
+declare global { interface Window { psyrec: { call(method: string, ...args: any[]): Promise<any>; onLock(callback: () => void): void; } } }
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const call = (method, ...args) => window.psyrec.call(method, ...args);
 let state: ReturnType<PsyRecService['snapshot']> | null, patientId = '', encounterId = '', busy = false, createVault = false, lastCapture = '';
 let physicalObserving = false;
+let lastQuery: ApprovedQueryAnswer | null = null;
+const goldEdits = new Map<string, { text: string; confirmed: boolean }>();
 let pendingSource = '', pendingEncounter = '', pendingRevision = 0, sessionGeneration = 0;
 const edits = new Map<string, { revision: number; draftId: string; source: string; draft: string }>();
-function rememberEdits() { const e = current(); if (e) edits.set(e.id, { revision: e.source.revision, draftId: e.draft?.id ?? '', source: $<HTMLTextAreaElement>('sourceText').value, draft: $<HTMLTextAreaElement>('draftText').value }); }
+function rememberEdits() { const e = current(); if (e) { edits.set(e.id, { revision: e.source.revision, draftId: e.draft?.id ?? '', source: $<HTMLTextAreaElement>('sourceText').value, draft: $<HTMLTextAreaElement>('draftText').value }); goldEdits.set(e.id, { text: $<HTMLTextAreaElement>('goldText').value, confirmed: $<HTMLInputElement>('goldSynthetic').checked }); } }
 const sourceDirty = () => Boolean(current() && $<HTMLTextAreaElement>('sourceText').value.trim() !== current().source.text);
 function resetApproval() { $<HTMLInputElement>('confirmApproval').checked = false; rememberEdits(); refreshButtons(); }
 const current = () => state?.encounters.find(e => e.id === encounterId);
 const notice = (message = '', error = false) => { $('notice').textContent = message; $('notice').className = error ? 'error' : ''; };
 const cleanError = error => String(error.message ?? error).replace(/^Error invoking remote method '[^']+': Error: /, '');
 async function action(fn, message = '') { if (busy) return; busy = true; notice(message); refreshButtons(); try { await fn(); } catch (error) { notice(cleanError(error), true); } finally { busy = false; refreshButtons(); } }
+
+function clearQuery(preserveQuestion = false) {
+  lastQuery = null;
+  if (!preserveQuestion) $<HTMLTextAreaElement>('queryQuestion').value = '';
+  $('queryAnswer').replaceChildren(); $('queryCoverage').replaceChildren(); $('queryMetrics').replaceChildren(); $('queryEvidence').hidden = true;
+}
+function renderGoldStatus() {
+  const reference = state?.goldTranscriptions?.filter(gold => gold.encounterId === encounterId).at(-1);
+  $('goldStatus').textContent = reference ? 'Immutable human reference saved ' + new Date(reference.createdAt).toLocaleString() + '. Another save creates a new reference.' : 'No human reference saved for this capture.';
+  if (!reference) { $('goldScore').replaceChildren(); return; }
+  if (reference.accuracy.status === 'unavailable') { $('goldScore').textContent = 'Accuracy unavailable: ' + reference.accuracy.reason; return; }
+  const { scores, methods, extractionRunId, performanceEvidenceComplete } = reference.accuracy;
+  const percent = (value: number) => (value * 100).toFixed(2) + '%';
+  $('goldScore').textContent = [
+    'Original extraction run: ' + extractionRunId,
+    'Word error rate (WER): ' + percent(scores.wer.rate) + ' · substitutions ' + scores.wer.substitutions + ', deletions ' + scores.wer.deletions + ', insertions ' + scores.wer.insertions + ' / ' + scores.wer.referenceUnits + ' reference words.',
+    'Character error rate (CER): ' + percent(scores.cer.rate) + ' · substitutions ' + scores.cer.substitutions + ', deletions ' + scores.cer.deletions + ', insertions ' + scores.cer.insertions + ' / ' + scores.cer.referenceUnits + ' reference code points.',
+    'Exact raw text match: ' + (scores.exactTextMatch ? 'yes' : 'no'),
+    'Native performance evidence complete: ' + (performanceEvidenceComplete ? 'yes' : 'no'),
+    'Clinical categories are unscored without explicit reference rules. These rates do not establish clinical safety or release acceptance.',
+    reference.referenceConditions,
+    'WER method: ' + methods.wer, 'CER method: ' + methods.cer,
+  ].join('\n\n');
+}
+function showQuery(answer: ApprovedQueryAnswer) {
+  lastQuery = answer;
+  const coverage = answer.coverage;
+  $('queryCoverage').textContent = 'Local text matching · ' + coverage.excerptsSearched + ' passage(s) from ' + coverage.recordsRepresented + ' of ' + coverage.approvedRecordsScanned + ' current approved notes.' + (coverage.partial ? ' Limited coverage: other passages were not sent to QVAC.' : ' All available approved-note passages were included.') + (coverage.omittedLongPassages ? ' ' + coverage.omittedLongPassages + ' overlong sentence(s) were excluded; open the full approved notes below to inspect them.' : '') + ' Exact source context is shown; no generated interpretation is approved.';
+  $('queryAnswer').replaceChildren();
+  if (answer.status === 'not-found') $('queryAnswer').textContent = 'No answer found in the searched notes.';
+  answer.citations.forEach((citation, index) => {
+    const section = document.createElement('section'), quote = document.createElement('blockquote'), button = document.createElement('button');
+    quote.textContent = citation.quote;
+    button.type = 'button'; button.className = 'secondary small';
+    button.textContent = 'Open approved note · ' + new Date(citation.approvedAt).toLocaleString() + ' · revision ' + citation.sourceRevision;
+    button.onclick = () => void action(async () => {
+      const generation = sessionGeneration, selected = patientId;
+      const canonical = await call('resolveQueryCitation', selected, answer.queryId, index);
+      if (generation !== sessionGeneration || selected !== patientId) return;
+      encounterId = canonical.encounterId; await refresh(); $('history').hidden = false;
+      const article = Array.from($('historyRecords').children).find(item => (item as HTMLElement).dataset.recordId === canonical.recordId);
+      article?.scrollIntoView({ block: 'center' });
+    });
+    section.append(quote, button); $('queryAnswer').append(section);
+  });
+  $('queryMetrics').textContent = answer.metrics ? JSON.stringify(answer.metrics, null, 2) : 'No model was invoked because no complete approved passage fit this lookup.';
+  $('queryEvidence').hidden = false;
+}
+
 function refreshButtons() {
   const e = current();
+  $<HTMLTextAreaElement>('queryQuestion').disabled = busy || !patientId;
+  $<HTMLButtonElement>('askApprovedNotes').disabled = busy || !patientId || !state?.queryEnabled;
+  $<HTMLTextAreaElement>('goldText').disabled = busy || !e?.capture;
+  $<HTMLInputElement>('goldSynthetic').disabled = busy || !e?.capture;
+  $<HTMLButtonElement>('saveGold').disabled = busy || !e?.capture || !$<HTMLTextAreaElement>('goldText').value.trim() || !$<HTMLInputElement>('goldSynthetic').checked;
   $<HTMLButtonElement>('attestPrintedSource').disabled = busy || !e?.capture;
   $<HTMLButtonElement>('exportPhysicalCandidate').disabled = busy || !e;
   $<HTMLSelectElement>('patient').disabled = busy;
@@ -54,7 +111,7 @@ async function refresh() {
     button.className = e.id === encounterId ? 'selected' : '';
     button.onclick = () => action(async () => { rememberEdits(); encounterId = e.id; await refresh(); }); return button;
   }));
-  const e = current(); $('empty').hidden = Boolean(e); $('editor').hidden = !e;
+  const e = current(); $('editor').dataset.encounterId = e?.id ?? ''; $('empty').hidden = Boolean(e); $('editor').hidden = !e;
   $('encounterTitle').textContent = state.patients.find(p => p.id === patientId)?.alias ?? 'Choose a patient to begin';
   $('encounterStatus').textContent = e ? `${e.status.replaceAll('-', ' ')} · ${e.id.slice(0, 8)}` : 'Create a patient, then start an encounter.';
   if (e) {
@@ -67,6 +124,10 @@ async function refresh() {
     $('draftLabel').textContent = e.draft ? 'Review and edit this draft' : approved ? 'Saved approved record' : 'Review and edit this draft';
     $<HTMLTextAreaElement>('sourceText').value = edit?.revision === e.source.revision ? edit.source : e.source.text;
     $<HTMLTextAreaElement>('draftText').value = edit && edit.draftId === e.draft?.id ? edit.draft : e.draft?.text ?? approved?.text ?? '';
+    const goldEdit = goldEdits.get(e.id);
+    $<HTMLTextAreaElement>('goldText').value = goldEdit?.text ?? '';
+    $<HTMLInputElement>('goldSynthetic').checked = goldEdit?.confirmed ?? false;
+    renderGoldStatus();
     rememberEdits();
     $<HTMLInputElement>('confirmApproval').checked = false;
     $('draftLink').textContent = e.draft ? `Linked to source revision ${e.draft.sourceRevision}. Historical context: ${e.draft.context.status}.` : approved ? `Approved record - source revision ${approved.sourceRevision}. Create a new draft to make a new approval.` : 'No active draft';
@@ -75,6 +136,7 @@ async function refresh() {
     $('metrics').textContent = JSON.stringify({ extraction: e.source.metrics ?? null, drafting: e.draft?.metrics ?? state.records.filter(r => r.encounterId === e.id).at(-1)?.draftingMetrics ?? null }, null, 2);
     const data = await call('captureData', e.id); if (generation !== sessionGeneration) return; $<HTMLImageElement>('sourceImage').src = data ?? ''; $('sourceImage').hidden = !data; $('noImage').hidden = Boolean(data); lastCapture = e.capture?.id ?? '';
   }
+  if (lastQuery && lastQuery.citations.some(citation => !state.records.some(record => record.id === citation.recordId && record.patientId === patientId && !record.supersededAt && record.sourceRevision === citation.sourceRevision && record.text.slice(citation.start, citation.end) === citation.quote))) { clearQuery(true); $('queryCoverage').textContent = 'An approved source changed. Ask again against the current notes.'; }
   await renderHistory(); refreshButtons();
 }
 async function renderHistory() {
@@ -84,26 +146,48 @@ async function renderHistory() {
   if (generation !== sessionGeneration || selected !== patientId) return;
   $('historyRecords').replaceChildren(...records.map(r => {
     const article = document.createElement('article'), meta = document.createElement('small'), text = document.createElement('p');
+    article.dataset.recordId = r.id;
     meta.textContent = `${r.supersededAt ? 'SUPERSEDED' : 'APPROVED'} · ${new Date(r.approvedAt).toLocaleString()} · source revision ${r.sourceRevision} · ${r.id.slice(0, 8)}`;
     text.textContent = r.text; article.append(meta, text); return article;
   }));
   if (!records.length) $('historyRecords').textContent = 'No approved notes for this patient.';
 }
+
+$('queryForm').onsubmit = event => {
+  event.preventDefault();
+  void action(async () => {
+    const generation = sessionGeneration, selected = patientId, question = $<HTMLTextAreaElement>('queryQuestion').value;
+    clearQuery(true);
+    const answer = await call('queryApprovedNotes', selected, question) as ApprovedQueryAnswer;
+    if (generation !== sessionGeneration || selected !== patientId || answer.patientId !== selected) return;
+    showQuery(answer);
+  }, 'Searching this patient’s approved notes locally…');
+};
+$('goldText').oninput = () => { $<HTMLInputElement>('goldSynthetic').checked = false; rememberEdits(); refreshButtons(); };
+$('goldSynthetic').onchange = () => { rememberEdits(); refreshButtons(); };
+$('saveGold').onclick = event => void action(async () => {
+  const generation = sessionGeneration, selectedEncounter = encounterId;
+  await call('recordHumanGoldTranscription', selectedEncounter, $<HTMLTextAreaElement>('goldText').value, $<HTMLInputElement>('goldSynthetic').checked, event.isTrusted);
+  if (generation !== sessionGeneration || selectedEncounter !== encounterId) return;
+  goldEdits.delete(selectedEncounter); $<HTMLTextAreaElement>('goldText').value = ''; $<HTMLInputElement>('goldSynthetic').checked = false;
+  await refresh(); notice('Human reference saved separately. Accuracy uses only retained original extraction output.');
+});
+
 $('unlockForm').onsubmit = event => { event.preventDefault(); void action(async () => { await call('unlock', $<HTMLInputElement>('passphrase').value, createVault); $<HTMLInputElement>('passphrase').value = ''; $('locked').hidden = true; $('workspace').hidden = false; $('lock').hidden = false; await refresh(); notice('Vault unlocked.'); }); };
 $('lock').onclick = () => void call('lock');
 window.psyrec.onLock(() => {
-  sessionGeneration++; state = null; edits.clear(); patientId = encounterId = lastCapture = pendingSource = pendingEncounter = ''; pendingRevision = 0;
-  $('attestPrintedSource').hidden = true;
+  sessionGeneration++; clearQuery(); state = null; edits.clear(); goldEdits.clear(); patientId = encounterId = lastCapture = pendingSource = pendingEncounter = ''; pendingRevision = 0;
+  $('attestPrintedSource').hidden = true; $('editor').dataset.encounterId = '';
   $('workspace').hidden = true; $('locked').hidden = false; $('lock').hidden = true; $('history').hidden = true;
-  for (const id of ['sourceText', 'draftText', 'alias', 'passphrase']) $<HTMLInputElement>(id).value = '';
-  for (const id of ['metrics', 'historyRecords', 'patient', 'encounters', 'encounterTitle', 'encounterStatus', 'consequenceText', 'pairStatus', 'revision', 'sourceState', 'draftLink']) $(id).replaceChildren();
-  for (const id of ['confirmApproval', 'syntheticOnly', 'showSuperseded']) $<HTMLInputElement>(id).checked = false;
+  for (const id of ['sourceText', 'draftText', 'alias', 'passphrase', 'goldText']) $<HTMLInputElement>(id).value = '';
+  for (const id of ['metrics', 'historyRecords', 'patient', 'encounters', 'encounterTitle', 'encounterStatus', 'consequenceText', 'pairStatus', 'revision', 'sourceState', 'draftLink', 'goldStatus', 'goldScore']) $(id).replaceChildren();
+  for (const id of ['confirmApproval', 'syntheticOnly', 'showSuperseded', 'goldSynthetic']) $<HTMLInputElement>(id).checked = false;
   for (const id of ['sourceImage', 'pairQr']) { $<HTMLImageElement>(id).removeAttribute('src'); $(id).hidden = true; }
   $<HTMLDialogElement>('pairDialog').close(); $<HTMLDialogElement>('consequences').close();
   void status(); notice('Vault locked.');
 });
-$('patientForm').onsubmit = event => { event.preventDefault(); void action(async () => { rememberEdits(); const p = await call('addPatient', $<HTMLInputElement>('alias').value); patientId = p.id; $<HTMLInputElement>('alias').value = ''; await refresh(); }); };
-$('patient').onchange = () => void action(async () => { rememberEdits(); patientId = $<HTMLSelectElement>('patient').value; encounterId = ''; await refresh(); });
+$('patientForm').onsubmit = event => { event.preventDefault(); void action(async () => { rememberEdits(); clearQuery(); const p = await call('addPatient', $<HTMLInputElement>('alias').value); patientId = p.id; $<HTMLInputElement>('alias').value = ''; await refresh(); }); };
+$('patient').onchange = () => void action(async () => { rememberEdits(); clearQuery(); patientId = $<HTMLSelectElement>('patient').value; encounterId = ''; await refresh(); });
 $('newEncounter').onclick = () => void action(async () => { rememberEdits(); const e = await call('addEncounter', patientId); rememberEdits(); encounterId = e.id; await refresh(); });
 $('importImage').onclick = () => void action(async () => { await call('import', encounterId); await refresh(); });
 $('extract').onclick = () => void action(async () => { await call('extract', encounterId); await refresh(); notice('Extraction complete. Check every line against the image.'); }, 'VisionPsy is loading and reading the image locally…');
@@ -133,12 +217,3 @@ $('exportPhysicalCandidate').onclick = () => void action(async () => { const res
 // Poll only capture receipt; never overwrite unsaved clinician edits.
 setInterval(async () => { if (!state || busy || !current() || current().capture) return; try { const next = await call('snapshot'); const e = next.encounters.find(e => e.id === encounterId); if (e?.capture?.id && e.capture.id !== lastCapture) { await refresh(); $<HTMLDialogElement>('pairDialog').close(); notice('Encrypted phone capture received.'); } } catch {} }, 2500);
 void status().catch(error => notice(cleanError(error), true));
-
-// Physical-session diagnostics retain these events only in the encrypted vault.
-// isTrusted distinguishes actual input from the automated DOM exercise.
-for (const eventType of ['click', 'change']) document.addEventListener(eventType, event => {
-  if (!physicalObserving) return;
-  const control = (event.target as HTMLElement)?.closest<HTMLElement>('button,input,select')?.id;
-  if (!control || !['attestPrintedSource', 'extract', 'reviewSource', 'confirmCorrection', 'cancelCorrection', 'draft', 'confirmApproval', 'approve', 'lock', 'patient', 'historyToggle', 'showSuperseded'].includes(control)) return;
-  window.psyrec.observe({ control, eventType, trusted: event.isTrusted, sourceText: $<HTMLTextAreaElement>('sourceText').value, draftText: $<HTMLTextAreaElement>('draftText').value, approvalChecked: $<HTMLInputElement>('confirmApproval').checked, patientId, encounterId });
-}, true);

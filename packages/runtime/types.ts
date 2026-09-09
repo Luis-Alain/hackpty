@@ -1,4 +1,5 @@
-export type Operation = 'extract' | 'draft';
+export type Operation = 'extract' | 'draft' | 'query';
+export interface QuerySource { sourceId: string; text: string }
 export interface ModelAsset {
   id: string; role: 'extract' | 'projector' | 'draft'; constant: string;
   filename: string; url: string; expectedBytes: number; sha256: string;
@@ -36,7 +37,7 @@ export interface RunMetrics {
     loadConfig: Record<string, unknown>; loadedModelInfo: Record<string, unknown>;
   };
   request: {
-    history: PromptMessage[]; generationParams: Record<string, number>;
+    history: PromptMessage[]; generationParams: Record<string, number>; responseFormat?: Record<string, unknown>;
     kvCache: false; stream: true; promptTemplateVersion: string;
     sourceId?: string; context: unknown[];
     attachment?: { sha256: string; bytes: number; mime: string };
@@ -66,5 +67,5 @@ export class RuntimeEvidenceError extends Error {
 export interface JobRequest {
   runId: string; operation: Operation; projectRoot: string; modelDirectory: string;
   tempDirectory: string; imageBase64?: string; mime?: string; text?: string;
-  sourceId?: string; context: unknown[];
+  sourceId?: string; context: unknown[]; querySources?: QuerySource[]; extractionPromptProfile?: 'psyrec-extract-lines-v3';
 }

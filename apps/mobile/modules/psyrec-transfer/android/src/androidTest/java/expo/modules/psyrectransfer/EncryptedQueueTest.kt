@@ -16,8 +16,9 @@ class EncryptedQueueTest {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     val id = UUID.randomUUID().toString(); val encounter = "SYNTHETIC-QUEUE-" + UUID.randomUUID()
     val photo = "U1lOVEhFVElDIE5BVElWRSBRVUVVRSBURVNUIE9OTFk="
+    val metadata = JSONObject().put("schemaVersion", 1).put("mode", "synthetic-capture-metadata").put("emittedWidth", 2048).put("emittedHeight", 1536)
     val queued = JSONObject().put("transferId", id).put("encounterId", encounter).put("sha256", "a".repeat(64))
-      .put("createdAt", "2026-09-09T00:00:00Z").put("image", photo)
+      .put("createdAt", "2026-09-09T00:00:00Z").put("image", photo).put("captureMetadata", metadata)
     val target = File(File(context.noBackupFilesDir, "psyrec-pending"), "$id.enc")
     try {
       val initial = PendingStore(context)
@@ -27,6 +28,7 @@ class EncryptedQueueTest {
       assertEquals(1, disk[0].toInt())
       assertFalse(String(disk, Charsets.UTF_8).contains(encounter))
       assertFalse(String(disk, Charsets.UTF_8).contains(photo))
+      assertFalse(String(disk, Charsets.UTF_8).contains("synthetic-capture-metadata"))
       val reopened = PendingStore(context)
       assertEquals(photo, reopened.read(id).getString("image"))
       assertTrue(reopened.list().any { it["transferId"] == id })
@@ -45,6 +47,7 @@ class EncryptedQueueTest {
       assertTrue(afterReceipt.completed(encounter))
       assertFalse(afterReceipt.list().any { it["transferId"] == id })
       assertFalse(afterReceipt.read(id).has("image"))
+      assertEquals(metadata.toString(), afterReceipt.read(id).getJSONObject("captureMetadata").toString())
       assertEquals("SYNTHETIC-RECEIPT", afterReceipt.read(id).getJSONObject("receipt").getString("captureId"))
       assertFalse(String(target.readBytes(), Charsets.UTF_8).contains(encounter))
     } finally {

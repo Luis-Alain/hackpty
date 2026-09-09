@@ -8,8 +8,8 @@ Z Fold photo of a printed synthetic clinician note → authenticated encrypted t
 
 ## Team integration
 
-- **This release:** photo capture and reviewed clinical records.
-- **Later RAG, owned by teammate:** implement the optional `ApprovedNotesRetriever` port in `packages/contracts/index.d.ts`. Return approved-record/revision IDs and excerpt locators. The application checks patient and revision authorization itself. No retrieval backend or vector database is included now.
+- **This release:** photo capture, reviewed clinical records, scored transcription evaluations and bounded read-only questions over selected-patient approved notes (September 9 user steering).
+- **Later semantic RAG, owned by teammate:** implement the optional `ApprovedNotesRetriever` port in `packages/contracts/index.d.ts`. Return approved-record/revision IDs and excerpt locators. The application checks patient and revision authorization itself. The bounded question flow uses local QVAC completion over application-selected passages; it does not add an embedding index or vector database.
 - **Later Philips voice integration:** implement `VoiceProcessor` to supply transcription/segments to source review. Voice processing cannot approve a clinical record. Audio is not part of this release.
 - Keep shared runtime logic separate from clinical approval and vault code. App/core/runtime source is TypeScript, with Kotlin Android and Swift iOS Expo modules for native capture, encrypted storage and pinned TLS. Python is not required.
 
@@ -25,7 +25,19 @@ Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `n
 
 `npm run test:workflow` exercises real desktop UI handlers in a fresh isolated synthetic vault and runs real local inference; schedule it alone on the GPU. Its output stays under ignored `.local/desktop-workflow/` until reviewed. `npm run check:desktop-evidence` validates the reviewed desktop receipt and explicitly does not establish phone acceptance. `npm run check:release` requires a separate connected physical Fold receipt; absent or incomplete evidence fails, never skips. `npm run check:mobile` typechecks the native app's TypeScript after its dependencies are installed.
 
-### Prepared physical-run checkpoint · September 9
+### Accuracy and query checkpoint · September 9
+
+Jeff's latest synthetic handwritten capture exposed low accuracy. The new [accuracy controls](docs/ACCURACY.md) save a blank, human-entered reference separately in the encrypted vault and score the exact retained extraction with WER/CER and edit counts. Local approved-note questions now use QVAC source-ID selection with native structured output; the app displays canonical passages, dates, revisions and bounded search coverage. This remains experimental: the 1.7B model selected the complete expected source set in 6/10 cases and missed relevant passages, including a denial. No clinical query reliability is accepted.
+
+A frozen stricter VisionPsy prompt regressed on the six already-seen development images: WER rose from 0.7353% to 2.9412%, and CER from 1.5064% to 3.8239%. The original production extraction prompt is retained. Both generated handwriting-style fixtures remained at zero normalized word errors; that does not explain or resolve the user's physical handwriting failure. The current capture needs a human reference before scoring. Exact synthetic inputs, prompts, model/load settings, native token counts, TTFT and throughput are retained in [reviewed evaluation evidence](diagnostics/qvac-spike/TRANSCRIPTION-EVALUATION.md).
+
+The higher-detail Android capture candidate is now built and installed on the Fold by an in-place update with installed-APK hash verification: SHA-256 `283425bdd88a6a01fc6c71baea8d9455bdcf04d7b6906e4d1c492d8650bc416b`. It requests 2048×1536 and JPEG quality 100, records actual output metadata in encrypted phone storage and retains the 8 MiB transfer limit. [Installation evidence](apps/mobile/evidence/capture-quality-candidate.json) does not establish a physical accuracy gain or phone lifecycle acceptance.
+
+Current automated validation: 68 tests passed with no failures/skips, mobile TypeScript and Kotlin compilation passed, six native JVM checks passed, and an isolated synthetic desktop UI check passed. The UI check uses explicit test doubles and creates no human approval/reference evidence. The original full physical workflow, human review and phone durability observations remain open. See the [accuracy checkpoint](docs/handoffs/2026-09-09-accuracy-query-checkpoint.md) before continuing. The 4B challenger also scored 6/10, with a slower decode rate and a different error pattern; it was not promoted.
+
+### Earlier prepared physical-run checkpoint · September 9
+
+The following records the earlier preparation state; the capture candidate installation above supersedes its unverified-APK status.
 
 Jeff chose to perform the physical steps later. Follow the [fresh-run checklist](docs/handoffs/2026-09-09-prepared-physical-run.md): `npm run prepare:fold` creates a new vault and asks for the passphrase in the app; a trusted paper-source observation is bound to the received DEMO-001 photo before clinical review. The native Android journal records installed APK identity, encrypted queue restart, wrong-certificate rejection, interrupted upload/retry and matching-receipt photo replacement. Reports travel through paired TLS into the encrypted PC vault; this implementation is not a claim those physical observations have occurred.
 
@@ -37,7 +49,7 @@ Validation: `npm test` passed 47 tests with zero failures/skips; mobile TypeScri
 
 ### Earlier verified checkpoint · September 9
 
-Read the [current AIOS continuation](docs/handoffs/2026-09-09-aios-continuation.md) before resuming. Implementation `98ce270` includes the [iPhone/Xcode handoff](apps/mobile/docs/ios-xcode-handoff.md). Its [EAS simulator build](apps/mobile/docs/ios-build-validation.json) finished successfully with four native Swift tests and compilation; authenticated status was rechecked at 19:29:57 UTC. Physical iPhone signing/testing remain open. The Expo project is `@hackpty/psyrec-capture`; local Android builds remain supported. The latest recorded local Android APK was built, but the Fold's last observed installation is older.
+Read the [earlier AIOS continuation](docs/handoffs/2026-09-09-aios-continuation.md) before resuming. Implementation `98ce270` includes the [iPhone/Xcode handoff](apps/mobile/docs/ios-xcode-handoff.md). Its [EAS simulator build](apps/mobile/docs/ios-build-validation.json) finished successfully with four native Swift tests and compilation; authenticated status was rechecked at 19:29:57 UTC. Physical iPhone signing/testing remain open. The Expo project is `@hackpty/psyrec-capture`; local Android builds remain supported. The latest recorded local Android APK was built, but the Fold's last observed installation is older.
 
 Continuation is active with dedicated runtime/performance, native Expo/transfer, and desktop/clinical-review owners. The coordinator owns shared contracts, dependencies and Git; real GPU jobs are serialized. The handoff remains an unfinished implementation checkpoint.
 
@@ -70,3 +82,5 @@ Synthetic English inputs; Spanish final demo video. No diagnosis, therapy, treat
 ## Prior base
 
 The September 8 architecture and a historical pre-event Whisper/Llama pilot informed this design. This branch began with its existing MIT licence. Current implementation is being written during the competition; no old pilot execution is reported as a Windows acceptance run. See [prior-base record](PRIOR-BASE.md).
+
+The [checkpoint validation receipt](artifacts/evidence/query-checkpoint-validation-20260909.json) records 68 passing tests, reviewed synthetic UI and installed APK evidence, and a successful read-only verification of 34 new plus six archived real-run records from an isolated Git index export. This does not establish independent-machine or physical human acceptance.

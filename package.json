@@ -18,7 +18,10 @@
     "check:release": "npm run build && node dist/scripts/validate-release.js",
     "check:desktop-evidence": "npm run build && node dist/scripts/validate-release.js --desktop-only",
     "prepare:fold": "npm run build && node dist/apps/desktop/fold-launch.js",
-    "check:mobile": "npm --prefix apps/mobile run check"
+    "check:mobile": "npm --prefix apps/mobile run check",
+    "eval:transcription": "npm run build && node dist/diagnostics/qvac-spike/transcription-ablation.js",
+    "score:transcription": "npm run build && node dist/diagnostics/qvac-spike/transcription-score.js",
+    "check:query-ui": "npm run build && node dist/apps/desktop/query-ui-check.js"
   },
   "main": "dist/apps/desktop/main.js",
   "dependencies": {

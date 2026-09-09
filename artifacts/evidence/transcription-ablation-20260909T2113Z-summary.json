@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": false,
+  "releaseAccepted": false,
+  "protocolSha256": "a0c3e0796a1368bccdf8a680c3481ac44978692002d919793c4a4837ae683374",
+  "completed": false,
+  "productionPromptUnchanged": true,
+  "transcription": null,
+  "transcriptionCases": [],
+  "queryCases": [],
+  "scope": "Predeclared comparison on six previously seen synthetic development images. Not model training, real handwriting reliability or physical release acceptance. Query tests exercise supplied excerpts, not end-to-end lexical retrieval."
+}

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "reviewedAt": "2026-09-09T21:22:13.993Z",
+  "reviewer": "Dedicated runtime/performance evidence owner; coordinator independently rejected production promotion",
+  "reviewKind": "Post-hoc human-readable agent review, separate from the unchanged frozen scoring protocol",
+  "releaseAccepted": false,
+  "heldOut": false,
+  "productionPromotion": false,
+  "productionPrompt": "psyrec-extract-v1",
+  "baselineFile": "artifacts/evidence/transcription-dev-baseline-20260909.json",
+  "baselineFileSha256": "0162f5c098d1c13f3de73402effc97c8bb279e6241cf480677e5c583588b21fe",
+  "protocolSha256": "47ccde17b9a37986043d4435d04b1e0beb1d3089d82f1fce00966f28b434bcf3",
+  "candidateSummarySha256": "c7120241578250902f1a176523ca7817c5a337c014e73a39c023fe611b460951",
+  "baseline": {
+    "caseCount": 6,
+    "wer": {
+      "referenceUnits": 136,
+      "outputUnits": 135,
+      "substitutions": 0,
+      "deletions": 1,
+      "insertions": 0,
+      "errors": 1,
+      "rate": 0.007352941176470588
+    },
+    "cer": {
+      "referenceUnits": 863,
+      "outputUnits": 854,
+      "substitutions": 0,
+      "deletions": 11,
+      "insertions": 2,
+      "errors": 13,
+      "rate": 0.015063731170336037
+    },
+    "exactMatches": 0,
+    "clinicalRules": 19,
+    "failedClinicalRules": 1
+  },
+  "candidate": {
+    "caseCount": 6,
+    "wer": {
+      "referenceUnits": 136,
+      "outputUnits": 138,
+      "substitutions": 0,
+      "deletions": 1,
+      "insertions": 3,
+      "errors": 4,
+      "rate": 0.029411764705882353
+    },
+    "cer": {
+      "referenceUnits": 863,
+      "outputUnits": 874,
+      "substitutions": 0,
+      "deletions": 11,
+      "insertions": 22,
+      "errors": 33,
+      "rate": 0.038238702201622246
+    },
+    "exactMatches": 0,
+    "clinicalRules": 19,
+    "failedClinicalRules": 0
+  },
+  "findings": [
+    {
+      "fixtureId": "unreadable",
+      "runId": "1fc3c5ff-b0cc-47a4-918f-4c87c7e2d287",
+      "rawOutputSha256": "17db63abe640f998c335ecabb6390b0d7b308070abb4396ac5cc6015a60a2bf0",
+      "exactMarkerPresent": false,
+      "markerPositionCorrect": false,
+      "verdict": "failed",
+      "explanation": "The candidate appends bare unclear and [un readable] after the final diagnosis line. It does not produce the required exact [unclear] marker in the masked line position. The frozen normalized phrase rule matches unclear and reports pass; this is limited rule coverage, not an accepted uncertainty treatment. Frozen scores and raw output are preserved unchanged."
+    }
+  ],
+  "decision": "Reject v3 promotion. It regresses aggregate WER and CER and does not improve either generated handwriting-style fixture. No general handwriting accuracy or human physical workflow acceptance is established."
+}

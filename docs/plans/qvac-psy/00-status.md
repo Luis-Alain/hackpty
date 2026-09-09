@@ -1,6 +1,18 @@
 # Status: PsyRec QVAC Psy
 
-## Current prepared checkpoint
+## Current accuracy and query checkpoint
+
+The [accuracy/query handoff](../../handoffs/2026-09-09-accuracy-query-checkpoint.md) is the current continuation pointer. Jeff's reported synthetic handwriting failure prompted encrypted human-reference scoring, reproducible WER/CER comparisons, an Android capture-quality candidate and experimental local approved-note questions. The dedicated performance owner retains serialized GPU responsibility. Semantic embedding retrieval and an external corpus remain deferred.
+
+The stricter extraction prompt was rejected: development WER 0.7353% → 2.9412%, CER 1.5064% → 3.8239%; production stays at extraction v1. All 24 new runs through the 1.7B query comparison retain complete native performance evidence. Query v3 is syntactically valid in 10/10 cases but retrieves the complete expected source set in only 6/10 (3/4 development, 3/6 fresh validation), so relevance/reliability remains unaccepted. The frozen 4B challenger also passed 6/10, with no aggregate gain and slower native decoding; it was not promoted. There are now 34 new real model runs with complete native measurements. See [evaluation methods/results](../../../diagnostics/qvac-spike/TRANSCRIPTION-EVALUATION.md).
+
+The capture-quality APK is installed and its device APK hash matches the build: `283425bdd88a6a01fc6c71baea8d9455bdcf04d7b6906e4d1c492d8650bc416b`, observed 21:11:54 UTC on September 9. In-place installation preserved app data. No subsequent physical photo or capture-quality gain is claimed. Existing SYN-HW-002 and the first unconfirmed-provenance vault remain unchanged. The latest handwritten capture needs a human reference and remains separate from printed-note acceptance.
+
+Validation: 68 root tests, mobile TypeScript, Kotlin compilation and six native JVM checks passed. Android instrumentation compiled but was not executed. The isolated desktop UI check and visual review passed, explicitly using synthetic test doubles and rejecting manufactured human-reference events. Full human/phone lifecycle acceptance is still open. The September 11 04:00–08:00 Panama submission buffer is unchanged.
+
+## Previous prepared checkpoint
+
+This is the historical preparation state; the current installation and validation above supersede its APK/device status.
 
 The [fresh physical-run checklist](../../handoffs/2026-09-09-prepared-physical-run.md) is the next operating procedure. Jeff explicitly chose to do the physical steps later; the Fold is absent from ADB. New code prepares a unique desktop vault with human passphrase entry and trusted paper attestation, an encrypted native Android lifecycle journal and authenticated PC evidence sink, and stricter model/lifecycle/human-chain gates. Implementation and native compilation are separate from physical acceptance.
 
@@ -45,3 +57,5 @@ Original [native feasibility](../../../artifacts/evidence/feasibility-summary.js
 
 ## Sources
 Software Factory upstream: https://gist.github.com/Maciejdziuba/88890d7e0eeefa5a8738bbe9fd5e20b8#file-skill-md . Wayfinder was read from the existing Claude skill source; branch-local Markdown tracking selected by Jeff. No skills or AIOS runtime installed.
+
+The [checkpoint validation receipt](../../../artifacts/evidence/query-checkpoint-validation-20260909.json) records 68 passing tests, reviewed synthetic UI and installed APK evidence, and a successful read-only verification of 34 new plus six archived real-run records from an isolated Git index export. This does not establish independent-machine or physical human acceptance.
