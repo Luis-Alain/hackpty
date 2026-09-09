@@ -59,3 +59,11 @@ Use the existing isolated AIOS worktrees in C:/Users/jeffe/Code/AIOS-Control-Pla
 Ten concurrent Memory commits were fast-forwarded before editing only this project's records. They include the latest cadence-generated dashboard; it is preserved. The snapshot/dashboard generators describe the canonical Pi5 estate and were inspected but not run against these partial Windows working copies. No Pi5 contact/synchronization, WSL repair, estate topology change or live deployment is claimed. The original dirty AIOS/AdwenTech checkouts and the three uncommitted MedPsy plans remain untouched. Secret values, pairing QR contents and private notes do not enter handoff records.
 
 Later device steering, 22:05 UTC: Jeff said the Fold is charging and he will connect a different Android device. ADB still listed no devices at 22:05:35 UTC. Identify any replacement by its actual model and installed APK before testing; keep its evidence separate from the Fold receipt and do not infer that alternate-device checks establish the primary Fold workflow.
+
+### AIOS publication boundary
+
+The reviewed Memory commit **7037f1af91631a3c97882ffe3f3f7a0f1dba0cc6** and Control-Plane commit **2311df9f6bf9a08090eb03643efcce4ed6f2ca01** are pushed and remote-verified on each repository's codex/psyrec-handoff-20260909 branch. [Memory review](https://github.com/jefferygyamerah/AIOS-Memory/compare/main...codex/psyrec-handoff-20260909) · [Control-Plane review](https://github.com/jefferygyamerah/AIOS-Control-Plane/compare/main...codex/psyrec-handoff-20260909).
+
+Canonical AIOS main synchronization is pending explicit user approval. Automatic approval review rejected the attempted Memory push to main before execution, interpreting the user's no-main instruction as applying to AIOS and citing shared-branch side effects. That rejected action was not retried; dedicated review-branch publication was the safer alternative. No default AIOS branch was changed by these prepared commits. Read the prepared branch records for this checkpoint until canonical synchronization is authorized. The app remains on QVAC-Psy.
+
+Final device observation at 22:10:33 UTC: ADB still listed no connected Android device. The replacement remains unidentified; no device installation or lifecycle test was attempted. The saved-edit/restart question and human reference remain pending.
