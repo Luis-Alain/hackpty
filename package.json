@@ -1,0 +1,16 @@
+{
+  "name": "vigia",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vigía: inteligencia local con evidencia, sobre @qvac/sdk 0.18.2 (HackPTY, Decentralized AI Hackathon 2026)",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test src/",
+    "start": "node src/servidor.js"
+  },
+  "dependencies": {
+    "@qvac/sdk": "0.18.2"
+  }
+}

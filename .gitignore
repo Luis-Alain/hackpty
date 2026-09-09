@@ -1,0 +1,9 @@
+node_modules
+node_modules/
+*.log
+.qvac/
+evidencia/rendimiento.jsonl
+datos/*.jsonl
+*.gguf
+.env
+*.env
