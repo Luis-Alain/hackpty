@@ -5,29 +5,58 @@ import type { PsyRecService } from '../../packages/core/service.js';
  * clinical field. All recorded text remains inside the existing encrypted vault. */
 export class PhysicalObserver {
   failed = false;
+  private generation = 0;
+  private stopping = false;
+  private pending: Promise<void> = Promise.resolve();
+  private timers = new Set<ReturnType<typeof setTimeout>>();
   constructor(private service: PsyRecService, private window: BrowserWindow) {}
 
+  beginLock() {
+    this.stopping = true;
+    this.generation++;
+    for (const timer of this.timers) clearTimeout(timer);
+    this.timers.clear();
+  }
+
+  private record(event: string, details: Record<string, unknown>) {
+    const job = this.pending.then(() => this.service.recordPhysicalObservation(event, details));
+    this.pending = job.catch(() => { this.failed = true; });
+    return job;
+  }
+
+  private scheduleView() {
+    if (this.stopping) return;
+    const generation = this.generation;
+    const timer = setTimeout(() => {
+      this.timers.delete(timer);
+      if (generation === this.generation) void this.view().catch(() => { this.failed = true; });
+    }, 750);
+    this.timers.add(timer);
+  }
+
   async input(value: unknown) {
-    if (!value || typeof value !== 'object' || !this.service.vault.state) return;
+    if (!value || typeof value !== 'object' || !this.service.vault.state || this.stopping) return;
     const event = value as Record<string, unknown>;
     const allowed = ['extract', 'reviewSource', 'confirmCorrection', 'cancelCorrection', 'draft', 'confirmApproval', 'approve', 'lock', 'patient', 'historyToggle', 'showSuperseded'];
     if (!allowed.includes(String(event.control)) || !['click', 'change'].includes(String(event.eventType)) || typeof event.trusted !== 'boolean' || typeof event.approvalChecked !== 'boolean') return;
     for (const name of ['sourceText', 'draftText', 'patientId', 'encounterId']) if (typeof event[name] !== 'string' || String(event[name]).length > 30000) return;
-    await this.service.recordPhysicalObservation('renderer-input', event);
-    setTimeout(() => { void this.view().catch(() => { this.failed = true; }); }, 750);
+    await this.record('renderer-input', event);
+    this.scheduleView();
   }
 
   async operation(method: string, result: unknown) {
     if (!this.service.vault.state || !['unlock', 'extract', 'reviewSource', 'generateDraft', 'approve'].includes(method)) return;
-    await this.service.recordPhysicalObservation('operation-completed', { method, result });
+    if (method === 'unlock') this.stopping = false;
+    await this.record('operation-completed', { method, result });
     if (method === 'unlock' || method === 'approve') {
       // The IPC response must return before the renderer can refresh its view.
-      setTimeout(() => { void this.view().catch(() => { this.failed = true; }); }, 750);
+      this.scheduleView();
     }
   }
 
   async view() {
-    if (!this.service.vault.state || this.window.isDestroyed()) return;
+    if (this.stopping || !this.service.vault.state || this.window.isDestroyed()) return;
+    const generation = this.generation;
     const details = await this.window.webContents.executeJavaScript(`({
       patientId: document.getElementById('patient').value,
       encounterStatus: document.getElementById('encounterStatus').textContent,
@@ -36,13 +65,15 @@ export class PhysicalObserver {
       approvedText: document.getElementById('draftText').value,
       approvedReadOnly: document.getElementById('draftText').readOnly
     })`);
-    if (this.service.vault.state) {
+    if (!this.stopping && generation === this.generation && this.service.vault.state) {
       const records = this.service.state().records.filter(r => r.patientId === details.patientId && !r.supersededAt);
-      await this.service.recordPhysicalObservation('renderer-view', { ...details, canonicalApprovedRecords: records.map(r => ({ id: r.id, encounterId: r.encounterId, text: r.text })) });
+      await this.record('renderer-view', { ...details, canonicalApprovedRecords: records.map(r => ({ id: r.id, encounterId: r.encounterId, text: r.text })) });
     }
   }
 
   async lockPurge() {
+    this.beginLock();
+    await this.pending;
     if (!this.service.vault.state || this.window.isDestroyed()) return;
     await new Promise(resolve => setTimeout(resolve, 100));
     const details = await this.window.webContents.executeJavaScript(`({
@@ -51,6 +82,6 @@ export class PhysicalObserver {
       content: ['patient','encounters','historyRecords','metrics','consequenceText','pairStatus','encounterTitle','encounterStatus'].every(id=>document.getElementById(id).textContent===''),
       images: ['sourceImage','pairQr'].every(id=>!document.getElementById(id).hasAttribute('src'))
     })`);
-    if (this.service.vault.state) await this.service.recordPhysicalObservation('lock-renderer-purge', details);
+    if (this.service.vault.state) await this.record('lock-renderer-purge', details);
   }
 }

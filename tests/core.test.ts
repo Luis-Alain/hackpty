@@ -5,9 +5,33 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Vault } from '../packages/core/vault.js';
 import { PsyRecService } from '../packages/core/service.js';
+import { PhysicalObserver } from '../apps/desktop/physical-observer.js';
 
 const image = Buffer.from('89504e470d0a1a0a00000000', 'hex');
 const password = 'synthetic-only-test-passphrase';
+
+test('observer drains input before lock and discards delayed views from the prior unlocked session', async t => {
+  const { service, vault } = await setup(t);
+  let finishView: (value: unknown) => void;
+  let calls = 0;
+  const fakeWindow = { isDestroyed: () => false, webContents: { executeJavaScript: () => {
+    calls++;
+    return calls === 1 ? new Promise(resolve => { finishView = resolve; }) : Promise.resolve({ workspaceHidden: true, fields: true, content: true, images: true });
+  } } };
+  const observer = new PhysicalObserver(service, fakeWindow as any);
+  const pendingView = observer.view();
+  const input = observer.input({ control: 'lock', eventType: 'click', trusted: false, approvalChecked: false, sourceText: '', draftText: '', patientId: '', encounterId: '' });
+  observer.beginLock();
+  finishView({ patientId: 'stale', historyText: 'stale private text' });
+  await Promise.all([input, pendingView]);
+  await observer.lockPurge();
+  await service.lock();
+  await vault.unlock(password);
+  assert.deepEqual(vault.state.physicalObservations.map(e => e.event), ['renderer-input', 'lock-renderer-purge']);
+  assert.equal(observer.failed, false);
+  assert.equal(calls, 2);
+  assert.ok(!(await readFile(vault.path, 'utf8')).includes('stale private text'));
+});
 // Unit-test double only. These records cannot qualify as real QVAC evidence.
 const runtime = {
   extractImage: async () => ({ text: 'Synthetic patient reports improved sleep.', metrics: { testDouble: true as const } }),

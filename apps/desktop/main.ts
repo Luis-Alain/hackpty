@@ -28,6 +28,7 @@ let locking: Promise<void> | null = null;
 async function lock() {
   if (locking) return locking;
   clearTimeout(idleTimer);
+  physicalObserver?.beginLock();
   // Purge visible and hidden renderer data immediately while cancellation drains.
   if (window && !window.isDestroyed()) window.webContents.send('locked');
   locking = (async () => {
