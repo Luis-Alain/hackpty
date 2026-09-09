@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "kind": "mobile-receipt-binding-review",
+  "syntheticOnly": true,
+  "reviewedAt": "2026-09-09T19:07:12.5268076Z",
+  "reviewMethod": "Read-only review of published candidate, prior installed-build evidence, and immutable installed-version source. No device actions or new inference.",
+  "candidate": {
+    "path": "artifacts/evidence/physical-fold-exploratory-provisional.json",
+    "sha256": "5cfb47ac87100954437315a40b14de7b4bd9cf59b08a7d4ba91f22467fe8c97f",
+    "fixtureId": "SYN-HW-002",
+    "inputClassification": "AI-generated handwriting-style synthetic note",
+    "sourceMedium": "unconfirmed",
+    "printedSyntheticEnglishNote": false,
+    "physicalFoldAcceptance": false
+  },
+  "receiptBinding": {
+    "deviceId": "3fd7002e-4dca-41ee-9271-a4ca1075daff",
+    "transferId": "14e5d7f2-50bc-4574-8532-ddc433596118",
+    "encounterId": "b5fe1323-c415-4c9a-af9a-2c1615747a55",
+    "captureId": "d2fe834c-898e-4314-bedb-a1ead1cf58c9",
+    "sha256": "f3245fb4a5351ca20c56e95dac6fdf01e017a9db8fb03d6c80c438c842ad451f",
+    "receivedAt": "2026-09-09T18:37:52.852Z",
+    "extractionRunId": "47ebf707-8140-4372-8245-6c3b2f3362db",
+    "draftRunId": "5112c4f6-6b86-471f-9add-40a95749ced6",
+    "extractionAttachmentBytes": 2769037,
+    "extractionAttachmentMime": "image/jpeg",
+    "receiptMatchesExtractionAttachmentSha256": true,
+    "receiptMatchesBothRunEncounterIds": true,
+    "scope": "Establishes PC receipt-to-inference attachment binding. Does not establish receipt delivery back to the phone."
+  },
+  "buildEvidence": {
+    "nativeAndroidBuildAndPriorPhysicalInstallationEstablished": true,
+    "sourceCheckpoint": "13ebf49",
+    "package": "tech.adwen.psyrec.capture",
+    "installedApkSha256": "86d41daf439c691e2140f3dc3480d090ba58528e73894ca74352ce296686212a",
+    "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+    "signingScope": "Local Android Debug development certificate; Release variant with bundled JavaScript.",
+    "priorAdbInstallSucceeded": true,
+    "priorLaunchAndNativeUiObserved": true,
+    "directBuildObservationForThisTransfer": null,
+    "latestUninstalledApkSha256": "084e23b7a10899a472691c087460e4be91bf206280690b2386e1ade089716818",
+    "latestCompletedReceiptGuardExcludedFromPhoneClaims": true,
+    "sources": ["apps/mobile/evidence/build.json", "13ebf49:apps/mobile/evidence/build.json"]
+  },
+  "receiptScopedAssessment": {
+    "nativeAndroidBuild": {
+      "recommendedObservedValue": null,
+      "implementationEvidence": "Native Android build and physical installation are established independently by the recorded APK hash, signature check, adb installation and prior native UI observation.",
+      "observationLimit": "No contemporaneous phone observation or per-transfer build identifier was recorded for this second receipt. The earlier installed build is supporting context, not a new second-transfer observation."
+    },
+    "certificatePinVerified": {
+      "recommendedObservedValue": null,
+      "implementationEvidence": "Installed-version PinnedHttps authenticates the server certificate fingerprint with a per-connection TrustManager and hostname verifier; redirects are disabled. Two Kotlin policy tests and two localhost HTTPS transport tests passed.",
+      "conditionalInference": "If this transfer was sent by that installed native code, it traversed the pinned HTTPS send path.",
+      "observationLimit": "No native TLS trace, second-transfer phone success observation, or physical wrong-pin rejection was collected. JVM policy and PC transport tests are not phone TLS execution evidence."
+    },
+    "encryptedPendingQueue": {
+      "recommendedObservedValue": null,
+      "implementationEvidence": "Installed-version CameraX capture passes an in-memory JPEG into PendingStore.save before resolving. PendingStore encrypts image and metadata with Android Keystore AES-GCM and writes an AtomicFile under noBackupFilesDir. Send reads this encrypted record.",
+      "conditionalInference": "If this transfer was sent by that installed camera/send path, it passed through encrypted pending storage.",
+      "observationLimit": "No second-transfer pending UI, queue restart, ciphertext inspection or Android Keystore instrumentation result was collected. The later instrumentation APK compiled but was not executed."
+    },
+    "deletedOnlyAfterReceipt": {
+      "recommendedObservedValue": null,
+      "implementationEvidence": "Installed-version send checks receipt device, transfer, encounter, image SHA, capture ID and timestamp; it persists the matching receipt in the encrypted record before removing the queue file.",
+      "observationLimit": "A durable PC receipt can exist even when its response is lost. This receipt alone cannot prove the phone received it or deleted its queue. No second-transfer pending-zero or success UI observation was collected. The earlier unrelated observation is excluded."
+    }
+  },
+  "preservedBoundaries": {
+    "candidateNotModified": true,
+    "allFourCandidateNullsRetained": true,
+    "earlierUnconfirmedInputAndPhoneReceiptExcluded": true,
+    "noPhysicalRestartOrUnavailableReceiverRetryClaim": true,
+    "noPhysicalWrongPinClaim": true,
+    "noPrintedFixtureAcceptanceUpgrade": true,
+    "noExternalIosFilesChanged": true
+  }
+}
