@@ -3,6 +3,13 @@ dist/
 .expo/
 apps/mobile/android/
 apps/mobile/ios/
+apps/mobile/**/build/
+.cxx/
+.kotlin/
+.gradle/
+local.properties
+*.keystore
+*.jks
 .local/
 artifacts/private/
 *.log

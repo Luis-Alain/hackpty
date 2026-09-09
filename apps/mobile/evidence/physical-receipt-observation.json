@@ -1,0 +1,17 @@
+{
+  "synthetic": true,
+  "scope": "Observed native phone UI after user physical capture and successful transfer; PC clinical workflow is separate evidence",
+  "date": "2026-09-09",
+  "recordedAt": "2026-09-09T18:20:04Z",
+  "deviceModel": "SM_F966B",
+  "applicationId": "tech.adwen.psyrec.capture",
+  "installedApkSha256": "86d41daf439c691e2140f3dc3480d090ba58528e73894ca74352ce296686212a",
+  "observationMethod": "adb foreground package check, Android UIAutomator text hierarchy, and app-process-only ReactNativeJS/AndroidRuntime error log query; temporary UI dump removed immediately",
+  "foregroundPackageConfirmed": true,
+  "encounterId": "8ae4e4a0-f4fd-4294-bf3f-a6e7bcf46af7",
+  "statusText": "PC confirmed a matching durable encrypted receipt. Phone queue copy removed. Continue source review on the PC.",
+  "pendingQueueCount": 0,
+  "appErrorLogEntriesObserved": 0,
+  "receiptValidationInNativeCode": ["deviceId", "transferId", "encounterId", "sha256", "captureId", "receivedAt"],
+  "limitations": ["Phone UI contains no full receipt or photo hash; canonical receipt and attachment hash must be bound from the encrypted PC vault", "Pending queue restart before send not exercised by this observation", "Phone-side interrupted upload/retry not exercised by this observation", "This record alone does not prove VisionPsy review, approval or encrypted clinical reload"]
+}

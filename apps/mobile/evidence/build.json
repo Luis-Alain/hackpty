@@ -1,0 +1,32 @@
+{
+  "scope": "Synthetic development evidence; not full physical workflow acceptance",
+  "date": "2026-09-09",
+  "platform": "Windows local build, Android arm64-v8a",
+  "expoVersion": "55.0.31",
+  "reactNativeVersion": "0.83.10",
+  "javaVersion": "17.0.20.1",
+  "compileSdk": 36,
+  "minSdk": 24,
+  "ndkVersion": "27.1.12297006",
+  "command": "gradlew.bat app:assembleRelease psyrec-transfer:testReleaseUnitTest -PreactNativeArchitectures=arm64-v8a --console=plain",
+  "buildPassed": true,
+  "nativeUnitTests": { "passed": 2, "failed": 0, "scope": "Production Kotlin certificate pin and private endpoint policy; no Android Keystore or phone TLS execution" },
+  "transportTests": { "passed": 2, "failed": 0, "scope": "Real localhost HTTPS, wrong pin, single-use pair, partial upload, durable retry/dedupe after vault reload; synthetic byte fixture, not image decoder acceptance" },
+  "apk": {
+    "path": "android/app/build/outputs/apk/release/app-release.apk",
+    "bytes": 31477403,
+    "sha256": "86d41daf439c691e2140f3dc3480d090ba58528e73894ca74352ce296686212a",
+    "signatureVerified": true,
+    "signer": "Android Debug development certificate; self-contained local test APK, not publication signing",
+    "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
+  },
+  "mergedManifest": {
+    "allowBackup": false,
+    "usesCleartextTraffic": false,
+    "expoUpdatesEnabled": false,
+    "permissions": ["android.permission.CAMERA", "android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE", "tech.adwen.psyrec.capture.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"]
+  },
+  "physicalWorkflowAccepted": false,
+  "physicalInstall": { "model": "SM_F966B", "adbInstallSucceeded": true, "launchCommandAccepted": true, "phoneUiObserved": true, "note": "See physical-receipt-observation.json for actual native successful receipt status and empty queue after user capture." },
+  "remaining": ["Phone-side interrupted retry", "Android encrypted pending queue restart before send", "PC full workflow chained from phone receipt"]
+}

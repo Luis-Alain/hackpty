@@ -1,0 +1,24 @@
+{
+  "name": "psyrec-capture",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "prebuild": "expo prebuild --platform android --no-install",
+    "android": "expo run:android",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "expo": "55.0.31",
+    "expo-camera": "~55.0.23",
+    "expo-secure-store": "~55.0.18",
+    "react": "19.2.0",
+    "react-native": "0.83.10"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "5.9.3"
+  }
+}
