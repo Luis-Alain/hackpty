@@ -9,6 +9,7 @@ export type CameraHandle = { capture(encounterId: string): Promise<Pending> };
 export const NativeCamera = requireNativeViewManager('PsyRecTransfer') as ComponentType<ViewProps & RefAttributes<CameraHandle>>;
 export const Transfer = requireNativeModule<{
   pending(): Promise<Pending[]>;
+  completed(encounterId: string): Promise<boolean>;
   pair(endpoint: string, pin: string, secret: string): Promise<string>;
   send(endpoint: string, pin: string, deviceId: string, token: string, encounterId: string, transferId: string): Promise<string>;
 }>('PsyRecTransfer');

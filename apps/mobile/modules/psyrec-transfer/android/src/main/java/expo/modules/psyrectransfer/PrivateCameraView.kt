@@ -47,6 +47,9 @@ class PrivateCameraView(context: Context, appContext: AppContext) : ExpoView(con
   }
   override fun onDetachedFromWindow() { provider?.unbindAll(); capture = null; super.onDetachedFromWindow() }
   fun capture(encounterId: String, promise: Promise) {
+    try {
+      if (PendingStore(context).hasCapture(encounterId)) { promise.reject("ENCOUNTER_CAPTURED", "This encounter already has a pending or received capture. Finish its transfer, then pair a new PC encounter.", null); return }
+    } catch (e: Exception) { promise.reject("QUEUE_UNAVAILABLE", "Encrypted capture history could not be read. Keep app data intact for recovery.", null); return }
     val camera = capture
     if (camera == null || busy || encounterId.isBlank()) { promise.reject("CAPTURE_UNAVAILABLE", error ?: "Camera is starting or busy.", null); return }
     busy = true

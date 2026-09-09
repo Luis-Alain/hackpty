@@ -28,6 +28,7 @@ internal fun sha256(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").dig
 
 /** Only ciphertext is written, including metadata. Photos originate in a CameraX memory buffer. */
 internal class PendingStore(private val context: Context) {
+  companion object { private val lock = Any() }
   private val dir get() = File(context.noBackupFilesDir, "psyrec-pending").also { it.mkdirs() }
   private fun key(): SecretKey {
     val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
@@ -41,7 +42,7 @@ internal class PendingStore(private val context: Context) {
     require(id.matches(Regex("[a-f0-9-]{36}"))) { "Invalid pending capture id." }
     return AtomicFile(File(dir, "$id.enc"))
   }
-  @Synchronized fun save(value: JSONObject) {
+  fun save(value: JSONObject) = synchronized(lock) {
     val id = value.getString("transferId")
     val cipher = Cipher.getInstance("AES/GCM/NoPadding").apply { init(Cipher.ENCRYPT_MODE, key()); updateAAD(id.toByteArray()) }
     val clear = value.toString().toByteArray()
@@ -50,21 +51,29 @@ internal class PendingStore(private val context: Context) {
     try { output.write(byteArrayOf(1)); output.write(cipher.iv); output.write(encrypted); target.finishWrite(output) }
     catch (error: Exception) { target.failWrite(output); throw error }
   }
-  @Synchronized fun read(id: String): JSONObject {
+  fun read(id: String): JSONObject = synchronized(lock) {
     val encrypted = file(id).readFully()
     require(encrypted.size > 29 && encrypted[0] == 1.toByte()) { "Damaged encrypted capture." }
     val cipher = Cipher.getInstance("AES/GCM/NoPadding").apply {
       init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(128, encrypted.copyOfRange(1, 13))); updateAAD(id.toByteArray())
     }
     val clear = cipher.doFinal(encrypted.copyOfRange(13, encrypted.size))
-    return try { JSONObject(String(clear, Charsets.UTF_8)) } finally { clear.fill(0) }
+    try { JSONObject(String(clear, Charsets.UTF_8)) } finally { clear.fill(0) }
   }
-  @Synchronized fun list() = dir.listFiles()?.filter { it.name.endsWith(".enc") }?.map {
-    val obj = read(it.name.removeSuffix(".enc"))
+  private fun records() = dir.listFiles()?.filter { it.name.endsWith(".enc") }?.map { read(it.name.removeSuffix(".enc")) } ?: emptyList()
+  fun list() = synchronized(lock) { records().filter { !it.has("receipt") }.map { obj ->
     mapOf("transferId" to obj.getString("transferId"), "encounterId" to obj.getString("encounterId"),
       "sha256" to obj.getString("sha256"), "createdAt" to obj.getString("createdAt"))
-  } ?: emptyList()
-  @Synchronized fun remove(id: String) { file(id).delete() }
+  } }
+  fun hasCapture(encounterId: String) = synchronized(lock) { records().any { it.getString("encounterId") == encounterId } }
+  fun completed(encounterId: String) = synchronized(lock) { records().any { it.getString("encounterId") == encounterId && it.has("receipt") } }
+  fun complete(queued: JSONObject, receipt: JSONObject) = synchronized(lock) {
+    // Atomic replacement discards photo bytes while preserving encrypted receipt metadata.
+    // A crash leaves either the retryable photo or completed metadata, never an unmarked deleted capture.
+    val completed = JSONObject().put("transferId", queued.getString("transferId")).put("encounterId", queued.getString("encounterId"))
+      .put("sha256", queued.getString("sha256")).put("createdAt", queued.getString("createdAt")).put("receipt", receipt)
+    save(completed)
+  }
 }
 
 internal object PinnedHttps {
@@ -118,6 +127,7 @@ class PsyRecTransferModule : Module() {
     OnCreate { appContext.currentActivity?.runOnUiThread { appContext.currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) } }
     OnActivityEntersForeground { appContext.currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) }
     AsyncFunction("pending") { store.list() }
+    AsyncFunction("completed") { encounterId: String -> store.completed(encounterId) }
     AsyncFunction("pair") { endpoint: String, pin: String, secret: String ->
       PinnedHttps.post(endpoint, pin, "/pair", JSONObject().put("secret", secret).put("deviceName", "PsyRec Android capture")).toString()
     }
@@ -128,8 +138,7 @@ class PsyRecTransferModule : Module() {
       val receipt = PinnedHttps.post(endpoint, pin, "/captures", payload, token)
       require(receipt.getString("deviceId") == deviceId && receipt.getString("transferId") == id && receipt.getString("encounterId") == encounterId &&
         receipt.getString("sha256") == queued.getString("sha256") && receipt.getString("captureId").isNotBlank() && receipt.getString("receivedAt").isNotBlank()) { "PC receipt does not match capture. Encrypted queue retained." }
-      queued.put("receipt", receipt); store.save(queued)
-      store.remove(id)
+      store.complete(queued, receipt)
       receipt.toString()
     }
     View(PrivateCameraView::class) {

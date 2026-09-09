@@ -8,14 +8,15 @@
   "compileSdk": 36,
   "minSdk": 24,
   "ndkVersion": "27.1.12297006",
-  "command": "gradlew.bat app:assembleRelease psyrec-transfer:testReleaseUnitTest -PreactNativeArchitectures=arm64-v8a --console=plain",
+  "command": "gradlew.bat app:assembleRelease psyrec-transfer:testReleaseUnitTest psyrec-transfer:assembleReleaseAndroidTest -PreactNativeArchitectures=arm64-v8a --console=plain",
+  "expoProject": { "owner": "hackpty", "slug": "psyrec-capture", "projectId": "b57b65cb-66a6-454f-8301-72259ee2a828", "verifiedBy": "eas whoami Owner membership and eas project:info", "cloudBuildOrUpdateExecuted": false },
   "buildPassed": true,
   "nativeUnitTests": { "passed": 2, "failed": 0, "scope": "Production Kotlin certificate pin and private endpoint policy; no Android Keystore or phone TLS execution" },
   "transportTests": { "passed": 2, "failed": 0, "scope": "Real localhost HTTPS, wrong pin, single-use pair, partial upload, durable retry/dedupe after vault reload; synthetic byte fixture, not image decoder acceptance" },
   "apk": {
     "path": "android/app/build/outputs/apk/release/app-release.apk",
-    "bytes": 31477403,
-    "sha256": "86d41daf439c691e2140f3dc3480d090ba58528e73894ca74352ce296686212a",
+    "bytes": 31477895,
+    "sha256": "084e23b7a10899a472691c087460e4be91bf206280690b2386e1ade089716818",
     "signatureVerified": true,
     "signer": "Android Debug development certificate; self-contained local test APK, not publication signing",
     "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
@@ -27,6 +28,6 @@
     "permissions": ["android.permission.CAMERA", "android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE", "tech.adwen.psyrec.capture.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"]
   },
   "physicalWorkflowAccepted": false,
-  "physicalInstall": { "model": "SM_F966B", "adbInstallSucceeded": true, "launchCommandAccepted": true, "phoneUiObserved": true, "note": "Native app launch and successful receipt status observed. First image was later identified as handwriting with unconfirmed provenance, so no input/receipt observation is published or counted as the required printed synthetic workflow." },
+  "physicalInstall": { "model": "SM_F966B", "installedApkSha256": "86d41daf439c691e2140f3dc3480d090ba58528e73894ca74352ce296686212a", "latestApkInstalled": false, "adbInstallSucceeded": true, "launchCommandAccepted": true, "phoneUiObserved": true, "note": "Prior APK installed successfully. Latest Expo-linked/recapture-guard APK awaits installation. First image was later identified as handwriting with unconfirmed provenance, so no input/receipt observation is published or counted as the required printed synthetic workflow." },
   "remaining": ["Printed synthetic English note capture and accepted provenance", "Phone-side interrupted retry", "Android encrypted pending queue restart before send", "PC full workflow chained from printed synthetic phone receipt"]
 }

@@ -2,6 +2,8 @@
 
 This Expo SDK 55 / React Native 0.83 app captures a printed synthetic English note on Android and transfers it to the paired Windows PsyRec vault. Inference is on the PC. Expo Go cannot run the local Kotlin module. No EAS/cloud build or cloud inference is used.
 
+The existing local app is linked to [@hackpty/psyrec-capture](https://expo.dev/accounts/hackpty/projects/psyrec-capture), project ID `b57b65cb-66a6-454f-8301-72259ee2a828`. Expo account membership was verified as Owner before linking. `app.json` records the account/project association; Android package identity and local build scripts are preserved. Linking the project did not run a cloud build, publish an update, or enable cloud inference. `eas project:info` verifies the association when signed in.
+
 ## Local build
 
 Install Node 22.17+, JDK 17, Android SDK platform 36, build tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1 and Android platform tools. Set `JAVA_HOME` and `ANDROID_HOME` to your local installations. From this directory:
@@ -33,7 +35,8 @@ With `JAVA_HOME` and `ANDROID_HOME` set, `./scripts/build-android.ps1` performs 
 - CameraX captures JPEG into memory; orientation adjustment and AES-256-GCM encryption happen before any photo is written. The app does not write a gallery image or a plaintext camera cache. Ciphertext plus encrypted metadata is atomically persisted in Android's no-backup directory with an Android Keystore key.
 - Pairing credentials use Expo SecureStore. Android backup and cleartext HTTP are disabled. The app requests no audio/storage permissions, disables screenshots with `FLAG_SECURE`, and removes camera preview when backgrounded.
 - The physical QR supplies the PC leaf-certificate SHA-256 fingerprint. The native bridge checks certificate validity and this pin for each HTTPS connection; redirects are disabled, endpoint must be a private IPv4 address, and global TLS defaults are never relaxed. A changed certificate requires a fresh physical pairing QR.
-- Pending photos survive network errors and mismatched receipts. A matching receipt is first saved encrypted; only then is the pending file removed. The PC commits its receipt and photo together in the encrypted vault, and deduplicates retries after restart. One capture per encounter is intentional.
+- Pending photos survive network errors and mismatched receipts. The PC commits its receipt and photo together in the encrypted vault, and deduplicates retries after restart. One capture per encounter is intentional.
+- After a successful receipt, the phone atomically replaces the encrypted photo with encrypted receipt metadata. That marker survives restart and prevents taking another photo for the already completed encounter. Pair a new PC encounter for each additional page/visit.
 - Uninstalling/clearing app data loses queued captures and pairing keys. Keep encrypted pending items until the PC confirms receipt. UI/source/patient confirmation remains mandatory on the PC; mobile performs no clinical interpretation.
 
 ## Evidence status
@@ -41,5 +44,7 @@ With `JAVA_HOME` and `ANDROID_HOME` set, `./scripts/build-android.ps1` performs 
 Root `tests/transport.test.ts` executes real localhost HTTPS: wrong pin rejection, one-use pairing, partial upload interruption, retry/deduplication after encrypted vault reload, changed-content/encounter rejection, and encrypted server identity persistence. It does **not** establish Android TLS, CameraX, SecureStore, physical Fold or LAN acceptance. Those need the actual native build and connected Fold walkthrough; do not infer them from the Node tests.
 
 `./gradlew.bat psyrec-transfer:testReleaseUnitTest` exercises the actual Kotlin certificate-pin/endpoint policy with a public synthetic certificate fixture: exact pin accepted, wrong/missing certificate rejected, and public/DNS/credential/path/fragment endpoints rejected. These JVM checks do not exercise Android Keystore or phone networking. The fixture contains a public certificate only, with its generated private key discarded.
+
+`./gradlew.bat psyrec-transfer:connectedReleaseAndroidTest` runs actual Android Keystore/queue checks on a connected Android device in a separate test package: encrypted reopen, ciphertext tamper rejection, photo-to-receipt replacement, and completed-encounter guard. It uses only generated synthetic test records and does not access the installed PsyRec app's private data.
 
 The native implementation follows [Expo local modules](https://docs.expo.dev/modules/get-started/), [Expo camera](https://docs.expo.dev/versions/v55.0.0/sdk/camera/) for QR only, and [CameraX in-memory capture](https://developer.android.com/media/camera/camerax/take-photo).

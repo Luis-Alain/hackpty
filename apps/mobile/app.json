@@ -1,8 +1,43 @@
 {
   "expo": {
-    "name": "PsyRec Capture", "slug": "psyrec-capture", "version": "0.1.0",
-    "orientation": "portrait", "userInterfaceStyle": "light",
-    "android": { "package": "tech.adwen.psyrec.capture", "allowBackup": false, "permissions": ["CAMERA", "INTERNET"], "blockedPermissions": ["android.permission.RECORD_AUDIO", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.SYSTEM_ALERT_WINDOW", "android.permission.VIBRATE", "android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT"] },
-    "plugins": [["expo-camera", {"recordAudioAndroid": false}], "expo-secure-store", "./plugins/with-private-android.cjs"]
+    "name": "PsyRec Capture",
+    "slug": "psyrec-capture",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "android": {
+      "package": "tech.adwen.psyrec.capture",
+      "allowBackup": false,
+      "permissions": [
+        "CAMERA",
+        "INTERNET",
+        "android.permission.CAMERA"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-secure-store",
+      "./plugins/with-private-android.cjs"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b57b65cb-66a6-454f-8301-72259ee2a828"
+      }
+    },
+    "owner": "hackpty"
   }
 }

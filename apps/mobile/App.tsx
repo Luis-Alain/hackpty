@@ -10,6 +10,7 @@ export default function App() {
   const [permission, requestPermission] = useCameraPermissions();
   const [credentials, setCredentials] = useState<Credentials | null>(null);
   const [pending, setPending] = useState<Pending[]>([]);
+  const [completed, setCompleted] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [preview, setPreview] = useState(false);
   const [active, setActive] = useState(true);
@@ -22,7 +23,7 @@ export default function App() {
     (async () => {
       try {
         const saved = await SecureStore.getItemAsync(credentialKey, secureOptions);
-        if (saved) setCredentials(JSON.parse(saved));
+        if (saved) { const restored: Credentials = JSON.parse(saved); setCredentials(restored); setCompleted(await Transfer.completed(restored.encounterId)); }
         await refresh(); setStatus('Ready. Unlock the PC vault and select the intended encounter.');
       } catch { setStatus('Encrypted capture storage could not be opened. Keep app data intact for recovery.'); }
     })();
@@ -47,7 +48,7 @@ export default function App() {
       const next: Credentials = { version: 1, endpoint: invite.endpoint, certificateFingerprint: invite.certificateFingerprint,
         encounterId: result.encounterId, deviceId: result.deviceId, token: result.token };
       await SecureStore.setItemAsync(credentialKey, JSON.stringify(next), secureOptions);
-      setCredentials(next); setStatus('Paired to the selected PC encounter. Capture the printed synthetic English note.');
+      setCredentials(next); setCompleted(await Transfer.completed(next.encounterId)); setStatus('Paired to the selected PC encounter. Capture the printed synthetic English note.');
     });
   }
   async function capture() {
@@ -62,7 +63,7 @@ export default function App() {
       if (!credentials) throw new Error('Pair with the original PC encounter first.');
       setStatus('Sending over pinned TLS. Keep the PC vault unlocked.');
       await Transfer.send(credentials.endpoint, credentials.certificateFingerprint, credentials.deviceId, credentials.token, credentials.encounterId, item.transferId);
-      await refresh(); setStatus('PC confirmed a matching durable encrypted receipt. Phone queue copy removed. Continue source review on the PC.');
+      setCompleted(true); await refresh(); setStatus('PC confirmed a matching durable encrypted receipt. Phone queue copy removed. Continue source review on the PC.');
     });
   }
   if (!active) return <SafeAreaView style={styles.page}><Text style={styles.title}>PsyRec Capture locked</Text></SafeAreaView>;
@@ -75,7 +76,8 @@ export default function App() {
     <Button title={credentials ? 'Pair another PC encounter' : 'Scan PC pairing QR'} disabled={busy || !permission?.granted || preview || pending.length > 0} onPress={() => setScanning(!scanning)} />
     {pending.length > 0 && <Text>Finish pending transfers before pairing another encounter. The original device credentials are retained for safe retries.</Text>}
     {scanning && <><Text>Scan only the QR shown on your own unlocked PsyRec PC.</Text><CameraView style={styles.camera} barcodeScannerSettings={{ barcodeTypes: ['qr'] }} onBarcodeScanned={({ data }) => void pair(data)} /></>}
-    {credentials && !scanning && <Button title={preview ? 'Close camera' : 'Photograph printed note'} disabled={busy || !permission?.granted || pending.some(x => x.encounterId === credentials.encounterId)} onPress={() => setPreview(!preview)} />}
+    {credentials && !scanning && <Button title={preview ? 'Close camera' : 'Photograph printed note'} disabled={busy || completed || !permission?.granted || pending.some(x => x.encounterId === credentials.encounterId)} onPress={() => setPreview(!preview)} />}
+    {completed && <Text>This encounter’s photo has been received. Pair a new PC encounter before taking another photo.</Text>}
     {preview && <><NativeCamera ref={camera} style={styles.camera} /><Text>Fill the frame with one printed page. Check focus, lighting and orientation.</Text><Button title="Capture and encrypt" disabled={busy} onPress={() => void capture()} /></>}
     <Text style={styles.subtitle}>Encrypted pending captures ({pending.length})</Text>
     {pending.map(item => <View key={item.transferId} style={styles.card}><Text>Captured {new Date(item.createdAt).toLocaleString()}</Text><Text>Encounter: {item.encounterId}</Text>

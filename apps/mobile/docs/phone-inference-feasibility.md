@@ -1,0 +1,9 @@
+# Phone-local QVAC feasibility — inspection only
+
+The pinned SDK **0.18.2** includes an Expo integration, a React Native Bare worklet RPC client, and `android-arm64` native llama.cpp addon binaries. This was verified in the installed package, not inferred from current documentation alone. Local inference on the Fold is therefore a plausible separate implementation, but **no phone model load, VisionPsy projector run, accuracy, thermal behavior, TTFT or throughput has been measured**. The current release continues to infer on the Windows PC.
+
+SDK 0.18.2's checked-in Expo plugin would add `expo-build-properties`, set Android minimum SDK 29, pin NDK `29.0.14206865`, restrict the Android ABI to `arm64-v8a`, configure optional OpenCL access, and generate a Bare worker bundle. It uses `react-native-bare-kit`, Expo filesystem/device integration and a separate worker lifecycle. The current capture app uses Expo 55 and NDK 27.1; adapting and validating the 0.18.2 plugin with this build is still required. No package upgrade or phone runtime was installed as part of this inspection.
+
+The [QVAC Expo documentation](https://docs.qvac.tether.io/tutorials/expo/) demonstrates a native mobile model workflow, and the [JS/TS SDK setup](https://docs.qvac.tether.io/js-ts-sdk/) calls for a physical device. The tutorial currently shows older Expo 54 example dependencies; the installed 0.18.2 plugin and package metadata are the version-specific implementation evidence here.
+
+A future bounded spike must provision SHA-verified VisionPsy model/projector files into appropriate private device storage, disable inference-time registry/P2P access, measure actual GPU or CPU execution instead of assuming a backend, record exact prompts/load configuration/token counts/TTFT/throughput, and preserve encrypted run records plus cancellation/cleanup behavior. Running on the Fold has not passed those gates. RAG and Philips voice remain separate teammate integrations.
