@@ -1,6 +1,6 @@
 # PsyRec — QVAC Psy challenge
 
-Native Android capture and local Windows clinician documentation, built in TypeScript. **Work in progress:** this branch is being developed in small tested checkpoints. Nothing in this README certifies clinical safety or sponsor eligibility.
+Native Android capture and local Windows clinician documentation, built in TypeScript, with an iPhone port validated by an iOS simulator build. **Work in progress:** this branch is being developed in small tested checkpoints. Nothing in this README certifies clinical safety or sponsor eligibility.
 
 ## Release workflow
 
@@ -11,7 +11,7 @@ Z Fold photo of a printed synthetic clinician note → authenticated encrypted t
 - **This release:** photo capture and reviewed clinical records.
 - **Later RAG, owned by teammate:** implement the optional `ApprovedNotesRetriever` port in `packages/contracts/index.d.ts`. Return approved-record/revision IDs and excerpt locators. The application checks patient and revision authorization itself. No retrieval backend or vector database is included now.
 - **Later Philips voice integration:** implement `VoiceProcessor` to supply transcription/segments to source review. Voice processing cannot approve a clinical record. Audio is not part of this release.
-- Keep shared runtime logic separate from clinical approval and vault code. App/core/runtime source is TypeScript, with a Kotlin Expo module for Android camera, Keystore encryption and pinned TLS. Python is not required.
+- Keep shared runtime logic separate from clinical approval and vault code. App/core/runtime source is TypeScript, with Kotlin Android and Swift iOS Expo modules for native capture, encrypted storage and pinned TLS. Python is not required.
 
 ## Judging evidence
 
@@ -26,6 +26,8 @@ Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `n
 `npm run test:workflow` exercises real desktop UI handlers in a fresh isolated synthetic vault and runs real local inference; schedule it alone on the GPU. Its output stays under ignored `.local/desktop-workflow/` until reviewed. `npm run check:desktop-evidence` validates the reviewed desktop receipt and explicitly does not establish phone acceptance. `npm run check:release` requires a separate connected physical Fold receipt; absent or incomplete evidence fails, never skips. `npm run check:mobile` typechecks the native app's TypeScript after its dependencies are installed.
 
 ### Verified checkpoint · September 9
+
+Read the [current AIOS continuation](docs/handoffs/2026-09-09-aios-continuation.md) before resuming. Implementation `98ce270` includes the [iPhone/Xcode handoff](apps/mobile/docs/ios-xcode-handoff.md). Its [EAS simulator build](apps/mobile/docs/ios-build-validation.json) finished successfully with four native Swift tests and compilation; authenticated status was rechecked at 19:29:57 UTC. Physical iPhone signing/testing remain open. The Expo project is `@hackpty/psyrec-capture`; local Android builds remain supported. The latest recorded local Android APK was built, but the Fold's last observed installation is older.
 
 Continuation is active with dedicated runtime/performance, native Expo/transfer, and desktop/clinical-review owners. The coordinator owns shared contracts, dependencies and Git; real GPU jobs are serialized. The handoff remains an unfinished implementation checkpoint.
 
