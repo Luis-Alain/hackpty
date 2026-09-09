@@ -14,7 +14,7 @@
 - [ ] Reproducible submission evidence and Spanish video
 
 ## Open evidence
-Actual model execution, physical Fold acceptance, end-to-end network/temporary-file privacy and organizer interpretation remain unverified until linked receipts exist. Do not mark these passed from source code or mocked tests.
+Real model execution and strict performance records passed: [native feasibility](../../../artifacts/evidence/feasibility-summary.json). All 13 core and metrics tests pass. Desktop locked screen smoke-tested; full review workflow remains untested. Physical Fold acceptance, complete network/temporary-file privacy, fixed quality set and organizer interpretation remain open. Do not mark these passed from source code or mocked tests. Handoff: [fresh-session checkpoint](../../handoffs/2026-09-09-qvac-psy.md).
 
 ## Sources
 Software Factory upstream: https://gist.github.com/Maciejdziuba/88890d7e0eeefa5a8738bbe9fd5e20b8#file-skill-md . Wayfinder was read from the existing Claude skill source; branch-local Markdown tracking selected by Jeff. No skills or AIOS runtime installed.

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "decision": "Use @qvac/sdk 0.18.2 for compatibility with the explicitly supplied shared team runtime.",
+  "basis": {
+    "teamCommit": "21f7f40736c201f8d3c14a36ced4cdb426639122",
+    "teamSource": "src/core/runtime.js",
+    "reason": "The team pins 0.18.2 because its broader project supports delegated P2P inference. Clinical PsyRec execution remains local-only and rejects delegation.",
+    "officialExpoPage": "https://docs.qvac.tether.io/tutorials/expo/",
+    "officialMultimodalPage": "https://docs.qvac.tether.io/ai-capabilities/multimodal/",
+    "officialReleaseNotes": "https://docs.qvac.tether.io/reference/release-notes/"
+  },
+  "verifiedComparison": {
+    "expo": "The official tutorial says npm i @qvac/sdk; its older sample dependency block uses ^0.7.0. It does not impose 0.18.2.",
+    "sdk0182": "Published package tarball inspected in memory: contains VisionPsy base and Flash constants, image_no_upscale, emittedTokens, generatedTokens, promptTokens, timeToFirstToken; monolithic dist/server/worker.js and llm addon ^0.45.0.",
+    "sdk0190": "Separates @qvac/inference and removes delegated inference. Different worker lifecycle import and worker entry path. Installed API research established local-only named-pipe execution.",
+    "modelPair": "Both SDKs support the base weights and matching projector. Base requires image_no_upscale unset."
+  },
+  "clinicalBoundary": "TypeScript adapts the existing cargar/completar/registrar contracts with exact prompts, validated native performance fields, local verified files, no KV persistence, isolated worker cleanup, and an encrypted evidence sink.",
+  "validationScope": "This version rationale is not a performance or clinical workflow result; actual inference evidence is retained in separate synthetic run files."
+}

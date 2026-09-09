@@ -1,0 +1,13 @@
+# PsyRec working agreement
+
+Read [the current handoff](docs/handoffs/2026-09-09-qvac-psy.md), [Factory status](docs/plans/qvac-psy/00-status.md) and [Wayfinder map](.scratch/qvac-psy/map.md) before continuing.
+
+- Jeff explicitly authorized implementation and incremental commits/pushes to `QVAC-Psy`. Keep teammates informed through README/status updates. Do not merge this branch into main, create the future submission repository, contact organizers or submit the entry automatically.
+- Windows PC inference, native Expo Android capture on Z Fold, TypeScript, English synthetic inputs and Spanish demo narration. No Pi5, cloud inference, new RAG backend, handwriting or audio integration in this release.
+- SDK **0.18.2** is intentional for compatibility with the shared team runtime; preserve the ancestry and attribution of `21f7f40736c201f8d3c14a36ced4cdb426639122`. PsyRec inference remains local to the PC.
+- The full workflow is the acceptance target. A model probe, screenshot or unit test alone cannot establish release acceptance.
+- Every real run must retain exact prompts, model/load configuration, token counters, TTFT and throughput with methods/units. Store actual clinical run records only inside the encrypted vault. Publish only explicitly synthetic evidence. Missing required metrics fail the evidence gate.
+- Patient history is scoped to the selected patient and current approved revisions. Future RAG returns canonical record/revision locators; application authorization never trusts provider text or patient binding.
+- This repository must move intact to its own submission repository. No sibling-repository dependencies, personal-path requirements or model binaries in Git.
+
+Jeff requested parallel agent cells for the fresh session. Use a coordinator plus at most three active worker cells with disjoint ownership: (1) runtime/performance evidence, (2) Expo/transport, (3) desktop/clinical review. The coordinator owns root dependencies, shared contracts, documentation, integration and Git commits. Workers do not commit, push or modify another cell's files. Coordinate GPU jobs so only one real model probe owns the PC GPU at a time. Reviews must identify evidence and remaining gaps. Use only actually available models/providers; do not relabel a substitute as GLM, Kimi or Fable.

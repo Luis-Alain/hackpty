@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "scope": "Implementation checkpoint, not full release acceptance",
+  "date": "2026-09-09",
+  "timezone": "America/Panama",
+  "checks": [
+    {"command": "npm run check", "status": "passed"},
+    {"command": "npm test", "status": "passed", "passed": 13, "failed": 0, "skipped": 0},
+    {"command": "node dist/diagnostics/qvac-spike/validate-evidence.js", "status": "passed", "scope": "native Windows GPU extraction and drafting only"},
+    {"command": "node_modules/.bin/electron.cmd . --smoke", "status": "passed", "title": "PsyRec · Local clinical documentation", "buttonCount": 16, "screenshot": ".local/desktop-smoke.png", "visualInspection": "locked screen rendered correctly; no complete UI workflow exercised"},
+    {"command": "npm audit", "status": "findings", "highSeverityPackageEntries": 2, "packages": ["electron", "extract-zip"], "suggestedElectronPatch": "40.10.6", "resolved": false}
+  ],
+  "unverified": ["full clinician UI workflow", "physical Z Fold", "real TLS transport rejection/retry", "network isolation", "fixed adverse-input quality set", "independent setup", "Spanish video"]
+}

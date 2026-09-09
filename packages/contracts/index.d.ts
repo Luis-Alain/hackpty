@@ -1,10 +1,6 @@
+import type { RunMetrics } from '../runtime/types.js';
+export type { RunMetrics } from '../runtime/types.js';
 /** All identifiers are opaque application-generated IDs, never patient names. */
-export interface RunMetrics {
-  model: string; sdkVersion: string; operation: 'extract' | 'draft';
-  loadMs: number; durationMs: number; ttftMs: number | null;
-  inputTokens: number | null; outputTokens: number | null;
-  tokensPerSecond: number | null; measurementMethod: string;
-}
 export interface ExtractionResult { text: string; metrics: RunMetrics; }
 export interface DraftSection { title: string; text: string; sourceIds: string[]; }
 export interface DraftResult { text: string; metrics: RunMetrics; }

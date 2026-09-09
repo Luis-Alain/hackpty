@@ -1,0 +1,64 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync, existsSync } from 'node:fs';
+import path from 'node:path';
+import { assertCompleteMetrics, IncompleteEvidenceError } from '../packages/runtime/metrics.js';
+
+// Real fixture assertions are skipped when hardware artifacts are absent.
+// diagnostics/qvac-spike/validate-evidence.ts is the separate hard release gate:
+// it fails on missing real artifacts. Ordinary unit tests need no GPU/download.
+const evidenceAvailable=['extract','draft'].every(op=>existsSync(path.resolve('artifacts','evidence',`synthetic-${op}.json`)));
+const needsEvidence={skip:!evidenceAvailable?'Real synthetic evidence not yet generated; release evidence gate still fails.':false};
+function actualMetrics(operation='extract') {
+  const file=path.resolve('artifacts','evidence',`synthetic-${operation}.json`);
+  const evidence=JSON.parse(readFileSync(file,'utf8'));
+  assert.equal(evidence.synthetic,true);
+  assert.equal(evidence.result.metrics.sdkVersion,'0.18.2');
+  return evidence.result.metrics;
+}
+test('null, placeholders and partial objects cannot pass without complete evidence',()=>{
+  for(const value of [null,undefined,{},'placeholder',{schemaVersion:1,status:'failed'},{schemaVersion:1,status:'succeeded',operation:'extract'}])assert.throws(()=>assertCompleteMetrics(value),IncompleteEvidenceError);
+});
+test('both actual Windows SDK runs have complete structured performance evidence',needsEvidence,()=>{
+  for(const operation of ['extract','draft']){
+    const metrics=actualMetrics(operation);assertCompleteMetrics(metrics);
+    assert.equal(metrics.runtime.platform,'win32');
+    assert.equal(metrics.native.backendDevice,'gpu');
+    assert.equal(metrics.runtime.localOnly,true);
+  }
+});
+test('missing/null/NaN core native counters and performance metrics are rejected',needsEvidence,()=>{
+  for(const key of ['timeToFirstToken','tokensPerSecond','cacheTokens','promptTokens','generatedTokens','emittedTokens','backendDevice']){
+    for(const bad of [undefined,null,NaN]){
+      const metrics=actualMetrics();if(bad===undefined)delete metrics.native[key];else metrics.native[key]=bad;
+      assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError,`${key}: ${String(bad)}`);
+    }
+  }
+});
+test('load timing cannot be replaced by wall-clock duration or a placeholder',needsEvidence,()=>{
+  for(const key of ['nativeModelInitialization','sdkTotalLoad','timeToFirstContent']){
+    const metrics=actualMetrics();metrics.timings[key].value=null;
+    assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);
+  }
+  const metrics=actualMetrics();metrics.profiler.recentEvents=[];
+  assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);
+});
+test('exact history and reused team rows are mandatory; character counts are insufficient',needsEvidence,()=>{
+  const metrics=actualMetrics();delete metrics.request.history;
+  assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);
+  const mismatched=actualMetrics();mismatched.sharedRuntime.performanceRows.find(row=>row.stage==='completion').history=[{role:'user',content:'Different prompt'}];
+  assert.throws(()=>assertCompleteMetrics(mismatched),IncompleteEvidenceError);
+});
+test('model integrity, base projector preprocessing, and local provenance are enforced',needsEvidence,()=>{
+  const wrongHash=actualMetrics();wrongHash.modelDetails.assets[0].actualSha256='f'.repeat(64);
+  assert.throws(()=>assertCompleteMetrics(wrongHash),IncompleteEvidenceError);
+  const wrongVariant=actualMetrics();wrongVariant.modelDetails.loadConfig.image_no_upscale='on';
+  assert.throws(()=>assertCompleteMetrics(wrongVariant),IncompleteEvidenceError);
+  const wrongSource=actualMetrics();wrongSource.modelDetails.assets[0].path='https://example.com/model.gguf';
+  assert.throws(()=>assertCompleteMetrics(wrongSource),IncompleteEvidenceError);
+});
+test('cancelled/failed/empty/truncated metadata cannot masquerade as a completed record',needsEvidence,()=>{
+  for(const status of ['failed','cancelled',null]){const metrics=actualMetrics();metrics.status=status;assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);}
+  const cancelled=actualMetrics();cancelled.output.stopReason='cancelled';assert.throws(()=>assertCompleteMetrics(cancelled),IncompleteEvidenceError);
+  const empty=actualMetrics();empty.output.characters=0;assert.throws(()=>assertCompleteMetrics(empty),IncompleteEvidenceError);
+});

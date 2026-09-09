@@ -21,7 +21,11 @@ Real-model, physical-device, privacy and independent-setup acceptance remain ope
 
 ## Development
 
-Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `npm run build` / `npm test`. Desktop launch is `npm start` once the desktop slice is present. Android setup and provisioning commands will be added with that slice. No inference API keys are required.
+Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `npm run build` / `npm test`. Desktop launch is `npm start`. Provision model files using `node dist/diagnostics/qvac-spike/provision.js`, then run `npm run test:runtime`. `node dist/diagnostics/qvac-spike/validate-evidence.js` checks required native evidence. Android capture has not been implemented yet. No inference API keys are required.
+
+### Verified checkpoint · September 9
+
+13 tests pass. Real VisionPsy base extraction and Qwen3-1.7B drafting ran on Jeff's Windows NVIDIA GPU using SDK 0.18.2, with exact prompts, load timings, native token counts, TTFT and throughput retained in [synthetic evidence](artifacts/evidence/feasibility-summary.json). Desktop startup and its locked screen were smoke-tested. The full clinician UI workflow, transport/device acceptance, adversarial quality set and offline network test remain open. Continue from the [fresh-session handoff](docs/handoffs/2026-09-09-qvac-psy.md).
 
 `@qvac/sdk` is pinned to **0.18.2**, aligned with the team's shared runtime from commit `21f7f40736c201f8d3c14a36ced4cdb426639122`. That runtime retains P2P delegation needed by other entries; this PsyRec release uses local PC inference. This supersedes the original 0.19.0 plan pin. VisionPsy base uses its matching base projector and leaves `image_no_upscale` unset. Models are provisioned before offline use; model bytes and private vaults are not committed.
 

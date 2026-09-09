@@ -1,0 +1,99 @@
+import { app, BrowserWindow, dialog, ipcMain, session } from 'electron';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import { networkInterfaces } from 'node:os';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { Vault } from '../../packages/core/vault.js';
+import { PsyRecService } from '../../packages/core/service.js';
+import { CaptureServer } from '../../packages/transport/server.js';
+import QRCode from 'qrcode';
+
+const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
+const uiPath = join(projectRoot, 'apps/desktop/ui/index.html');
+const uiUrl = pathToFileURL(uiPath).href;
+let window: BrowserWindow;
+let service: PsyRecService;
+let receiver: CaptureServer;
+let runtime: any;
+let receiverInfo: any = null;
+let idleTimer: ReturnType<typeof setTimeout>;
+const privateDirectory = process.env.PSYREC_HOME ? resolve(process.env.PSYREC_HOME) : join(app.getPath('userData'), 'private');
+const ownFrame = event => event.senderFrame === window.webContents.mainFrame && event.senderFrame.url === uiUrl;
+function addresses() { return Object.values(networkInterfaces()).flat().filter(a => a && a.family === 'IPv4' && !a.internal && /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(a.address)).map(a => a!.address); }
+async function lock() { clearTimeout(idleTimer); await runtime?.cancelAll?.(); await receiver?.stop(); receiverInfo = null; await service?.lock(); if (window && !window.isDestroyed()) window.webContents.send('locked'); }
+function touch() { clearTimeout(idleTimer); idleTimer = setTimeout(() => void lock(), 10 * 60 * 1000); }
+
+async function startDesktop() {
+await app.whenReady();
+await mkdir(privateDirectory, { recursive: true, mode: 0o700 });
+try {
+  const module = await import(pathToFileURL(join(projectRoot, 'dist/packages/runtime/index.js')).href);
+  runtime = new module.QvacRuntime({ projectRoot });
+} catch {
+  runtime = { getStatus: () => ({ ready: false, message: 'QVAC runtime is not built yet. No inference is being simulated.' }), extractImage: async () => { throw new Error('QVAC runtime unavailable.'); }, draftFromSource: async () => { throw new Error('QVAC runtime unavailable.'); } };
+}
+service = new PsyRecService(new Vault(join(privateDirectory, 'psyrec.vault')), runtime);
+receiver = new CaptureServer(service, privateDirectory);
+window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--smoke'), webPreferences: { preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
+window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+window.webContents.on('will-navigate', (event, url) => { if (url !== uiUrl) event.preventDefault(); });
+session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
+session.defaultSession.webRequest.onBeforeRequest((details, callback) => { callback({ cancel: !details.url.startsWith('file:') && !details.url.startsWith('data:') }); });
+
+ipcMain.handle('psyrec', async (event, method: string, args: any[] = []) => {
+  if (!ownFrame(event)) throw new Error('Untrusted window.');
+  if (!Array.isArray(args) || args.length > 5) throw new Error('Invalid request.');
+  if (!['status', 'snapshot', 'captureData', 'approvedNotes'].includes(method)) touch();
+  switch (method) {
+    case 'status': return { locked: !service.vault.state, exists: await service.vault.exists(), runtime: await runtime.getStatus?.(), addresses: addresses(), receiver: receiverInfo };
+    case 'unlock': await service.vault.unlock(args[0], args[1] === true); return service.snapshot();
+    case 'lock': await lock(); return;
+    case 'snapshot': return service.snapshot();
+    case 'addPatient': return service.addPatient(args[0]);
+    case 'addEncounter': return service.addEncounter(args[0]);
+    case 'captureData': return service.captureData(args[0]);
+    case 'import': {
+      const result = await dialog.showOpenDialog(window, { properties: ['openFile'], filters: [{ name: 'Synthetic printed note', extensions: ['png', 'jpg', 'jpeg'] }] });
+      if (result.canceled) return null;
+      return service.importImage(args[0], await readFile(result.filePaths[0]));
+    }
+    case 'extract': return service.extract(args[0]);
+    case 'previewSourceChange': return service.previewSourceChange(args[0], args[1]);
+    case 'reviewSource': return service.reviewSource(args[0], args[1]);
+    case 'generateDraft': return service.generateDraft(args[0]);
+    case 'approve': return service.approve(args[0], args[1], args[2], args[3]);
+    case 'approvedNotes': return service.approvedNotes(args[0], args[1]);
+    case 'revokeDevice': return service.revokeDevice(args[0]);
+    case 'pair': {
+      if (!addresses().includes(args[1])) throw new Error('Select this PC’s private LAN address.');
+      if (!receiverInfo) receiverInfo = await receiver.start(args[1]);
+      if (receiverInfo.endpoint !== `https://${args[1]}:9443`) throw new Error('Lock and unlock the vault before switching networks.');
+      const invite = service.startPairing(args[0], receiverInfo.endpoint, receiverInfo.certificateFingerprint);
+      return { ...invite, qr: await QRCode.toDataURL(JSON.stringify(invite), { width: 320, margin: 2 }) };
+    }
+    case 'exportEvidence': {
+      if (args[0] !== true) throw new Error('Confirm this vault contains synthetic demo data only.');
+      const runs = service.state().runs ?? [];
+      if (!runs.length) throw new Error('No completed inference runs to export.');
+      const module = await import(pathToFileURL(join(projectRoot, 'dist/packages/runtime/index.js')).href);
+      for (const run of runs) module.assertCompleteMetrics(run.metrics);
+      const output = await dialog.showSaveDialog(window, { defaultPath: 'psyrec-synthetic-runs.jsonl', filters: [{ name: 'JSON Lines', extensions: ['jsonl'] }] });
+      if (output.canceled || !output.filePath) return null;
+      await writeFile(output.filePath, runs.map(r => JSON.stringify(r)).join('\n') + '\n', { mode: 0o600 });
+      return { count: runs.length };
+    }
+    default: throw new Error('Unknown operation.');
+  }
+});
+await window.loadFile(uiPath);
+app.on('window-all-closed', () => { void lock().finally(() => app.quit()); });
+if (process.argv.includes('--smoke')) {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const path = join(projectRoot, '.local/desktop-smoke.png');
+  await mkdir(join(projectRoot, '.local'), { recursive: true });
+  await writeFile(path, (await window.webContents.capturePage()).toPNG());
+  console.log(JSON.stringify({ screenshot: path, title: await window.webContents.executeJavaScript('document.title'), controls: await window.webContents.executeJavaScript('document.querySelectorAll("button").length') }));
+  app.quit();
+}
+}
+void startDesktop().catch(error => { console.error('PsyRec startup failed:', error.message); app.exit(1); });

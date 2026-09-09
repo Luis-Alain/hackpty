@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T17:42:12.152Z",
+  "status": "passed",
+  "scope": "Real SDK extraction and drafting feasibility only; full UI workflow must be validated separately",
+  "outcomes": [
+    {
+      "operation": "extract",
+      "status": "succeeded",
+      "runId": "bcbfa100-b9f5-46a1-8be4-6f33f0de6f47",
+      "model": "VISIONPSY_NANO_460M_MULTIMODAL_Q8_0_1",
+      "native": {
+        "timeToFirstToken": 368.338,
+        "tokensPerSecond": 263.93348876083223,
+        "cacheTokens": 0,
+        "promptTokens": 654,
+        "generatedTokens": 42,
+        "emittedTokens": 42,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      },
+      "loadMs": 5248.23,
+      "durationMs": 1444.4815999999992,
+      "output": "Synthetic Training Note  \n Source ID: DEMO-001  \n Reports Poor Sleep For Three Nights.  \n No Diagnosis Recorded.  \n Follow Up: Review Sleep Log."
+    },
+    {
+      "operation": "draft",
+      "status": "succeeded",
+      "runId": "6a8e2c69-a7e7-4cb4-83bc-8eef57f3f35f",
+      "model": "QWEN3_1_7B_INST_Q4",
+      "native": {
+        "timeToFirstToken": 81.544,
+        "tokensPerSecond": 128.30382345393895,
+        "cacheTokens": 0,
+        "promptTokens": 200,
+        "generatedTokens": 31,
+        "emittedTokens": 31,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      },
+      "loadMs": 4878.499,
+      "durationMs": 376.7411999999995,
+      "output": "The source indicates that the individual has reported poor sleep for three nights. No diagnosis has been recorded. A follow-up is recommended to review the sleep log."
+    }
+  ],
+  "temporaryFilesRemaining": []
+}

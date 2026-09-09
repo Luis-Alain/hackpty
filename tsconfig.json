@@ -5,6 +5,6 @@
     "noImplicitAny": false, "skipLibCheck": true, "esModuleInterop": true,
     "types": ["node"], "sourceMap": true
   },
-  "include": ["apps/desktop/**/*.ts", "packages/**/*.ts", "tests/**/*.ts", "diagnostics/**/*.ts", "scripts/**/*.ts"],
+  "include": ["apps/desktop/**/*.ts", "apps/desktop/**/*.cts", "packages/**/*.ts", "tests/**/*.ts", "diagnostics/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["apps/mobile", "node_modules", "dist"]
 }
