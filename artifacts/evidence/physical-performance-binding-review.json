@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T19:02:32.241Z",
+  "reviewer": "Dedicated runtime/performance evidence agent",
+  "scope": "Independent measurement/output/receipt/human-approval binding for a real Fold capture of known AI-generated SYN-HW-002; not complete physical workflow acceptance",
+  "workflowStatus": "provisional-not-accepted",
+  "sourceMedium": "unconfirmed",
+  "primaryPrintedNoteAcceptance": "not-established",
+  "sourcePhoto": {
+    "file": "physical-synthetic-SYN-HW-002.jpg",
+    "sha256": "f3245fb4a5351ca20c56e95dac6fdf01e017a9db8fb03d6c80c438c842ad451f",
+    "independentlyVisuallyReviewed": true,
+    "quality": "Known NOT A REAL PATIENT/SYN-HW-002 content. Top training header partly cropped and omitted by extraction. Clinical body, missing sleep duration, negation and follow-up are preserved; line breaks collapsed. No new clinical facts observed."
+  },
+  "candidate": "physical-fold-exploratory-provisional.json",
+  "bindings": [
+    {
+      "operation": "extract",
+      "runId": "47ebf707-8140-4372-8245-6c3b2f3362db",
+      "processId": 50376,
+      "metricsGate": "passed",
+      "exactOutputHashVerified": true,
+      "networkProcessBindingVerified": true,
+      "native": {
+        "timeToFirstToken": 609.439,
+        "tokensPerSecond": 237.75323195799695,
+        "cacheTokens": 0,
+        "promptTokens": 1174,
+        "generatedTokens": 48,
+        "emittedTokens": 48,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      },
+      "loadMs": 5401.8922999999995,
+      "completionWallMs": 1886.5658000000003,
+      "appTimeToFirstContentMs": 1670.3297999999995
+    },
+    {
+      "operation": "draft",
+      "runId": "5112c4f6-6b86-471f-9add-40a95749ced6",
+      "processId": 51020,
+      "metricsGate": "passed",
+      "exactOutputHashVerified": true,
+      "networkProcessBindingVerified": true,
+      "native": {
+        "timeToFirstToken": 80.974,
+        "tokensPerSecond": 122.73703590058298,
+        "cacheTokens": 0,
+        "promptTokens": 223,
+        "generatedTokens": 30,
+        "emittedTokens": 30,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      },
+      "loadMs": 6463.2234,
+      "completionWallMs": 371.1934000000001,
+      "appTimeToFirstContentMs": 109.91019999999844
+    }
+  ],
+  "chainChecks": {
+    "phoneReceiptImageDigestAndEncounterMatchActualExtraction": true,
+    "exactRawOutputsMatchNativeDigests": true,
+    "reviewedSourceMatchesExactDraftPromptAndRevision": true,
+    "trustedSourceReviewAt": "2026-09-09T18:38:21.476Z",
+    "trustedExactApprovalAt": "2026-09-09T18:38:47.920Z",
+    "approvedAndReloadedTextDigestsMatch": true,
+    "assistantNavigationLabeledSeparately": true
+  },
+  "network": {
+    "file": "physical-network-observation-1788979224270.json",
+    "samples": 213,
+    "inferenceSocketObservations": 0,
+    "workerProcessIds": [
+      50376,
+      51020
+    ],
+    "actualRunTimestampsSequential": true,
+    "enforcedIsolation": false,
+    "scope": "Sampled worker/native subtrees showed no sockets. Desktop private-LAN TLS9443 receiver sockets are separate. Short-lived sockets between samples may be missed."
+  },
+  "remainingGaps": [
+    "Observer failure flag is true; preserve this actual final status.",
+    "Encrypted observer missing assistant lock-renderer-purge event although direct DOM diagnostic checks passed.",
+    "Native phone assertions await dedicated owner binding review.",
+    "Paper versus screen carrier unconfirmed; not primary typed printed-note acceptance."
+  ],
+  "retainedFailureStatus": {
+    "physicalObservationFailed": true,
+    "failedSteps": [
+      "paired-fold-photo-received",
+      "lock-renderer-purge"
+    ],
+    "nativePhoneAssertions": {
+      "receipt": {
+        "deviceId": "3fd7002e-4dca-41ee-9271-a4ca1075daff",
+        "transferId": "14e5d7f2-50bc-4574-8532-ddc433596118",
+        "encounterId": "b5fe1323-c415-4c9a-af9a-2c1615747a55",
+        "captureId": "d2fe834c-898e-4314-bedb-a1ead1cf58c9",
+        "sha256": "f3245fb4a5351ca20c56e95dac6fdf01e017a9db8fb03d6c80c438c842ad451f",
+        "receivedAt": "2026-09-09T18:37:52.852Z"
+      },
+      "nativeAndroidBuild": null,
+      "certificatePinVerified": null,
+      "encryptedPendingQueue": null,
+      "deletedOnlyAfterReceipt": null,
+      "printedSyntheticEnglishNote": false,
+      "inputClassification": "AI-generated handwriting-style synthetic note",
+      "sourceMedium": "unconfirmed",
+      "fixtureId": "SYN-HW-002"
+    }
+  },
+  "screenshots": {
+    "file": "physical-assisted-approved-history.png",
+    "independentlyVisuallyReviewed": true,
+    "scope": "Known synthetic approved text and selected-patient history after assistant navigation; no QR or private source visible."
+  },
+  "visualReviewBinding": {
+    "photoSha256": "f3245fb4a5351ca20c56e95dac6fdf01e017a9db8fb03d6c80c438c842ad451f",
+    "screenshotSha256": "52e62626b5a95664bc929587489353db712c1f1055ebbbc42dee73a6016be731",
+    "runIds": [
+      "47ebf707-8140-4372-8245-6c3b2f3362db",
+      "5112c4f6-6b86-471f-9add-40a95749ced6"
+    ],
+    "approvedSha256": "d663a4126f1bd090c348cf435b479a211eb75a91a1861189c5694b405c3c0b28"
+  }
+}

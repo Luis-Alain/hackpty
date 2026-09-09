@@ -1,0 +1,6447 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "startedAt": "2026-09-09T18:35:59.175Z",
+  "endedAt": "2026-09-09T18:40:24.270Z",
+  "desktopPid": 17804,
+  "samples": 213,
+  "method": "Read-only Win32_Process descendant snapshots, runtime worker command-line classification and netstat -ano; 250 ms delay after each completed sample. IP addresses and command lines intentionally not retained.",
+  "enforcedIsolation": false,
+  "limitations": [
+    "Short-lived processes or sockets between samples may be missed.",
+    "The PC remains network-connected. Desktop private-LAN TLS receiver sockets are separate from inference worker sockets.",
+    "A process/socket observation alone is not full workflow acceptance or proof of enforced offline isolation."
+  ],
+  "processes": [
+    {
+      "processId": 17804,
+      "parentProcessId": 45724,
+      "name": "electron.exe",
+      "role": "desktop-root-lan-receiver",
+      "firstSeen": "2026-09-09T18:35:59.936Z",
+      "lastSeen": "2026-09-09T18:40:23.964Z"
+    },
+    {
+      "processId": 36388,
+      "parentProcessId": 17804,
+      "name": "electron.exe",
+      "role": "desktop-other",
+      "firstSeen": "2026-09-09T18:35:59.936Z",
+      "lastSeen": "2026-09-09T18:40:23.964Z"
+    },
+    {
+      "processId": 13868,
+      "parentProcessId": 17804,
+      "name": "electron.exe",
+      "role": "desktop-other",
+      "firstSeen": "2026-09-09T18:35:59.936Z",
+      "lastSeen": "2026-09-09T18:40:23.964Z"
+    },
+    {
+      "processId": 32056,
+      "parentProcessId": 17804,
+      "name": "electron.exe",
+      "role": "desktop-other",
+      "firstSeen": "2026-09-09T18:35:59.936Z",
+      "lastSeen": "2026-09-09T18:40:23.964Z"
+    },
+    {
+      "processId": 62068,
+      "parentProcessId": 17804,
+      "name": "electron.exe",
+      "role": "desktop-other",
+      "firstSeen": "2026-09-09T18:37:15.755Z",
+      "lastSeen": "2026-09-09T18:37:15.755Z"
+    },
+    {
+      "processId": 50376,
+      "parentProcessId": 17804,
+      "name": "electron.exe",
+      "role": "inference-worker-tree",
+      "firstSeen": "2026-09-09T18:38:00.588Z",
+      "lastSeen": "2026-09-09T18:38:10.905Z"
+    },
+    {
+      "processId": 45796,
+      "parentProcessId": 50376,
+      "name": "bare.exe",
+      "role": "inference-worker-tree",
+      "firstSeen": "2026-09-09T18:38:04.985Z",
+      "lastSeen": "2026-09-09T18:38:10.905Z"
+    },
+    {
+      "processId": 36052,
+      "parentProcessId": 45796,
+      "name": "conhost.exe",
+      "role": "inference-worker-tree",
+      "firstSeen": "2026-09-09T18:38:04.985Z",
+      "lastSeen": "2026-09-09T18:38:10.905Z"
+    },
+    {
+      "processId": 51020,
+      "parentProcessId": 17804,
+      "name": "electron.exe",
+      "role": "inference-worker-tree",
+      "firstSeen": "2026-09-09T18:38:23.330Z",
+      "lastSeen": "2026-09-09T18:38:36.239Z"
+    },
+    {
+      "processId": 16220,
+      "parentProcessId": 51020,
+      "name": "bare.exe",
+      "role": "inference-worker-tree",
+      "firstSeen": "2026-09-09T18:38:31.128Z",
+      "lastSeen": "2026-09-09T18:38:36.239Z"
+    },
+    {
+      "processId": 13176,
+      "parentProcessId": 16220,
+      "name": "conhost.exe",
+      "role": "inference-worker-tree",
+      "firstSeen": "2026-09-09T18:38:31.128Z",
+      "lastSeen": "2026-09-09T18:38:36.239Z"
+    }
+  ],
+  "sampledInferenceProcessIds": [
+    50376,
+    45796,
+    36052,
+    51020,
+    16220,
+    13176
+  ],
+  "socketObservations": [
+    {
+      "at": "2026-09-09T18:35:59.936Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:01.016Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:02.155Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:03.289Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:04.389Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:05.536Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:06.704Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:07.839Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:08.923Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:10.070Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:11.221Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:12.363Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:13.484Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:14.661Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:15.817Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:16.964Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:18.127Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:19.275Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:20.425Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:21.548Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:22.668Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:23.829Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:24.964Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:26.130Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:27.279Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:28.412Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:29.510Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:30.643Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:31.762Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:32.881Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:34.034Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:35.151Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:36.302Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:37.424Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:38.567Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:39.667Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:40.761Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:41.972Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:43.318Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:44.531Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:45.771Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:47.103Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:48.334Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:49.584Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:50.876Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:52.297Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:53.480Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:54.659Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:55.810Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:57.012Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:58.160Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:36:59.287Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:00.485Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:01.643Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:02.794Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:03.979Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:05.135Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:06.278Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:07.395Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:08.779Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:10.041Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:11.357Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:15.755Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:19.521Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:22.293Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:22.293Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:23.844Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:23.844Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:25.922Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:25.922Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:27.967Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:27.967Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:30.459Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:30.459Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:32.477Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:32.477Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:35.828Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:35.828Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:38.967Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:38.967Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:40.410Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:40.410Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:41.998Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:41.998Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:43.572Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:43.572Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:44.854Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:44.854Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:46.019Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:46.019Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:47.120Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:47.120Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:48.237Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:48.237Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:49.373Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:49.373Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:50.544Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:50.544Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:51.647Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:51.647Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:52.780Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:52.780Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:52.780Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:53.948Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:53.948Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:53.948Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:55.071Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:55.071Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:55.071Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:56.122Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:56.122Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:56.122Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:57.222Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:57.222Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:57.222Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:58.334Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:58.334Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "ESTABLISHED"
+    },
+    {
+      "at": "2026-09-09T18:37:58.334Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:59.454Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:37:59.454Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:37:59.454Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:00.588Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:00.588Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:00.588Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:01.680Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:01.680Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:01.680Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:02.795Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:02.795Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:02.795Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:03.880Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:03.880Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:03.880Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:04.985Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:04.985Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:04.985Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:06.131Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:06.131Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:06.131Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:07.309Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:07.309Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:07.309Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:08.403Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:08.403Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:08.403Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:09.675Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:09.675Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:09.675Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:10.905Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:10.905Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:10.905Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:12.072Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:12.072Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:12.072Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:13.235Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:13.235Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:13.235Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:14.400Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:14.400Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:14.400Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:15.536Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:15.536Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:15.536Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:16.618Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:16.618Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:16.618Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:17.723Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:17.723Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:17.723Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:18.849Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:18.849Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:18.849Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:19.997Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:19.997Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:19.997Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:21.143Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:21.143Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:21.143Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:22.252Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:22.252Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:22.252Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:23.330Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:23.330Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:23.330Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:24.459Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:24.459Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:24.459Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:25.541Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:25.541Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:25.541Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:26.598Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:26.598Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:26.598Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:27.689Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:27.689Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:27.689Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:28.845Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:28.845Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:28.845Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:29.943Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:29.943Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:29.943Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:31.128Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:31.128Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:31.128Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:32.359Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:32.359Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:32.359Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:33.559Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:33.559Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:33.559Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:34.781Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:34.781Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:34.781Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:36.239Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:36.239Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:36.239Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:37.549Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:37.549Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:37.549Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:38.703Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:38.703Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:38.703Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:39.816Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:39.816Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:39.816Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:40.940Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:40.940Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:40.940Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:42.047Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:42.047Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:42.047Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:43.157Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:43.157Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:43.157Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:44.318Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:44.318Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:44.318Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:45.424Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:45.424Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:45.424Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:46.494Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:46.494Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:46.494Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:47.563Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:47.563Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:47.563Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:48.696Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:48.696Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:48.696Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:49.809Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:49.809Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:49.809Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:50.906Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:50.906Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:50.906Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:51.940Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:51.940Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:51.940Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:53.028Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:53.028Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:53.028Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:54.160Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:54.160Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:54.160Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:55.292Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:55.292Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:55.292Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:56.383Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:56.383Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:56.383Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:57.556Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:57.556Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:57.556Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:58.901Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:38:58.901Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:38:58.901Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:00.069Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:00.069Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:00.069Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:01.235Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:01.235Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:01.235Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:02.405Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:02.405Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:02.405Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:03.553Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:03.553Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:03.553Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:04.704Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:04.704Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:04.704Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:05.846Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:05.846Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:05.846Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:07.037Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:07.037Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:07.037Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:08.190Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:08.190Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:08.190Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:09.305Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:09.305Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:09.305Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:10.478Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:10.478Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:10.478Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:11.639Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:11.639Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:11.639Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:12.858Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:12.858Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:12.858Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:14.192Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:14.192Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:14.192Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:15.563Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:15.563Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:15.563Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:17.066Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:17.066Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:17.066Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:18.474Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:18.474Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:18.474Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:19.816Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:19.816Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:19.816Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:20.984Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:20.984Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:20.984Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:22.146Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:22.146Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:22.146Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:23.351Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:23.351Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:23.351Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:24.508Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:24.508Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:24.508Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:25.689Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:25.689Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:25.689Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "42120"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:26.900Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:26.900Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:28.109Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:28.109Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:29.353Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:29.353Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:30.486Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:30.486Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:31.617Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:31.617Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:32.749Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:32.749Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:33.992Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:33.992Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:35.242Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:35.242Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:36.463Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:36.463Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:37.632Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:37.632Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:38.773Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:38.773Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:39.920Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:39.920Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:41.034Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:41.034Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:42.147Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:42.147Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:43.258Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:43.258Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:44.373Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:44.373Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:45.482Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:45.482Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:46.579Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:46.579Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:47.687Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:47.687Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:48.795Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:48.795Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:49.913Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:49.913Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:51.028Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:51.028Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:52.115Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:52.115Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:53.204Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:53.204Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:54.310Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:54.310Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:55.425Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:55.425Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:56.484Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:56.484Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:57.547Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:57.547Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:58.595Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:39:58.595Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "private-ipv4",
+        "port": "37532"
+      },
+      "state": "FIN_WAIT_2"
+    },
+    {
+      "at": "2026-09-09T18:39:59.665Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:00.776Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:01.963Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:03.182Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:04.410Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:05.774Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:07.184Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:08.539Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:09.936Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:11.325Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:12.645Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:13.881Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:14.983Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:16.149Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:17.287Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:18.410Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:19.558Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:20.676Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:21.761Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:22.856Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    },
+    {
+      "at": "2026-09-09T18:40:23.964Z",
+      "processId": 17804,
+      "role": "desktop-root-lan-receiver",
+      "protocol": "TCP",
+      "local": {
+        "scope": "private-ipv4",
+        "port": "9443"
+      },
+      "remote": {
+        "scope": "wildcard",
+        "port": "0"
+      },
+      "state": "LISTENING"
+    }
+  ],
+  "inferenceSocketObservations": [],
+  "errors": []
+}
