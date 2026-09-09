@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
+import { mkdtemp, mkdir, writeFile, readdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { randomUUID } from 'node:crypto';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
+import { OWNER_MARKER, recoverAbandonedTemporaryFiles } from '../packages/runtime/temporary-files.js';
 import { assertCompleteMetrics, IncompleteEvidenceError } from '../packages/runtime/metrics.js';
 
 // Real fixture assertions are skipped when hardware artifacts are absent.
@@ -83,4 +89,22 @@ test('wrong or missing projector is rejected by the evidence gate',needsEvidence
   }
   const metrics=actualMetrics();metrics.modelDetails.assets.find(asset=>asset.role==='projector').path+='.different.gguf';
   assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);
+});
+
+test('crash recovery removes only marked dead-owner temporary directories',async()=>{
+  const root=await mkdtemp(path.join(tmpdir(),'psyrec-runtime-recovery-'));
+  const temporary=path.join(root,'.local/runtime-tmp');await mkdir(temporary,{recursive:true});
+  const child=spawn(process.execPath,['-e','process.exit(0)'],{stdio:'ignore',windowsHide:true});
+  const deadPid=child.pid;await once(child,'exit');assert.ok(deadPid);
+  const dead=randomUUID(),live=randomUUID(),unmarked=randomUUID(),malformed=randomUUID();
+  try{
+    for(const id of [dead,live,unmarked,malformed])await mkdir(path.join(temporary,id));
+    await writeFile(path.join(temporary,dead,OWNER_MARKER),JSON.stringify({schemaVersion:1,ownerProcessId:deadPid}));
+    await writeFile(path.join(temporary,dead,'capture.png'),'SYNTHETIC TEMPORARY IMAGE');
+    await writeFile(path.join(temporary,live,OWNER_MARKER),JSON.stringify({schemaVersion:1,ownerProcessId:process.pid}));
+    await writeFile(path.join(temporary,malformed,OWNER_MARKER),JSON.stringify({schemaVersion:1,ownerProcessId:-1}));
+    assert.deepEqual(await recoverAbandonedTemporaryFiles(root),[dead]);
+    assert.deepEqual((await readdir(temporary)).sort(),[live,unmarked,malformed].sort());
+    assert.deepEqual(await recoverAbandonedTemporaryFiles(root),[]);
+  }finally{await rm(root,{recursive:true,force:true});}
 });

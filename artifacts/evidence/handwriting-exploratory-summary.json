@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T18:34:07.104Z",
+  "scope": "Additional user-requested fixtures. Does not establish real handwriting reliability or replace physical printed-note release acceptance.",
+  "classification": "AI-generated handwriting-style synthetic evaluation fixtures",
+  "noTrainingOrFineTuning": true,
+  "productionPromptUnchanged": true,
+  "outcomes": [
+    {
+      "fixtureId": "SYN-HW-001",
+      "file": "artifacts\\evidence\\handwriting-exploratory-SYN-HW-001.json",
+      "runId": "29ebff73-744a-43c5-bb7b-82b06425214d",
+      "metricsGate": "passed",
+      "quality": {
+        "referenceWordCount": 34,
+        "outputWordCount": 34,
+        "wordEditDistance": 0,
+        "normalizedWordErrorRate": 0,
+        "method": "Levenshtein word edits divided by reference word count after lowercasing and Unicode letter/number tokenization. This is a text-quality comparison, never an inference token estimate.",
+        "exactTextMatch": false,
+        "agentReviewRequired": true
+      },
+      "text": "Synthetic Training Note\nNot a Real Patient\nCase: SYN-HW-001\nThe client reports poor sleep for three nights.\nMood was described as tired.\nNo diagnosis is recorded.\nFollow-up: review the sleep log.",
+      "native": {
+        "timeToFirstToken": 622.903,
+        "tokensPerSecond": 244.8187451036251,
+        "cacheTokens": 0,
+        "promptTokens": 1174,
+        "generatedTokens": 55,
+        "emittedTokens": 55,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    },
+    {
+      "fixtureId": "SYN-HW-002",
+      "file": "artifacts\\evidence\\handwriting-exploratory-SYN-HW-002.json",
+      "runId": "1884292c-6839-4993-9739-458a9c6711c3",
+      "metricsGate": "passed",
+      "quality": {
+        "referenceWordCount": 36,
+        "outputWordCount": 36,
+        "wordEditDistance": 0,
+        "normalizedWordErrorRate": 0,
+        "method": "Levenshtein word edits divided by reference word count after lowercasing and Unicode letter/number tokenization. This is a text-quality comparison, never an inference token estimate.",
+        "exactTextMatch": false,
+        "agentReviewRequired": true
+      },
+      "text": "Synthetic Training Note not a real patient Case: SYN-HW-002 The client reports feeling worried before meetings. Sleep duration was not recorded. No diagnosis is recorded. Follow-up: review the diary at the next visit.",
+      "native": {
+        "timeToFirstToken": 632.442,
+        "tokensPerSecond": 238.71703914482006,
+        "cacheTokens": 0,
+        "promptTokens": 1174,
+        "generatedTokens": 50,
+        "emittedTokens": 50,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    }
+  ],
+  "preexistingTemporaryDirectories": [
+    "563fb787-29ee-4555-b71f-14c055df6634",
+    "6626ba07-6b52-4935-938b-c632ce1f8fc8"
+  ],
+  "newTemporaryDirectoriesRemaining": []
+}

@@ -1,7 +1,5 @@
 import { createServer, type Server } from 'node:https';
 import { X509Certificate } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import selfsigned from 'selfsigned';
 import { MAX_IMAGE_BYTES, PsyRecService } from '../core/service.js';
 
@@ -12,18 +10,14 @@ export class CaptureServer {
   constructor(private service: PsyRecService, private directory: string) {}
   async start(host: string, port = 9443) {
     if (this.server) throw new Error('Stop the current receiver before starting another.');
-    await mkdir(this.directory, { recursive: true, mode: 0o700 });
-    const path = join(this.directory, 'transport-identity.json');
-    let identity;
-    try { identity = JSON.parse(await readFile(path, 'utf8')); }
-    catch (error) {
-      if (error.code !== 'ENOENT') throw error;
+    let identity = this.service.getTransportIdentity();
+    if (!identity) {
       const pems = selfsigned.generate([{ name: 'commonName', value: 'PsyRec local capture' }], { keySize: 2048, days: 30, algorithm: 'sha256' });
       identity = { key: pems.private, cert: pems.cert };
-      await writeFile(path, JSON.stringify(identity), { mode: 0o600, flag: 'wx' });
+      await this.service.saveTransportIdentity(identity);
     }
     const cert = new X509Certificate(identity.cert);
-    if (Date.parse(cert.validTo) <= Date.now()) throw new Error('Capture certificate expired. Remove transport-identity.json while the app is closed and pair again.');
+    if (Date.parse(cert.validTo) <= Date.now()) throw new Error('Capture certificate expired. Rotate the encrypted vault identity and pair again.');
     this.fingerprint = cert.fingerprint256.replaceAll(':', '').toLowerCase();
     const server = createServer({ key: identity.key, cert: identity.cert, minVersion: 'TLSv1.2', maxHeaderSize: 4096 }, async (req, res) => {
       res.setHeader('Content-Type', 'application/json'); res.setHeader('Cache-Control', 'no-store');

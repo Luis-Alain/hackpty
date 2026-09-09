@@ -1,5 +1,19 @@
 import type { RunMetrics } from '../runtime/types.js';
 export type { RunMetrics } from '../runtime/types.js';
+/** Private TLS identity: encrypted vault only; never include in renderer snapshots. */
+export interface TransportIdentity { key: string; cert: string; }
+/** The physical desktop QR is the trust anchor for this single encounter. */
+export interface PairingInvite {
+  version: 1; endpoint: string; certificateFingerprint: string;
+  secret: string; encounterId: string; expiresAt: number;
+}
+/** Phone persists these only in protected device storage. */
+export interface PairedDevice { deviceId: string; token: string; encounterId: string; }
+/** Receipt is returned only after the capture's encrypted vault commit succeeds. */
+export interface CaptureReceipt {
+  deviceId: string; transferId: string; encounterId: string; captureId: string;
+  sha256: string; receivedAt: string; duplicate?: boolean;
+}
 /** All identifiers are opaque application-generated IDs, never patient names. */
 export interface ExtractionResult { text: string; metrics: RunMetrics; }
 export interface DraftSection { title: string; text: string; sourceIds: string[]; }

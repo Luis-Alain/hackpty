@@ -15,7 +15,7 @@ A self-contained PsyRec submission: native Fold capture, local VisionPsy extract
 - [Approval and recovery rules](issues/05-approval-recovery.md): immutable approvals, source-change invalidation, encrypted atomic saves and idempotent transfers.
 
 ## Not yet specified
-Final demonstrated performance and device-specific findings will be filled from runtime and Fold evidence. Do not manufacture these facts.
+Connected desktop performance and clinical review are verified in the [desktop workflow receipt](../../artifacts/evidence/desktop-workflow.json). Runtime quality review records an unreadable-line omission; image/source correction stays mandatory. The native Android APK builds locally; physical Fold capture and full release acceptance remain open. Follow Factory status for current evidence rather than the historical handoff's unfinished code inventory.
 
 ## Out of scope
 RAG backend/vector storage, external reference documents, cross-patient retrieval, diagnosis, therapy, full-session/background audio, handwriting guarantees, cloud inference, automatic patient sharing and other challenge applications.

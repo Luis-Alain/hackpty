@@ -10,8 +10,8 @@ const image = Buffer.from('89504e470d0a1a0a00000000', 'hex');
 const password = 'synthetic-only-test-passphrase';
 // Unit-test double only. These records cannot qualify as real QVAC evidence.
 const runtime = {
-  extractImage: async () => ({ text: 'Synthetic patient reports improved sleep.', metrics: { testDouble: true } }),
-  draftFromSource: async ({ text }) => ({ text: `Reviewed source: ${text}`, metrics: { testDouble: true } }),
+  extractImage: async () => ({ text: 'Synthetic patient reports improved sleep.', metrics: { testDouble: true as const } }),
+  draftFromSource: async ({ text }) => ({ text: `Reviewed source: ${text}`, metrics: { testDouble: true as const } }),
 };
 async function setup(t, options = {}, replacementRuntime = runtime) {
   const dir = await mkdtemp(join(tmpdir(), 'psyrec-test-'));
@@ -42,7 +42,7 @@ test('approved record and performance records survive encrypted reload; wrong ke
   await vault.unlock(password);
   assert.deepEqual(service.approvedNotes(patient.id), [saved]);
   assert.equal(vault.state.runs.length, 2);
-  assert.deepEqual(saved.draftingMetrics, { testDouble: true });
+  assert.deepEqual(saved.draftingMetrics, { testDouble: true as const });
 });
 test('source correction supersedes approval, preserves original, rejects stale approval', async t => {
   const { service, patient, encounter } = await setup(t);
@@ -113,4 +113,87 @@ test('late inference after vault lock cannot persist output', async t => {
   await assert.rejects(pending, /session changed/);
   await vault.unlock(password);
   assert.equal(service.encounter(vault.state, encounter.id).source.revision, 0);
+});
+import { RuntimeEvidenceError } from '../packages/runtime/types.js';
+import { validateRequest } from '../apps/desktop/ipc.js';
+
+test('failed inference evidence persists encrypted without changing source or draft', async t => {
+  const failure = { schemaVersion: 1 as const, status: 'failed' as const, runId: 'failure-synthetic', operation: 'draft' as const, stage: 'completion', error: { name: 'RuntimeTimeoutError', message: 'Synthetic timeout' }, startedAt: new Date().toISOString(), endedAt: new Date().toISOString(), partialEvidence: { exactPrompt: 'SYNTHETIC PRIVATE PROMPT', generatedTokens: 3 } };
+  const failedRuntime = { ...runtime, draftFromSource: async () => { throw new RuntimeEvidenceError('Timed out', failure); } };
+  const { service, vault, encounter } = await setup(t, {}, failedRuntime);
+  await service.reviewSource(encounter.id, 'Synthetic reviewed source');
+  await assert.rejects(service.generateDraft(encounter.id), /Timed out/);
+  assert.equal(service.encounter(vault.state, encounter.id).draft, null);
+  assert.ok(!(await readFile(vault.path, 'utf8')).includes('SYNTHETIC PRIVATE PROMPT'));
+  await service.lock(); await vault.unlock(password);
+  assert.deepEqual(vault.state.runs[0], { encounterId: encounter.id, sourceRevision: 1, operation: 'draft', status: 'failed', evidence: failure });
+});
+
+test('exact approval preserves whitespace and selected-patient history excludes others', async t => {
+  const { service, encounter, patient } = await setup(t);
+  await service.reviewSource(encounter.id, 'Synthetic source');
+  const draft = await service.generateDraft(encounter.id);
+  const exact = '  Clinician edited synthetic note.\n';
+  const saved = await service.approve(encounter.id, draft.id, draft.sourceRevision, exact);
+  assert.equal(saved.text, exact);
+  const other = await service.addPatient('SYNTHETIC-OTHER');
+  assert.deepEqual(service.approvedNotes(other.id), []);
+  assert.equal(service.approvedNotes(patient.id)[0].text, exact);
+  await service.reviewSource(encounter.id, 'Synthetic source');
+  assert.equal(service.encounter(service.state(), encounter.id).status, 'approved');
+  await assert.rejects(service.approve(encounter.id, draft.id, draft.sourceRevision, exact), /stale/);
+});
+
+test('source preview rejects changed revisions and extraction cannot silently supersede reviewed source', async t => {
+  const { service, encounter } = await setup(t);
+  await service.importImage(encounter.id, image);
+  await service.extract(encounter.id);
+  const preview = service.previewSourceChange(encounter.id, 'First correction');
+  await service.reviewSource(encounter.id, 'Second correction', preview.sourceRevision);
+  await assert.rejects(service.reviewSource(encounter.id, 'First correction', preview.sourceRevision), /since preview/);
+  await assert.rejects(service.extract(encounter.id), /Extraction already exists/);
+});
+
+test('TLS private identity is encrypted and absent from snapshots', async t => {
+  const { service, vault } = await setup(t);
+  const identity = { key: 'SYNTHETIC PRIVATE KEY', cert: 'SYNTHETIC CERT' };
+  await service.saveTransportIdentity(identity);
+  assert.equal(JSON.stringify(service.snapshot()).includes(identity.key), false);
+  assert.equal((await readFile(vault.path, 'utf8')).includes(identity.key), false);
+  await service.lock(); await vault.unlock(password);
+  assert.deepEqual(service.getTransportIdentity(), identity);
+});
+
+test('IPC rejects unknown operations, wrong types and missing approval fields', () => {
+  for (const [method, args] of [['constructor', []], ['approve', ['enc', 'draft', 1]], ['reviewSource', ['enc', 'text', '1']], ['approvedNotes', ['patient', 'false']], ['unlock', [{ password }, true]]]) {
+    assert.throws(() => validateRequest(method, args), /Invalid request/);
+  }
+  validateRequest('approve', ['enc', 'draft', 1, 'Exact note']);
+});
+
+test('raw model output remains byte-exact for performance output hashes', async t => {
+  const raw = '  Synthetic model output.\n';
+  const rawRuntime = { extractImage: async () => ({ text: raw, metrics: { testDouble: true as const } }), draftFromSource: async () => ({ text: raw, metrics: { testDouble: true as const } }) };
+  const { service, encounter } = await setup(t, {}, rawRuntime);
+  await service.importImage(encounter.id, image);
+  assert.equal((await service.extract(encounter.id)).text, raw);
+  await service.reviewSource(encounter.id, raw);
+  assert.equal((await service.generateDraft(encounter.id)).text, raw);
+});
+
+test('raw output and physical observation survive correction and encrypted reload without snapshot exposure', async t => {
+  const { service, vault, encounter } = await setup(t);
+  await service.importImage(encounter.id, image);
+  const extraction = await service.extract(encounter.id);
+  await service.recordPhysicalObservation('renderer-input', { trusted: true, control: 'reviewSource', sourceText: 'SYNTHETIC OBSERVED CORRECTION' });
+  await service.reviewSource(encounter.id, 'SYNTHETIC OBSERVED CORRECTION');
+  const draft = await service.generateDraft(encounter.id);
+  assert.equal(JSON.stringify(service.snapshot()).includes('renderer-input'), false);
+  await service.lock(); await vault.unlock(password);
+  assert.ok(vault.state.runs[0].status !== 'failed');
+  assert.ok(vault.state.runs[1].status !== 'failed');
+  assert.equal(vault.state.runs[0].outputText, extraction.text);
+  assert.equal(vault.state.runs[1].outputText, draft.text);
+  assert.equal(vault.state.physicalObservations[0].details.control, 'reviewSource');
+  assert.equal((await readFile(vault.path, 'utf8')).includes('SYNTHETIC OBSERVED CORRECTION'), false);
 });

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T18:14:15.389Z",
+  "scope": "Dead-owner temporary-file recovery test, not a crash-proof privacy guarantee",
+  "test": {
+    "command": "npm run build && node --test dist/tests/runtime-metrics.test.js",
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "recoveryCase": "Real short-lived child PID exits; marked directory removed, current-parent directory retained, unmarked directory retained, malformed PID retained, second recovery is idempotent"
+  },
+  "recoveryPolicy": "On runtime status/new inference, remove only owned UUID directories with a valid marker whose parent process is confirmed absent. Live, unmarked, malformed or ambiguous owners are retained.",
+  "limitations": [
+    "Abrupt OS termination can leave plaintext SDK capture files until next runtime startup/recovery.",
+    "Previous unmarked synthetic orphan directories cannot be automatically attributed; two authorized literal-path removal attempts were rejected by automatic approval review as blocked by policy. No alternate-tool deletion attempted."
+  ],
+  "preexistingUnmarkedSyntheticDirectoriesRemaining": [
+    "563fb787-29ee-4555-b71f-14c055df6634",
+    "6626ba07-6b52-4935-938b-c632ce1f8fc8"
+  ],
+  "occlusionProbeNewTemporaryDirectoriesRemaining": []
+}

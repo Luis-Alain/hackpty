@@ -123,5 +123,14 @@
         "backendDevice": "gpu"
       }
     }
-  ]
+  ],
+  "followUp": {
+    "file": "artifacts/evidence/quality-unreadable-extract-v2.json",
+    "runId": "bd623bde-3977-4e07-b64e-9e8e7bc38d6f",
+    "metricsGate": "passed",
+    "qualityStatus": "failed",
+    "review": "The one stronger-prompt attempt still silently omits the visibly occluded line; no invisible duration is invented. Production prompt restored to psyrec-extract-v1. Mandatory clinician comparison and correction remain required.",
+    "productionPromptVersion": "psyrec-extract-v1",
+    "experimentalPromptVersion": "psyrec-extract-v2"
+  }
 }

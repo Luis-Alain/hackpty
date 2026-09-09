@@ -7,6 +7,8 @@ import { Vault } from '../../packages/core/vault.js';
 import { PsyRecService } from '../../packages/core/service.js';
 import { CaptureServer } from '../../packages/transport/server.js';
 import QRCode from 'qrcode';
+import { validateRequest } from './ipc.js';
+import { PhysicalObserver } from './physical-observer.js';
 
 const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
 const uiPath = join(projectRoot, 'apps/desktop/ui/index.html');
@@ -16,11 +18,31 @@ let service: PsyRecService;
 let receiver: CaptureServer;
 let runtime: any;
 let receiverInfo: any = null;
+let physicalObserver: PhysicalObserver | null = null;
 let idleTimer: ReturnType<typeof setTimeout>;
 const privateDirectory = process.env.PSYREC_HOME ? resolve(process.env.PSYREC_HOME) : join(app.getPath('userData'), 'private');
 const ownFrame = event => event.senderFrame === window.webContents.mainFrame && event.senderFrame.url === uiUrl;
 function addresses() { return Object.values(networkInterfaces()).flat().filter(a => a && a.family === 'IPv4' && !a.internal && /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(a.address)).map(a => a!.address); }
-async function lock() { clearTimeout(idleTimer); await runtime?.cancelAll?.(); await receiver?.stop(); receiverInfo = null; await service?.lock(); if (window && !window.isDestroyed()) window.webContents.send('locked'); }
+let locking: Promise<void> | null = null;
+async function lock() {
+  if (locking) return locking;
+  clearTimeout(idleTimer);
+  // Purge visible and hidden renderer data immediately while cancellation drains.
+  if (window && !window.isDestroyed()) window.webContents.send('locked');
+  locking = (async () => {
+    let failure: unknown;
+    // Attempt every cleanup stage even when an earlier stage fails.
+    for (const cleanup of [
+      () => receiver?.stop(),
+      () => runtime?.cancelAll?.(),
+      () => physicalObserver?.lockPurge().catch(() => { physicalObserver.failed = true; }),
+      () => service?.lock(),
+    ]) { try { await cleanup(); } catch (error) { failure ??= error; } }
+    receiverInfo = null;
+    if (failure) throw failure;
+  })();
+  try { await locking; } finally { locking = null; }
+}
 function touch() { clearTimeout(idleTimer); idleTimer = setTimeout(() => void lock(), 10 * 60 * 1000); }
 
 async function startDesktop() {
@@ -34,18 +56,28 @@ try {
 }
 service = new PsyRecService(new Vault(join(privateDirectory, 'psyrec.vault')), runtime);
 receiver = new CaptureServer(service, privateDirectory);
-window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--smoke'), webPreferences: { preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
+window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--smoke') && !process.argv.includes('--workflow-evidence'), webPreferences: { backgroundThrottling: false, preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
 window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
 window.webContents.on('will-navigate', (event, url) => { if (url !== uiUrl) event.preventDefault(); });
 session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
 session.defaultSession.webRequest.onBeforeRequest((details, callback) => { callback({ cancel: !details.url.startsWith('file:') && !details.url.startsWith('data:') }); });
 
+if (process.argv.includes('--prepare-fold')) physicalObserver = new PhysicalObserver(service, window);
+ipcMain.on('psyrec-observation', (event, observation) => {
+  if (ownFrame(event)) void physicalObserver?.input(observation).then(() => physicalObserver?.view()).catch(() => { if (physicalObserver) physicalObserver.failed = true; });
+});
 ipcMain.handle('psyrec', async (event, method: string, args: any[] = []) => {
   if (!ownFrame(event)) throw new Error('Untrusted window.');
-  if (!Array.isArray(args) || args.length > 5) throw new Error('Invalid request.');
+  validateRequest(method, args);
+  if (locking && !['status', 'lock'].includes(method)) throw new Error('Vault is locking. Wait for local inference cleanup, then unlock.');
   if (!['status', 'snapshot', 'captureData', 'approvedNotes'].includes(method)) touch();
+  const result = await dispatch(method, args);
+  await physicalObserver?.operation(method, result).catch(() => { physicalObserver.failed = true; });
+  return result;
+});
+async function dispatch(method: string, args: any[]) {
   switch (method) {
-    case 'status': return { locked: !service.vault.state, exists: await service.vault.exists(), runtime: await runtime.getStatus?.(), addresses: addresses(), receiver: receiverInfo };
+    case 'status': return { locked: !service.vault.state, locking: Boolean(locking), physicalObserverEnabled: Boolean(physicalObserver), physicalObservationFailed: physicalObserver?.failed ?? false, exists: await service.vault.exists(), runtime: await runtime.getStatus?.(), addresses: addresses(), receiver: receiverInfo };
     case 'unlock': await service.vault.unlock(args[0], args[1] === true); return service.snapshot();
     case 'lock': await lock(); return;
     case 'snapshot': return service.snapshot();
@@ -59,7 +91,7 @@ ipcMain.handle('psyrec', async (event, method: string, args: any[] = []) => {
     }
     case 'extract': return service.extract(args[0]);
     case 'previewSourceChange': return service.previewSourceChange(args[0], args[1]);
-    case 'reviewSource': return service.reviewSource(args[0], args[1]);
+    case 'reviewSource': return service.reviewSource(args[0], args[1], args[2]);
     case 'generateDraft': return service.generateDraft(args[0]);
     case 'approve': return service.approve(args[0], args[1], args[2], args[3]);
     case 'approvedNotes': return service.approvedNotes(args[0], args[1]);
@@ -76,7 +108,10 @@ ipcMain.handle('psyrec', async (event, method: string, args: any[] = []) => {
       const runs = service.state().runs ?? [];
       if (!runs.length) throw new Error('No completed inference runs to export.');
       const module = await import(pathToFileURL(join(projectRoot, 'dist/packages/runtime/index.js')).href);
-      for (const run of runs) module.assertCompleteMetrics(run.metrics);
+      for (const run of runs) {
+        if (run.status === 'failed') throw new Error('This vault contains failed runs with incomplete evidence. Review the encrypted ledger; these cannot pass the success export gate.');
+        module.assertCompleteMetrics(run.metrics);
+      }
       const output = await dialog.showSaveDialog(window, { defaultPath: 'psyrec-synthetic-runs.jsonl', filters: [{ name: 'JSON Lines', extensions: ['jsonl'] }] });
       if (output.canceled || !output.filePath) return null;
       await writeFile(output.filePath, runs.map(r => JSON.stringify(r)).join('\n') + '\n', { mode: 0o600 });
@@ -84,9 +119,26 @@ ipcMain.handle('psyrec', async (event, method: string, args: any[] = []) => {
     }
     default: throw new Error('Unknown operation.');
   }
-});
+}
 await window.loadFile(uiPath);
 app.on('window-all-closed', () => { void lock().finally(() => app.quit()); });
+if (process.argv.includes('--prepare-fold')) {
+  if (!process.env.PSYREC_HOME?.includes('desktop-workflow') || !process.env.PSYREC_FOLD_ADDRESS) throw new Error('Dedicated synthetic Fold vault and private LAN address required.');
+  const { prepareFoldSession } = await import('./fold-session.js');
+  console.log(JSON.stringify(await prepareFoldSession(window, process.env.PSYREC_FOLD_ADDRESS)));
+}
+if (process.argv.includes('--workflow-reload-evidence')) {
+  const { captureReloadEvidence } = await import('./workflow-evidence.js');
+  console.log(JSON.stringify(await captureReloadEvidence(window, projectRoot, privateDirectory)));
+  await lock(); app.quit();
+}
+if (process.argv.includes('--workflow-evidence')) {
+  const { runWorkflowEvidence } = await import('./workflow-evidence.js');
+  let evidence;
+  try { evidence = await runWorkflowEvidence(window, projectRoot, privateDirectory); }
+  catch (error) { await writeFile(join(projectRoot, '.local/desktop-workflow/failed.png'), (await window.webContents.capturePage()).toPNG()); throw error; }
+  console.log(JSON.stringify(evidence)); await lock(); app.quit();
+}
 if (process.argv.includes('--smoke')) {
   await new Promise(resolve => setTimeout(resolve, 1000));
   const path = join(projectRoot, '.local/desktop-smoke.png');
@@ -96,4 +148,7 @@ if (process.argv.includes('--smoke')) {
   app.quit();
 }
 }
-void startDesktop().catch(error => { console.error('PsyRec startup failed:', error.message); app.exit(1); });
+void startDesktop().catch(async error => {
+  console.error('PsyRec startup failed:', error.message);
+  try { await lock(); } finally { app.exit(1); }
+});

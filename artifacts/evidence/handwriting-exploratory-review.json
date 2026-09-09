@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T18:34:53.075Z",
+  "reviewer": "Dedicated runtime/performance evidence agent",
+  "scope": "Two AI-generated handwriting-style synthetic evaluation images, independently visually checked against ground truth; production extraction prompt unchanged",
+  "noTrainingOrFineTuning": true,
+  "notRealHandwritingReliabilityEvidence": true,
+  "notPhysicalFoldWorkflowAcceptance": true,
+  "reviewed": [
+    {
+      "fixtureId": "SYN-HW-001",
+      "file": "artifacts/evidence/handwriting-exploratory-SYN-HW-001.json",
+      "runId": "29ebff73-744a-43c5-bb7b-82b06425214d",
+      "metricsGate": "passed",
+      "imageGroundTruthIndependentlyVisuallyVerified": true,
+      "allGroundTruthWordsAndFactsPreserved": true,
+      "inventedClinicalDetailsObserved": false,
+      "normalizedWordErrorRate": 0,
+      "exactTranscription": false,
+      "layoutFidelity": "Line breaks preserved; header capitalization differs.",
+      "qualityConclusion": "Facts and words preserved on this generated handprint fixture; not character-exact."
+    },
+    {
+      "fixtureId": "SYN-HW-002",
+      "file": "artifacts/evidence/handwriting-exploratory-SYN-HW-002.json",
+      "runId": "1884292c-6839-4993-9739-458a9c6711c3",
+      "metricsGate": "passed",
+      "imageGroundTruthIndependentlyVisuallyVerified": true,
+      "allGroundTruthWordsAndFactsPreserved": true,
+      "inventedClinicalDetailsObserved": false,
+      "normalizedWordErrorRate": 0,
+      "exactTranscription": false,
+      "layoutFidelity": "All original line breaks collapsed into one paragraph; original header capitalization differs.",
+      "qualityConclusion": "Facts and words preserved on this generated cursive fixture; original line-break instruction was not followed."
+    }
+  ]
+}

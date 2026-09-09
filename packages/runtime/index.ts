@@ -1,10 +1,11 @@
 import { fork, execFile, type ChildProcess, type ForkOptions } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { mkdir, rm, stat } from 'node:fs/promises';
+import { mkdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { assertWithin, manifest } from './models.js';
 import { assertCompleteMetrics } from './metrics.js';
+import { OWNER_MARKER, recoverAbandonedTemporaryFiles } from './temporary-files.js';
 import { RuntimeEvidenceError, type RuntimeResult, type JobRequest, type Operation, type RuntimeFailure } from './types.js';
 export { assertCompleteMetrics, IncompleteEvidenceError } from './metrics.js';
 export { RuntimeEvidenceError } from './types.js';
@@ -31,6 +32,7 @@ export class QvacRuntime {
     this.timeoutMs = options.timeoutMs ?? 180000;
   }
   async getStatus() {
+    await recoverAbandonedTemporaryFiles(this.projectRoot);
     const data = await manifest(this.projectRoot);
     const models = await Promise.all(data.models.map(async asset => ({id:asset.id,model:asset.constant,filename:asset.filename,expectedBytes:asset.expectedBytes,present:await stat(path.join(this.modelDirectory,asset.filename)).then(s=>s.size===asset.expectedBytes).catch(()=>false)})));
     return {sdk:'@qvac/sdk',sdkVersion:data.sdk.version,localOnly:true,ready:models.every(m=>m.present),integrityCheck:'Full SHA-256 is checked before every load',models,activeRuns:this.active.size,ragEnabled:false,voiceEnabled:false};
@@ -52,10 +54,12 @@ export class QvacRuntime {
     this.queue=job.catch(()=>{}); return job;
   }
   private async run(input: Pick<JobRequest,'operation'|'context'> & Partial<JobRequest>,signal?:AbortSignal):Promise<RuntimeResult> {
+    await recoverAbandonedTemporaryFiles(this.projectRoot);
     const runId=randomUUID(),startedAt=new Date().toISOString();
     const tempDirectory=path.join(this.projectRoot,'.local','runtime-tmp',runId);
     assertWithin(path.join(this.projectRoot,'.local','runtime-tmp'),tempDirectory);
     await mkdir(tempDirectory,{recursive:true,mode:0o700});
+    await writeFile(path.join(tempDirectory,OWNER_MARKER),JSON.stringify({schemaVersion:1,ownerProcessId:process.pid,runId,createdAt:startedAt}),{mode:0o600});
     const workerPath=fileURLToPath(new URL('./worker.js',import.meta.url));
     const forkOptions:ForkOptions & {windowsHide:boolean}={cwd:this.projectRoot,execPath:this.options.nodeExecutable ?? process.execPath,execArgv:[],windowsHide:true,serialization:'advanced',stdio:['ignore','pipe','pipe','ipc'],env:{...process.env,ELECTRON_RUN_AS_NODE:'1'}};
     const child=fork(workerPath,[],forkOptions);
@@ -79,13 +83,13 @@ export class QvacRuntime {
           if(message?.type==='evidence' && message.runId===runId && message.partialEvidence && typeof message.partialEvidence==='object')partialEvidence=message.partialEvidence;
           if(message?.type==='stage'){stage=message.stage;this.options.onStage?.({runId,stage,processId:child.pid!});}
           if(message?.type==='result'){try{assertCompleteMetrics(message.result?.metrics);result=message.result;}catch(error){failure={schemaVersion:1,status:'failed',runId,operation:input.operation,stage:'client-evidence-gate',error:{name:(error as Error).name,message:(error as Error).message},startedAt,endedAt:new Date().toISOString(),partialEvidence:{candidate:message.result?.metrics}};}}
-          if(message?.type==='failure')failure=message.evidence;
+          if(message?.type==='failure'){failure=message.evidence;if(failure)failure.partialEvidence={...partialEvidence,...failure.partialEvidence};}
         });
         child.once('error',error=>finish(error));
         child.once('exit',(code,exitSignal)=>{
           if(terminating)return;
           if(failure){failure.partialEvidence.diagnosticTail=diagnosticTail;finish(new RuntimeEvidenceError('Local inference failed; no incomplete result was accepted.',failure));return;}
-          if(code!==0||!result){const evidence:RuntimeFailure={schemaVersion:1,status:'failed',runId,operation:input.operation,stage,error:{name:'WorkerExitedError',message:`Isolated worker exited (${code}, ${exitSignal}) without validated evidence.`},startedAt,endedAt:new Date().toISOString(),partialEvidence:{diagnosticTail}};finish(new RuntimeEvidenceError(evidence.error.message,evidence));return;}
+          if(code!==0||!result){const evidence:RuntimeFailure={schemaVersion:1,status:'failed',runId,operation:input.operation,stage,error:{name:'WorkerExitedError',message:`Isolated worker exited (${code}, ${exitSignal}) without validated evidence.`},startedAt,endedAt:new Date().toISOString(),partialEvidence:{...partialEvidence,diagnosticTail}};finish(new RuntimeEvidenceError(evidence.error.message,evidence));return;}
           finish();
         });
         child.send(job,error=>{if(error)finish(error);});

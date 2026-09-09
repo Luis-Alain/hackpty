@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-09",
+  "syntheticOnly": true,
+  "generator": "Built-in image_gen tool; provider model identifier not exposed",
+  "classification": "AI-generated handwriting-style synthetic evaluation fixtures",
+  "purpose": "Fictional training-note examples and exploratory transcription evaluation; no model training or fine-tuning performed.",
+  "scope": "Additional user-requested fixtures. Does not establish real handwriting reliability or replace physical printed-note release acceptance.",
+  "groundTruthReview": {
+    "method": "Coordinator visually inspected both generated images against exact intended text, preserving observed line wrapping.",
+    "passed": true
+  },
+  "fixtures": [
+    {
+      "id": "SYN-HW-001",
+      "file": "syn-hw-001-handprint.png",
+      "sha256": "5101e70c6cc9fd7bfc275b60c53f3346584923a2881ad56f596344ee766f7c1c",
+      "style": "Neat blue ballpoint hand printing",
+      "prompt": "Use case: scientific-educational\nAsset type: synthetic clinician-note image fixture for PsyRec handwriting transcription evaluation.\nCreate one realistic flat, top-down view of a single off-white sheet, fully visible, with neat blue ballpoint HAND PRINTING (natural handwritten letters, not a computer font). Large readable handwriting, generous line spacing, neutral even lighting, no hands or objects. Portrait page. All text must be verbatim, each sentence on its own line:\n\"SYNTHETIC TRAINING NOTE\nNOT A REAL PATIENT\nCase: SYN-HW-001\nThe client reports poor sleep for three nights.\nMood was described as tired.\nNo diagnosis is recorded.\nFollow-up: review the sleep log.\"\nThe first two lines must be especially clear. Fictional educational material only. Do not add a name, date, signature, clinic, diagnosis, medication, extra text or watermark. Keep the full page uncropped and all ink legible.",
+      "groundTruth": "SYNTHETIC TRAINING NOTE\nNOT A REAL PATIENT\nCase: SYN-HW-001\nThe client reports poor sleep for three nights.\nMood was described as tired.\nNo diagnosis is recorded.\nFollow-up: review the sleep log."
+    },
+    {
+      "id": "SYN-HW-002",
+      "file": "syn-hw-002-cursive.png",
+      "sha256": "e6ffcc95bb896a36299e3943610128738d75e1073efda5199677373eaa29e6d7",
+      "style": "Blue ballpoint cursive with printed header",
+      "prompt": "Use case: scientific-educational\nAsset type: fictional clinician-note image fixture for PsyRec handwriting transcription evaluation.\nCreate one realistic flat, top-down view of a single white faintly ruled notebook page, fully visible. Header in clear blue ballpoint hand printing, rest in legible flowing blue cursive handwriting with natural variation. Portrait page, readable large letters and generous line spacing, even light. No objects or hands.\nWrite ONLY this exact text, no additions:\n\"SYNTHETIC TRAINING NOTE\nNOT A REAL PATIENT\nCase: SYN-HW-002\nThe client reports feeling worried before meetings.\nSleep duration was not recorded.\nNo diagnosis is recorded.\nFollow-up: review the diary at the next visit.\"\nKeep missing information explicit. Do not invent duration, a date, medication, a name, clinician signature or clinic. Fictional educational material only. No logos. All ink legible; full page uncropped.",
+      "groundTruth": "SYNTHETIC TRAINING NOTE\nNOT A REAL PATIENT\nCase: SYN-HW-002\nThe client reports feeling worried\nbefore meetings.\nSleep duration was not recorded.\nNo diagnosis is recorded.\nFollow-up: review the diary at the next visit."
+    }
+  ]
+}

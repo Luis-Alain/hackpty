@@ -1,3 +1,4 @@
+import type { VaultState } from './types.js';
 import { randomBytes, scryptSync, createCipheriv, createDecipheriv } from 'node:crypto';
 import { mkdir, readFile, writeFile, rename, rm } from 'node:fs/promises';
 import { dirname } from 'node:path';
@@ -6,8 +7,8 @@ export class Vault {
   path: string;
   key: Buffer | null;
   salt: Buffer | null;
-  state: any;
-  constructor(path) { this.path = path; this.key = null; this.salt = null; this.state = null; }
+  state: VaultState | null;
+  constructor(path: string) { this.path = path; this.key = null; this.salt = null; this.state = null; }
   async exists() { try { await readFile(this.path); return true; } catch (e) { if (e.code === 'ENOENT') return false; throw e; } }
   async unlock(passphrase, create = false) {
     if (typeof passphrase !== 'string' || passphrase.length < 10 || passphrase.length > 256) throw new Error('Use a vault passphrase of 10–256 characters.');
@@ -33,12 +34,12 @@ export class Vault {
       decipher.setAuthTag(Buffer.from(envelope.tag, 'base64'));
       const clear = Buffer.concat([decipher.update(Buffer.from(envelope.data, 'base64')), decipher.final()]);
       const state = JSON.parse(clear.toString('utf8')); clear.fill(0);
-      if (state.version !== 1 || !Array.isArray(state.patients) || !Array.isArray(state.records)) throw new Error('format');
+      if (state.version !== 1 || !Array.isArray(state.patients) || !Array.isArray(state.records) || !Array.isArray(state.encounters) || !Array.isArray(state.devices) || !Array.isArray(state.transfers) || (state.runs !== undefined && !Array.isArray(state.runs))) throw new Error('format');
       this.key = key; this.salt = salt; this.state = state;
       return state;
     } catch { key?.fill(0); throw new Error('Incorrect passphrase or damaged vault. No data was changed.'); }
   }
-  async save(nextState) {
+  async save(nextState: VaultState) {
     if (!this.key) throw new Error('Vault is locked.');
     const iv = randomBytes(12);
     const cipher = createCipheriv('aes-256-gcm', this.key, iv);

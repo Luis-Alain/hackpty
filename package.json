@@ -13,7 +13,11 @@
     "start": "npm run build && electron .",
     "test": "npm run build && node --test dist/tests/*.test.js",
     "test:runtime": "npm run build && node dist/diagnostics/qvac-spike/probe.js",
-    "check": "tsc -p tsconfig.json --noEmit"
+    "test:workflow": "npm run build && node dist/scripts/run-workflow.js",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "check:release": "npm run build && node dist/scripts/validate-release.js",
+    "check:desktop-evidence": "npm run build && node dist/scripts/validate-release.js --desktop-only",
+    "check:mobile": "npm --prefix apps/mobile run check"
   },
   "main": "dist/apps/desktop/main.js",
   "dependencies": {

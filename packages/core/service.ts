@@ -1,9 +1,13 @@
+import type { TransportIdentity } from '../contracts/index.js';
+import type { Vault } from './vault.js';
+import type { VaultState, InferencePort, Encounter, Context } from './types.js';
+import type { RuntimeFailure } from '../runtime/types.js';
 import { randomUUID, createHash, timingSafeEqual, randomBytes } from 'node:crypto';
 
 export const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const now = () => new Date().toISOString();
 const digest = value => createHash('sha256').update(value).digest('hex');
-function requiredText(value, name, max = 30000) {
+function requiredText(value: unknown, name: string, max = 30000) {
   if (typeof value !== 'string' || !value.trim() || value.length > max) throw new Error(`${name} is required and must be at most ${max} characters.`);
   return value.trim();
 }
@@ -14,14 +18,14 @@ export function imageType(bytes) {
   throw new Error('Only PNG and JPEG images are accepted.');
 }
 export class PsyRecService {
-  vault: any;
-  runtime: any;
+  vault: Vault;
+  runtime: InferencePort;
   retriever: import('../contracts/index.js').ApprovedNotesRetriever | null;
   retrievalTimeoutMs: number;
-  queue: Promise<any>;
+  queue: Promise<unknown>;
   generation: number;
   pairing: { secret: string; encounterId: string; expiresAt: number } | null;
-  constructor(vault, runtime, options: { retriever?: import('../contracts/index.js').ApprovedNotesRetriever; retrievalTimeoutMs?: number } = {}) {
+  constructor(vault: Vault, runtime: InferencePort, options: { retriever?: import('../contracts/index.js').ApprovedNotesRetriever; retrievalTimeoutMs?: number } = {}) {
     this.vault = vault; this.runtime = runtime;
     this.retriever = options.retriever ?? null;
     this.retrievalTimeoutMs = options.retrievalTimeoutMs ?? 3000;
@@ -29,13 +33,27 @@ export class PsyRecService {
     this.pairing = null;
   }
   state() { if (!this.vault.state) throw new Error('Unlock the vault first.'); return this.vault.state; }
-  async change(action) {
+  async change<T>(action: (state: VaultState) => T | Promise<T>): Promise<T> {
     const job = this.queue.then(async () => {
       const next = structuredClone(this.state());
       const result = await action(next);
       await this.vault.save(next); return result;
     });
     this.queue = job.catch(() => {}); return job;
+  }
+  async recordPhysicalObservation(event: string, details: Record<string, unknown>) {
+    await this.change(s => { (s.physicalObservations ??= []).push({ at: now(), event, details }); });
+  }
+  getTransportIdentity() { return structuredClone(this.state().transportIdentity ?? null); }
+  async saveTransportIdentity(identity: TransportIdentity) {
+    if (!identity || typeof identity.key !== 'string' || typeof identity.cert !== 'string' || identity.key.length > 32000 || identity.cert.length > 32000) throw new Error('Invalid transport identity.');
+    await this.change(s => { s.transportIdentity = { ...identity }; });
+  }
+  private async retainFailure(error: unknown, encounterId: string, sourceRevision: number, operation: 'extract' | 'draft', generation: number) {
+    const evidence = (error as { evidence?: RuntimeFailure })?.evidence;
+    if (evidence?.status === 'failed' && generation === this.generation && this.vault.state) {
+      await this.change(s => { (s.runs ??= []).push({ status: 'failed', encounterId, sourceRevision, operation, evidence }); });
+    }
   }
   async lock() { this.generation++; this.pairing = null; await this.queue; this.vault.lock(); }
   snapshot() {
@@ -50,11 +68,11 @@ export class PsyRecService {
   async addEncounter(patientId) {
     return this.change(s => {
       if (!s.patients.some(p => p.id === patientId)) throw new Error('Patient not found.');
-      const e = { id: randomUUID(), patientId, createdAt: now(), capture: null, source: { revision: 0, text: '', reviewed: false }, draft: null, status: 'empty' };
+      const e: Encounter = { id: randomUUID(), patientId, createdAt: now(), capture: null, source: { revision: 0, text: '', reviewed: false }, draft: null, status: 'empty' };
       s.encounters.push(e); return e;
     });
   }
-  encounter(state, id) { const e = state.encounters.find(e => e.id === id); if (!e) throw new Error('Encounter not found.'); return e; }
+  encounter(state: VaultState, id: string) { const e = state.encounters.find(e => e.id === id); if (!e) throw new Error('Encounter not found.'); return e; }
   async importImage(encounterId, bytes) {
     const mime = imageType(bytes);
     return this.change(s => {
@@ -72,33 +90,39 @@ export class PsyRecService {
   async extract(encounterId) {
     const e = structuredClone(this.encounter(this.state(), encounterId));
     if (!e.capture) throw new Error('Import or capture an image first.');
+    if (e.source.revision) throw new Error('Extraction already exists. Correct and review this source, or create another encounter.');
     const generation = this.generation, revision = e.source.revision;
-    const result = await this.runtime.extractImage({ bytes: Buffer.from(e.capture.data, 'base64'), mime: e.capture.mime });
+    let result;
+    try { result = await this.runtime.extractImage({ bytes: Buffer.from(e.capture.data, 'base64'), mime: e.capture.mime }); }
+    catch (error) { await this.retainFailure(error, encounterId, revision, 'extract', generation); throw error; }
     if (generation !== this.generation) throw new Error('Vault session changed; extraction was not saved.');
     return this.change(s => {
       const current = this.encounter(s, encounterId);
       if (current.source.revision !== revision) throw new Error('The source changed while extraction ran. Result discarded.');
       this.supersede(s, current.id);
-      current.source = { revision: revision + 1, text: requiredText(result.text, 'Extracted text'), reviewed: false, metrics: result.metrics };
-      (s.runs ??= []).push({ encounterId, sourceRevision: revision + 1, operation: 'extract', metrics: result.metrics });
+      requiredText(result.text, 'Extracted text');
+      current.source = { revision: revision + 1, text: result.text, reviewed: false, metrics: result.metrics };
+      (s.runs ??= []).push({ encounterId, sourceRevision: revision + 1, operation: 'extract', metrics: result.metrics, outputText: result.text });
       current.draft = null; current.status = 'source-review'; return current.source;
     });
   }
   previewSourceChange(encounterId, text) {
+    text = requiredText(text, 'Source text');
     const s = this.state(), e = this.encounter(s, encounterId);
-    return { changed: text.trim() !== e.source.text, nextRevision: e.source.revision + 1,
+    return { sourceRevision: e.source.revision, changed: text.trim() !== e.source.text, nextRevision: e.source.revision + 1,
       approvalsToSupersede: s.records.filter(r => r.encounterId === encounterId && !r.supersededAt).map(r => ({ id: r.id, approvedAt: r.approvedAt })),
       discardDraft: Boolean(e.draft), historyImpact: 'Old approvals remain in the audit history and are excluded from future retrieval.' };
   }
-  supersede(state, encounterId) { for (const r of state.records) if (r.encounterId === encounterId && !r.supersededAt) r.supersededAt = now(); }
-  async reviewSource(encounterId, text) {
+  supersede(state: VaultState, encounterId: string) { for (const r of state.records) if (r.encounterId === encounterId && !r.supersededAt) r.supersededAt = now(); }
+  async reviewSource(encounterId: string, text: string, expectedRevision?: number) {
     text = requiredText(text, 'Source text');
     return this.change(s => {
       const e = this.encounter(s, encounterId);
+      if (expectedRevision !== undefined && e.source.revision !== expectedRevision) throw new Error('Source changed since preview. Review the correction again.');
       const changed = e.source.text !== text;
       if (changed) { this.supersede(s, encounterId); e.source.revision++; e.draft = null; }
       if (!e.source.revision) e.source.revision = 1;
-      e.source.text = text; e.source.reviewed = true; e.status = e.draft ? 'draft-review' : 'source-reviewed';
+      e.source.text = text; e.source.reviewed = true; e.status = !changed && e.status === 'approved' ? 'approved' : e.draft ? 'draft-review' : 'source-reviewed';
       return e.source;
     });
   }
@@ -108,7 +132,7 @@ export class PsyRecService {
     return s.records.filter(r => r.patientId === patientId && (includeSuperseded || !r.supersededAt))
       .sort((a,b) => b.approvedAt.localeCompare(a.approvedAt));
   }
-  async retrieveContext(patientId, query, currentEncounterId) {
+  async retrieveContext(patientId: string, query: string, currentEncounterId: string): Promise<Context> {
     if (!this.retriever) return { status: 'disabled', excerpts: [] };
     const controller = new AbortController(); let timer;
     try {
@@ -130,19 +154,23 @@ export class PsyRecService {
     if (!e.source.reviewed) throw new Error('Review and confirm the extracted source first.');
     const generation = this.generation;
     const context = await this.retrieveContext(e.patientId, e.source.text, e.id);
-    const result = await this.runtime.draftFromSource({ text: e.source.text, sourceId: e.id + ':' + e.source.revision, context: context.excerpts });
+    let result;
+    try { result = await this.runtime.draftFromSource({ text: e.source.text, sourceId: e.id + ':' + e.source.revision, context: context.excerpts }); }
+    catch (error) { await this.retainFailure(error, encounterId, e.source.revision, 'draft', generation); throw error; }
     if (generation !== this.generation) throw new Error('Vault session changed; draft was not saved.');
     return this.change(s => {
       const current = this.encounter(s, encounterId);
       if (current.source.revision !== e.source.revision) throw new Error('Source changed while drafting. Result discarded.');
-      const text = requiredText(result.text, 'Draft text');
+      requiredText(result.text, 'Draft text');
+      const text = result.text;
       current.draft = { id: randomUUID(), sourceRevision: e.source.revision, text, createdAt: now(), metrics: result.metrics, context };
-      (s.runs ??= []).push({ encounterId, sourceRevision: e.source.revision, operation: 'draft', metrics: result.metrics });
+      (s.runs ??= []).push({ encounterId, sourceRevision: e.source.revision, operation: 'draft', metrics: result.metrics, outputText: result.text });
       current.status = 'draft-review'; return current.draft;
     });
   }
   async approve(encounterId, draftId, sourceRevision, text) {
-    text = requiredText(text, 'Approved note');
+    requiredText(text, 'Approved note'); // Preserve every character the clinician approved, including whitespace.
+    if (!Number.isInteger(sourceRevision) || sourceRevision < 1) throw new Error('Invalid source revision.');
     return this.change(s => {
       const e = this.encounter(s, encounterId);
       if (!e.draft || e.draft.id !== draftId || e.source.revision !== sourceRevision || e.draft.sourceRevision !== sourceRevision || !e.source.reviewed) throw new Error('This draft is stale. Generate and review the current revision.');
@@ -189,7 +217,7 @@ export class PsyRecService {
       if (e.capture || e.source.revision) throw new Error('Encounter already has a capture.');
       e.capture = { id: randomUUID(), mime, data: bytes.toString('base64'), sha256: hash, receivedAt: now() }; e.status = 'received';
       const receipt = { deviceId, transferId, encounterId, captureId: e.capture.id, sha256: hash, receivedAt: now() };
-      s.transfers.push(receipt); return receipt;
+      s.transfers.push(receipt); return { ...receipt, duplicate: false };
     });
   }
 }
