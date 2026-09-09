@@ -115,7 +115,7 @@ test('late inference after vault lock cannot persist output', async t => {
   assert.equal(service.encounter(vault.state, encounter.id).source.revision, 0);
 });
 import { RuntimeEvidenceError } from '../packages/runtime/types.js';
-import { validateRequest } from '../apps/desktop/ipc.js';
+import { validateRequest, isTrustedUiUrl } from '../apps/desktop/ipc.js';
 
 test('failed inference evidence persists encrypted without changing source or draft', async t => {
   const failure = { schemaVersion: 1 as const, status: 'failed' as const, runId: 'failure-synthetic', operation: 'draft' as const, stage: 'completion', error: { name: 'RuntimeTimeoutError', message: 'Synthetic timeout' }, startedAt: new Date().toISOString(), endedAt: new Date().toISOString(), partialEvidence: { exactPrompt: 'SYNTHETIC PRIVATE PROMPT', generatedTokens: 3 } };
@@ -196,4 +196,12 @@ test('raw output and physical observation survive correction and encrypted reloa
   assert.equal(vault.state.runs[1].outputText, draft.text);
   assert.equal(vault.state.physicalObservations[0].details.control, 'reviewSource');
   assert.equal((await readFile(vault.path, 'utf8')).includes('SYNTHETIC OBSERVED CORRECTION'), false);
+});
+
+
+test('same-document fragments retain trusted IPC while other documents and query URLs do not', () => {
+  const expected = 'file:///C:/workspace/apps/desktop/ui/index.html';
+  assert.equal(isTrustedUiUrl(expected + '#', expected), true);
+  assert.equal(isTrustedUiUrl(expected + '#history', expected), true);
+  for (const url of [expected + '?other=1', expected + '.evil', 'https://example.test/index.html', 'not a URL']) assert.equal(isTrustedUiUrl(url, expected), false);
 });

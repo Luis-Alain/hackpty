@@ -7,7 +7,7 @@ import { Vault } from '../../packages/core/vault.js';
 import { PsyRecService } from '../../packages/core/service.js';
 import { CaptureServer } from '../../packages/transport/server.js';
 import QRCode from 'qrcode';
-import { validateRequest } from './ipc.js';
+import { validateRequest, isTrustedUiUrl } from './ipc.js';
 import { PhysicalObserver } from './physical-observer.js';
 
 const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
@@ -21,7 +21,8 @@ let receiverInfo: any = null;
 let physicalObserver: PhysicalObserver | null = null;
 let idleTimer: ReturnType<typeof setTimeout>;
 const privateDirectory = process.env.PSYREC_HOME ? resolve(process.env.PSYREC_HOME) : join(app.getPath('userData'), 'private');
-const ownFrame = event => event.senderFrame === window.webContents.mainFrame && event.senderFrame.url === uiUrl;
+const sameUiDocument = (url: string) => isTrustedUiUrl(url, uiUrl);
+const ownFrame = event => event.senderFrame === window.webContents.mainFrame && sameUiDocument(event.senderFrame.url);
 function addresses() { return Object.values(networkInterfaces()).flat().filter(a => a && a.family === 'IPv4' && !a.internal && /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(a.address)).map(a => a!.address); }
 let locking: Promise<void> | null = null;
 async function lock() {
@@ -58,7 +59,7 @@ service = new PsyRecService(new Vault(join(privateDirectory, 'psyrec.vault')), r
 receiver = new CaptureServer(service, privateDirectory);
 window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--smoke') && !process.argv.includes('--workflow-evidence'), webPreferences: { backgroundThrottling: false, preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
 window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
-window.webContents.on('will-navigate', (event, url) => { if (url !== uiUrl) event.preventDefault(); });
+window.webContents.on('will-navigate', (event, url) => { if (!sameUiDocument(url)) event.preventDefault(); });
 session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
 session.defaultSession.webRequest.onBeforeRequest((details, callback) => { callback({ cancel: !details.url.startsWith('file:') && !details.url.startsWith('data:') }); });
 

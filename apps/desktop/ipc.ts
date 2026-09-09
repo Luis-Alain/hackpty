@@ -1,3 +1,10 @@
+/** Fragment navigation does not change document identity. Queries and other
+ * paths remain untrusted; callers also require Electron's exact main frame. */
+export function isTrustedUiUrl(candidateUrl: string, expectedUrl: string): boolean {
+  try { const candidate = new URL(candidateUrl); candidate.hash = ''; return candidate.href === expectedUrl; }
+  catch { return false; }
+}
+
 /** Validate privileged renderer requests before any dialog, vault or runtime work. */
 export function validateRequest(method: unknown, args: unknown): asserts args is any[] {
   const text = (value: unknown, max = 30000) => typeof value === 'string' && value.length > 0 && value.length <= max;
