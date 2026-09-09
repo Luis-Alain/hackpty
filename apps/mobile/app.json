@@ -27,17 +27,28 @@
       [
         "expo-camera",
         {
-          "recordAudioAndroid": false
+          "recordAudioAndroid": false,
+          "microphonePermission": false
         }
       ],
-      "expo-secure-store",
-      "./plugins/with-private-android.cjs"
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ],
+      "./plugins/with-private-android.cjs",
+      "./plugins/with-private-ios.cjs"
     ],
     "extra": {
       "eas": {
         "projectId": "b57b65cb-66a6-454f-8301-72259ee2a828"
       }
     },
-    "owner": "hackpty"
+    "owner": "hackpty",
+    "ios": {
+      "bundleIdentifier": "tech.adwen.psyrec.capture",
+      "supportsTablet": false
+    }
   }
 }

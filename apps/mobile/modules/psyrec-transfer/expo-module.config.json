@@ -1,1 +1,17 @@
-{ "platforms": ["android"], "android": { "modules": ["expo.modules.psyrectransfer.PsyRecTransferModule"] } }
+{
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "android": {
+    "modules": [
+      "expo.modules.psyrectransfer.PsyRecTransferModule"
+    ]
+  },
+  "apple": {
+    "modules": [
+      "PsyRecTransferModule"
+    ],
+    "podspecPath": "ios/PsyRecTransfer.podspec"
+  }
+}

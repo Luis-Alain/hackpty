@@ -1,6 +1,6 @@
 # PsyRec native Android capture
 
-This Expo SDK 55 / React Native 0.83 app captures a printed synthetic English note on Android and transfers it to the paired Windows PsyRec vault. Inference is on the PC. Expo Go cannot run the local Kotlin module. No EAS/cloud build or cloud inference is used.
+This Expo SDK 55 / React Native 0.83 app captures a printed synthetic English note on Android and transfers it to the paired Windows PsyRec vault. Inference is on the PC. Expo Go cannot run the local Kotlin module. Android builds remain local. The iPhone port also has an optional EAS simulator validation build; inference remains on the paired PC.
 
 The existing local app is linked to [@hackpty/psyrec-capture](https://expo.dev/accounts/hackpty/projects/psyrec-capture), project ID `b57b65cb-66a6-454f-8301-72259ee2a828`. Expo account membership was verified as Owner before linking. `app.json` records the account/project association; Android package identity and local build scripts are preserved. Linking the project did not run a cloud build, publish an update, or enable cloud inference. `eas project:info` verifies the association when signed in.
 
@@ -48,3 +48,7 @@ Root `tests/transport.test.ts` executes real localhost HTTPS: wrong pin rejectio
 `./gradlew.bat psyrec-transfer:connectedReleaseAndroidTest` runs actual Android Keystore/queue checks on a connected Android device in a separate test package: encrypted reopen, ciphertext tamper rejection, photo-to-receipt replacement, and completed-encounter guard. It uses only generated synthetic test records and does not access the installed PsyRec app's private data.
 
 The native implementation follows [Expo local modules](https://docs.expo.dev/modules/get-started/), [Expo camera](https://docs.expo.dev/versions/v55.0.0/sdk/camera/) for QR only, and [CameraX in-memory capture](https://developer.android.com/media/camera/camerax/take-photo).
+
+## iPhone source port
+
+The [iPhone source port and build instructions](README.ios.md) reuse this app’s TypeScript interface. iOS Release simulator compilation and four native Swift tests passed; signing and physical iPhone acceptance are pending. Follow the [Xcode teammate handoff](docs/ios-xcode-handoff.md).

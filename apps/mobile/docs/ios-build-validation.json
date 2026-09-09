@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "project": "@hackpty/psyrec-capture",
+  "buildId": "f5aa3439-547f-4d03-a3fd-d1c15dce33d8",
+  "buildUrl": "https://expo.dev/accounts/hackpty/projects/psyrec-capture/builds/f5aa3439-547f-4d03-a3fd-d1c15dce33d8",
+  "status": "FINISHED",
+  "createdAt": "2026-09-09T19:04:55.01Z",
+  "finishedObservedAt": "2026-09-09T19:08:42.257Z",
+  "profile": "ios-simulator",
+  "configuration": "Release",
+  "platform": "iOS Simulator",
+  "deviceInstallable": false,
+  "artifactUrl": "https://expo.dev/artifacts/eas/wO53mOH8jnAtJ53B57uXn461s67veUl9vPwZ-je5NyY.tar.gz",
+  "expo": "55.0.31",
+  "reactNative": "0.83.10",
+  "easCli": "23.2.0",
+  "nativePolicyTests": {
+    "framework": "XCTest",
+    "platform": "macOS Apple build worker",
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "testCiphertextCannotBeRenamedToAnotherTransfer",
+      "testEncryptedReloadTamperAndReceiptRetention",
+      "testPhysicalPinAndCertificateDates",
+      "testPrivateEndpointsOnly"
+    ]
+  },
+  "typescript": "passed",
+  "nativeAppCompilation": "passed",
+  "deviceWorkflow": "not-run",
+  "upload": {
+    "files": 23,
+    "uncompressedBytes": 337640,
+    "scope": "Mobile source and public synthetic certificate fixture only",
+    "desktopVaultsIncluded": false,
+    "modelsIncluded": false
+  },
+  "signing": {
+    "appleTeamCountAtCheck": 0,
+    "credentialSetsAtCheck": 0,
+    "handledBy": "Teammate in Xcode"
+  },
+  "warnings": [
+    "Deprecated SecTrustGetCertificateAtIndex call compiles; migrate during later maintenance."
+  ],
+  "sourceFiles": [
+    {
+      "path": "App.tsx",
+      "bytes": 7647,
+      "sha256": "e0dd9e6e51630c82b6d79d56477d8a5fbf70149b57b686ec12ff9f9365d70bef"
+    },
+    {
+      "path": "app.json",
+      "bytes": 1318,
+      "sha256": "89b0bd42937736a3ce7148d82349634b3844b26c1b0e6ef73dd596a31bdc6164"
+    },
+    {
+      "path": "eas.json",
+      "bytes": 535,
+      "sha256": "179cbd56226c17a2709a7b1f03ff4042f0a502fcb770d4963ae9b8d207a90083"
+    },
+    {
+      "path": "index.ts",
+      "bytes": 99,
+      "sha256": "af10e01cf5fa6d399a83829926cc80d935c1dca8fb01313ab7cb54aab84c028b"
+    },
+    {
+      "path": "modules/psyrec-transfer/Package.swift",
+      "bytes": 780,
+      "sha256": "80bd0ac01e7795091e6575b0e8bca3d926e8be5c2f1dd67d9b278b9883e4c9c0"
+    },
+    {
+      "path": "modules/psyrec-transfer/expo-module.config.json",
+      "bytes": 269,
+      "sha256": "96b029ab37621858146b5e294320b552704398b9db1a4a92c2dd7a72856a323d"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios-tests/Fixtures/synthetic-certificate.pem",
+      "bytes": 1178,
+      "sha256": "18688247a203cc14158f30be6821fed1a09e921e242c9ae997884304ca889eb2"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios-tests/PolicyTests.swift",
+      "bytes": 5972,
+      "sha256": "51d3970e50512c5399a3b5ebc8d22c73e6afa50c3991c7f819c3418d4b604f4b"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/CaptureRecord.swift",
+      "bytes": 1168,
+      "sha256": "d4f04a187e1a95ae4ccd3fb7bed5acd0943ebb1cca19fe470b8528840e0e2513"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PendingStore.swift",
+      "bytes": 6436,
+      "sha256": "70668260588f5e69554a8cb6d671b01ad7421d22f261ba609888b00c9c594b21"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PinnedHTTPS.swift",
+      "bytes": 5393,
+      "sha256": "a7af893127418c453d417f8279ef09a5785e0c4e439827119ccd76610e25addd"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PinnedPeer.swift",
+      "bytes": 4900,
+      "sha256": "53fb8a66c4b3dec1df65e103fe9727ccd0c12363e2234743a84861808d0954eb"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PrivateCameraView.swift",
+      "bytes": 6722,
+      "sha256": "9cb3a72f9ff91983f3f846702948dabacbb71caa56a919c1ae0fa1d46d8d67df"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PrivateScreenShield.swift",
+      "bytes": 1911,
+      "sha256": "7fc5ffade11bf6532ce522b63de0177abe639b66193be96956f47295c80e95de"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PsyRecTransfer.podspec",
+      "bytes": 726,
+      "sha256": "2ae64d5d646ef38bd08dbc931e18d6136aa42244bedd5e6da9727f96d458539c"
+    },
+    {
+      "path": "modules/psyrec-transfer/ios/PsyRecTransferModule.swift",
+      "bytes": 3098,
+      "sha256": "c510a406210d46e89c75326e55239a0c6961b1885875de3237d90a10cea6dbcc"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 284412,
+      "sha256": "d63e407529753b7500c51cc28bd431147bde9c80f642842a1685b3fa344ca689"
+    },
+    {
+      "path": "package.json",
+      "bytes": 651,
+      "sha256": "b306e802c9d0fb708c1784ebaee6c451c2696b2f53e1d84fcf2d01f24e2a77c1"
+    },
+    {
+      "path": "plugins/with-private-android.cjs",
+      "bytes": 294,
+      "sha256": "eb541b1ed5e80827a087f5fa98b4483f414906c5b68a50e205c7f771367ee050"
+    },
+    {
+      "path": "plugins/with-private-ios.cjs",
+      "bytes": 1155,
+      "sha256": "b590f8ec3acedcf1f70bac9ad85f3d6ce4a2b2fce0021121be07a02e2c359ee4"
+    },
+    {
+      "path": "scripts/eas-ios-post-install.cjs",
+      "bytes": 797,
+      "sha256": "bd3fb5c0700fa1d1a5eedc54d456f8c8c53284358dc0e46a5c5829e4522ec7fd"
+    },
+    {
+      "path": "src/transfer.ts",
+      "bytes": 2059,
+      "sha256": "9b1cf1edc75e1d076dd48015d404cc2c89890480134702e8bd22de6271760177"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 120,
+      "sha256": "c67a6bc11b32b9df79d47b13cfe28345fa3d3ef204e59dcd4de301cd51d42eab"
+    }
+  ],
+  "sourceHashMethod": "SHA-256 of exact uploaded source bytes; Git checkout line-ending conversion can change raw hashes without changing source text."
+}

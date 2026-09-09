@@ -8,7 +8,8 @@
     "start": "expo start --dev-client",
     "prebuild": "expo prebuild --platform android --no-install",
     "android": "expo run:android",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "eas-build-post-install": "node scripts/eas-ios-post-install.cjs"
   },
   "dependencies": {
     "expo": "55.0.31",

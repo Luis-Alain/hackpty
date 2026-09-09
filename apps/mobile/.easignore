@@ -1,0 +1,26 @@
+# iOS cloud builds contain an allow-list of mobile source only.
+*
+!app.json
+!package.json
+!package-lock.json
+!eas.json
+!App.tsx
+!index.ts
+!tsconfig.json
+!src
+!src/**
+!plugins
+!plugins/*.cjs
+!modules
+!modules/psyrec-transfer
+!modules/psyrec-transfer/expo-module.config.json
+!modules/psyrec-transfer/Package.swift
+!modules/psyrec-transfer/ios
+!modules/psyrec-transfer/ios/*.swift
+!modules/psyrec-transfer/ios/*.podspec
+!modules/psyrec-transfer/ios-tests
+!modules/psyrec-transfer/ios-tests/PolicyTests.swift
+!modules/psyrec-transfer/ios-tests/Fixtures
+!modules/psyrec-transfer/ios-tests/Fixtures/synthetic-certificate.pem
+!scripts
+!scripts/eas-ios-post-install.cjs
