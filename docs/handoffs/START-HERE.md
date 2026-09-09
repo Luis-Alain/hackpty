@@ -20,4 +20,4 @@ Preserve the three uncommitted MedPsy design files (01-product.md, 02-architectu
 
 Latest device update: the Fold is charging and I plan to connect another Android device. At 22:05:35 UTC none was visible to ADB. Identify the actual replacement device and its installed build before testing, and keep its evidence separate from the Fold receipt.
 
-AIOS handoff records are prepared and pushed to codex/psyrec-handoff-20260909 in both AIOS-Memory (7037f1af) and AIOS-Control-Plane (2311df9f). Canonical main synchronization awaits my explicit approval after automatic approval review rejected a main push. Do not retry that action without approval. ADB still showed no device at 22:10:33 UTC.
+AIOS synchronization was explicitly approved in this task and completed on September 9 at 22:21 UTC: AIOS-Memory main contains 7037f1af and AIOS-Control-Plane main contains 2311df9f. The earlier approval rejection is resolved for these reviewed AIOS handoff records; do not ask again for that completed synchronization. PsyRec stays on QVAC-Psy. The last ADB check at 22:10:33 UTC showed no device; inspect current state before testing.

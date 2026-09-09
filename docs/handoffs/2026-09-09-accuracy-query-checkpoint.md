@@ -60,10 +60,14 @@ Ten concurrent Memory commits were fast-forwarded before editing only this proje
 
 Later device steering, 22:05 UTC: Jeff said the Fold is charging and he will connect a different Android device. ADB still listed no devices at 22:05:35 UTC. Identify any replacement by its actual model and installed APK before testing; keep its evidence separate from the Fold receipt and do not infer that alternate-device checks establish the primary Fold workflow.
 
-### AIOS publication boundary
+### Initial AIOS publication boundary — resolved below
 
 The reviewed Memory commit **7037f1af91631a3c97882ffe3f3f7a0f1dba0cc6** and Control-Plane commit **2311df9f6bf9a08090eb03643efcce4ed6f2ca01** are pushed and remote-verified on each repository's codex/psyrec-handoff-20260909 branch. [Memory review](https://github.com/jefferygyamerah/AIOS-Memory/compare/main...codex/psyrec-handoff-20260909) · [Control-Plane review](https://github.com/jefferygyamerah/AIOS-Control-Plane/compare/main...codex/psyrec-handoff-20260909).
 
 Canonical AIOS main synchronization is pending explicit user approval. Automatic approval review rejected the attempted Memory push to main before execution, interpreting the user's no-main instruction as applying to AIOS and citing shared-branch side effects. That rejected action was not retried; dedicated review-branch publication was the safer alternative. No default AIOS branch was changed by these prepared commits. Read the prepared branch records for this checkpoint until canonical synchronization is authorized. The app remains on QVAC-Psy.
 
 Final device observation at 22:10:33 UTC: ADB still listed no connected Android device. The replacement remains unidentified; no device installation or lifecycle test was attempted. The saved-edit/restart question and human reference remain pending.
+
+### Canonical AIOS synchronization completed
+
+Jeff explicitly approved updating only AIOS-Memory and AIOS-Control-Plane main with the reviewed handoff records. At 2026-09-09 17:21 Panama / 22:21 UTC, both pushes succeeded and live remote refs matched: Memory 7037f1af91631a3c97882ffe3f3f7a0f1dba0cc6; Control-Plane 2311df9f6bf9a08090eb03643efcce4ed6f2ca01. These were fast-forward updates; no concurrent history was overwritten. The earlier approval gate is resolved for this synchronization. Follow-up metadata commits record completion in the existing project/session/run records. App implementation remains 95bb7f1 and its branch remains QVAC-Psy; release acceptance, human reference, phone lifecycle and replacement-device identification remain open. No app restart, inference, private-vault access or device operation was performed to synchronize these records.
