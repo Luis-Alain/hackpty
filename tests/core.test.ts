@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { Vault } from '../packages/core/vault.js';
 import { PsyRecService } from '../packages/core/service.js';
 import { PhysicalObserver } from '../apps/desktop/physical-observer.js';
+import { validateStoredPhoneEvidence } from '../packages/core/phone-evidence.js';
 
 const image = Buffer.from('89504e470d0a1a0a00000000', 'hex');
 const password = 'synthetic-only-test-passphrase';
@@ -239,9 +240,14 @@ test('phone evidence authenticates durable binding, appends without rewriting, a
   const report: import('../packages/contracts/index.js').PhoneLifecycleEvidence = {
     schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'synthetic-instrumentation',
     binding: { transferId, encounterId: encounter.id, imageSha256: receipt.sha256, deviceId: paired.deviceId, captureId: receipt.captureId },
+    device: { manufacturer: 'Synthetic manufacturer', model: 'Synthetic model' },
     build: { packageName: 'test.synthetic.psyrec', versionName: 'synthetic-test-only', versionCode: 1, apkSha256: 'a'.repeat(64) },
     events: [{ sequence: 1, type: 'capture_encrypted', observedAt: '2026-09-09T20:00:00.000Z', processSessionId: 'test-only-process', apkSha256: 'a'.repeat(64), queueCiphertextSha256: 'b'.repeat(64), photoPresent: true }],
   };
+  const legacy = structuredClone(report); delete legacy.device;
+  const legacyBefore = structuredClone(legacy);
+  assert.doesNotThrow(() => validateStoredPhoneEvidence(legacy, receipt));
+  assert.deepEqual(legacy, legacyBefore, 'legacy identity must never be backfilled');
   const request = { ...paired, transferId, evidence: report };
   await assert.rejects(service.receivePhoneEvidence({ ...request, token: 'wrong' }), /authorized/);
   await assert.rejects(service.receivePhoneEvidence({ ...request, transferId: 'missing-transfer' }), /durable/);
@@ -259,6 +265,12 @@ test('phone evidence authenticates durable binding, appends without rewriting, a
   await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: changed }), /rewrite/);
   const changedBuild = structuredClone(extended); changedBuild.build.apkSha256 = 'c'.repeat(64);
   await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: changedBuild }), /rewrite/);
+  const changedDevice = structuredClone(extended); changedDevice.device.model = 'Other model';
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: changedDevice }), /rewrite/);
+  const removedDevice = structuredClone(extended); delete removedDevice.device;
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: removedDevice }), /rewrite/);
+  const invalidDevice = structuredClone(extended) as any; invalidDevice.device.serial = 'not permitted';
+  await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: invalidDevice }), /schema/);
   const malformed = structuredClone(extended) as any; malformed.events[0].unexpectedText = 'do not accept arbitrary fields';
   await assert.rejects(service.receivePhoneEvidence({ ...request, evidence: malformed }), /schema/);
   assert.equal(JSON.stringify(service.snapshot()).includes('native-android-transfer-lifecycle'), false);

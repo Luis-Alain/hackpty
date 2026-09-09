@@ -54,3 +54,25 @@ test('candidate export refuses unrelated clinical state, unmatched sessions, and
   const noPaper = example(); noPaper.state.physicalObservations = noPaper.state.physicalObservations.filter(e => e.event !== 'printed-source-attestation');
   assert.throws(() => buildPhysicalCandidate(noPaper.state, noPaper.options), /printed synthetic/);
 });
+
+test('candidate device labels distinguish the observed Fold, a replacement and missing historical identity', () => {
+  for (const device of [undefined, { manufacturer: 'Google', model: 'Synthetic replacement' }, { manufacturer: 'samsung', model: 'SM-F966B' }]) {
+    const { state, options } = example();
+    const transfer = state.transfers[0];
+    state.phoneEvidence = [{ evidence: {
+      schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'synthetic-instrumentation',
+      binding: { ...transfer, imageSha256: transfer.sha256 }, device,
+      build: { packageName: 'tech.adwen.psyrec.capture', versionName: 'test', versionCode: 1, apkSha256: 'a'.repeat(64) }, events: [],
+    } }];
+    const before = structuredClone(state);
+    const result = buildPhysicalCandidate(state, options);
+    const fold = device?.model === 'SM-F966B';
+    assert.equal(result.kind, fold ? 'physical-fold-review-workflow' : 'physical-android-review-workflow');
+    assert.equal(result.steps[0].operation, fold ? 'paired-fold-photo-received' : 'paired-android-photo-received');
+    assert.deepEqual(result.phoneLifecycle.device, device);
+    assert.equal(result.physicalFoldAcceptance, false);
+    assert.equal(result.clinicianHumanAcceptance, false);
+    assert.equal(result.reviewPreview.gatePassedWithReviewedFlags, false);
+    assert.deepEqual(state, before);
+  }
+});

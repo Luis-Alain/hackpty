@@ -68,7 +68,8 @@ export function validateWorkflow(receipt: any, physical: boolean | 'exploratory'
     else requireEvidence(capture.inputClassification === 'AI-generated handwriting-style synthetic note' && ['paper', 'screen', 'unconfirmed'].includes(capture.sourceMedium), 'Exploratory capture must accurately classify its synthetic source and observed medium.');
     requireEvidence(capture.receipt?.encounterId === draft.encounterId && capture.receipt?.sha256 === extraction.metrics.request.attachment?.sha256 && typeof capture.receipt?.transferId === 'string', 'Durable phone receipt must identify the actual extracted photo and encounter.');
     requireEvidence(capture.encryptedPendingQueue === true && capture.deletedOnlyAfterReceipt === true, 'Encrypted phone queue and receipt-before-deletion evidence required.');
-    validatePhoneLifecycle(receipt.phoneLifecycle, capture.receipt);
+    // Both supported physical workflow kinds are explicitly Fold-labelled.
+    validatePhoneLifecycle(receipt.phoneLifecycle, capture.receipt, { primaryFold: true });
     validateHumanReview(receipt, extraction, draft, paperObservationIndex);
   } else {
     requireEvidence(receipt.kind === 'automated-electron-renderer-import-workflow', 'Expected an actual automated Electron renderer receipt.');

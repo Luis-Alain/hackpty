@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import type { VaultState } from '../../packages/core/types.js';
 import { assertCompleteMetrics } from '../../packages/runtime/metrics.js';
 import { validateHumanReview, validatePaperSource } from '../../scripts/validate-human-review.js';
-import { validatePhoneLifecycle } from '../../scripts/validate-phone-lifecycle.js';
+import { isPrimaryFoldDevice, validatePhoneLifecycle } from '../../scripts/validate-phone-lifecycle.js';
 import { validateWorkflow } from '../../scripts/validate-release.js';
 
 const sha256 = (text: string) => createHash('sha256').update(text).digest('hex');
@@ -53,6 +53,7 @@ export function buildPhysicalCandidate(state: VaultState, options: { encounterId
     assertCompleteMetrics(run.metrics);
   })).every(Boolean);
   const phone = structuredClone(state.phoneEvidence?.filter(p => p.evidence.binding.transferId === transfer.transferId && p.evidence.binding.deviceId === transfer.deviceId).at(-1)?.evidence ?? null);
+  const primaryFold = isPrimaryFoldDevice(phone?.device);
   const phonePassed = check('Phone lifecycle', () => validatePhoneLifecycle(phone, transfer));
   const approvalIndex = events.findIndex(e => e.event === 'operation-completed' && e.details.method === 'approve' && (e.details.result as any)?.id === record.id);
   const afterApproval = events.slice(approvalIndex < 0 ? events.length : approvalIndex + 1);
@@ -72,11 +73,13 @@ export function buildPhysicalCandidate(state: VaultState, options: { encounterId
   const approvalTrusted = events.some((e, index) => index < approvalIndex && e.event === 'renderer-input' && e.details.control === 'approve' && e.details.trusted === true && e.details.approvalChecked === true && e.details.patientId === record.patientId && e.details.encounterId === encounter.id && e.details.draftText === record.text);
   const capture = { receipt: transfer, nativeAndroidBuild: phonePassed ? true : null, certificatePinVerified: phonePassed ? true : null, encryptedPendingQueue: phonePassed ? true : null, deletedOnlyAfterReceipt: phonePassed ? true : null, printedSyntheticEnglishNote: true, sourceMedium: 'paper', fixtureId: 'DEMO-001', sourceAttestation: attestation };
   const candidate: any = {
-    schemaVersion: 1, syntheticOnly: true, sessionId: options.sessionId, kind: 'physical-fold-review-workflow', status: 'candidate-awaiting-independent-review',
+    schemaVersion: 1, syntheticOnly: true, sessionId: options.sessionId, kind: primaryFold ? 'physical-fold-review-workflow' : 'physical-android-review-workflow', status: 'candidate-awaiting-independent-review',
+    observedPhoneDevice: phone?.device ?? null,
+    scope: primaryFold ? 'Primary Fold candidate; physical and human acceptance require independent review.' : 'Android candidate only; primary Fold workflow acceptance remains pending.',
     publicationRedactions: ['Source photo bytes, device credentials and TLS identity are excluded.', 'Observer unlock snapshots retain approved records only; session setup/network metadata is excluded. Required prompts, model configuration and native measurements are unchanged.'],
     exportedAt: new Date().toISOString(), completedAt: null, physicalFoldAcceptance: false, clinicianHumanAcceptance: false, physicalObservationFailed: options.observerFailed,
     steps: [
-      { operation: 'paired-fold-photo-received', passed: phonePassed, evidence: capture },
+      { operation: primaryFold ? 'paired-fold-photo-received' : 'paired-android-photo-received', passed: phonePassed, evidence: capture },
       { operation: 'real-visionpsy-extraction', passed: metricsComplete, evidence: { runId: 'runId' in extraction.metrics ? extraction.metrics.runId : null, text: extraction.outputText } },
       { operation: 'source-correction-review', passed: sourceReviewed && sourceTrusted, evidence: { sourceRevision: draft.sourceRevision, correctedText: record.sourceText, correctedSha256: sha256(record.sourceText), extractedSha256: sha256(extraction.outputText), changed: record.sourceText !== extraction.outputText, actor: sourceTrusted ? 'human' : 'unconfirmed' } },
       { operation: 'real-bounded-draft', passed: metricsComplete, evidence: { runId: draftRunId, text: draft.outputText } },
@@ -93,7 +96,8 @@ export function buildPhysicalCandidate(state: VaultState, options: { encounterId
   check('Human workflow', () => validateHumanReview(candidate, extraction, draft));
   // Preview the gate without promoting this exported candidate's acceptance flags.
   const observedEnd = events.at(-1)?.at ?? null;
-  const gatePassed = check('Workflow gate preview', () => validateWorkflow({ ...candidate, completedAt: observedEnd, physicalFoldAcceptance: true, clinicianHumanAcceptance: true }));
+  const gatePassed = primaryFold && check('Workflow gate preview', () => validateWorkflow({ ...candidate, completedAt: observedEnd, physicalFoldAcceptance: true, clinicianHumanAcceptance: true }));
+  if (!primaryFold) failures.push('Primary Fold scope: the phone lifecycle does not identify the required Samsung SM-F966B; this Android candidate cannot establish primary Fold acceptance.');
   candidate.completedAt = gatePassed && failures.length === 0 ? observedEnd : null;
   candidate.reviewPreview = { gatePassedWithReviewedFlags: gatePassed && failures.length === 0, failures, acceptanceRequiresIndependentReview: true };
   return candidate;

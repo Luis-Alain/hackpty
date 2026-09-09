@@ -14,7 +14,11 @@ A self-contained PsyRec submission: native Fold capture, local VisionPsy extract
 - [Shared component contract](issues/04-shared-contract.md): use an optional retrieval port and validate patient/revision ownership in the application.
 - [Approval and recovery rules](issues/05-approval-recovery.md): immutable approvals, source-change invalidation, encrypted atomic saves and idempotent transfers.
 
-## Current accuracy and query checkpoint
+## Current device identity checkpoint
+
+The [device-identity continuation](../../docs/handoffs/2026-09-09-device-identity-checkpoint.md) is the current pointer. Native reports measure manufacturer/model without backfilling history; replacement candidates stay separate from Fold acceptance. The installer skips matching builds. The new signed APK is built but uninstalled, ADB remains empty, and the active desktop is preserved pending saved-edit confirmation. 71 root tests and targeted mobile checks pass; physical/human acceptance remains open. Observe successful journal sync before pairing another encounter.
+
+## Previous accuracy and query checkpoint
 
 Continue from the [accuracy/query handoff](../../docs/handoffs/2026-09-09-accuracy-query-checkpoint.md). Encrypted human-reference scoring and experimental QVAC source-ID queries are implemented; the higher-detail APK is installed with matching device/build SHA-256. The stricter VisionPsy prompt regressed and was rejected. The 1.7B query model passed 6/10 complete source selections, so reliable querying is unaccepted; the frozen 4B challenger also passed 6/10 and was not promoted. The user's handwritten photo remains unscored until a human reference is saved. Physical printed-paper, phone lifecycle and human acceptance remain open.
 

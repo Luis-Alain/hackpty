@@ -1,6 +1,12 @@
 # Status: PsyRec QVAC Psy
 
-## Current accuracy and query checkpoint
+## Current device identity checkpoint
+
+Continue from the [device-identity handoff](../../handoffs/2026-09-09-device-identity-checkpoint.md). New native reports retain measured manufacturer/model; encrypted history is not backfilled. Replacement Android candidates cannot pass either Fold-labelled workflow gate. The installer hashes first and skips matching APKs. New build `b3d5a9f…` is signature-verified but not installed; the last verified Fold installation remains `283425bd…`. ADB had no device at 22:19:39 UTC.
+
+71 root tests, six native JVM tests, six mocked installer scenarios, mobile TypeScript and native/instrumentation compilation passed. No device instrumentation, physical capture, new inference or human approval occurred. Saved-edit/restart, exact handwritten reference and physical readiness questions remain pending; the active vault is untouched. See the handoff for build identity and the pairing-observation caveat. Deadline and final buffer are unchanged.
+
+## Previous accuracy and query checkpoint
 
 The [accuracy/query handoff](../../handoffs/2026-09-09-accuracy-query-checkpoint.md) is the current continuation pointer. Jeff's reported synthetic handwriting failure prompted encrypted human-reference scoring, reproducible WER/CER comparisons, an Android capture-quality candidate and experimental local approved-note questions. The dedicated performance owner retains serialized GPU responsibility. Semantic embedding retrieval and an external corpus remain deferred.
 

@@ -68,7 +68,9 @@ internal class PendingStore(private val context: Context) {
     val binding = JSONObject().put("transferId", value.getString("transferId")).put("encounterId", value.getString("encounterId"))
       .put("imageSha256", value.getString("sha256")).put("deviceId", JSONObject.NULL).put("captureId", JSONObject.NULL)
     value.put("lifecycle", JSONObject().put("schemaVersion", 1).put("kind", "native-android-transfer-lifecycle")
-      .put("platform", "android").put("provenance", provenance).put("binding", binding).put("build", build).put("events", JSONArray()))
+      .put("platform", "android").put("provenance", provenance).put("binding", binding).put("build", build)
+      .put("device", JSONObject().put("manufacturer", android.os.Build.MANUFACTURER).put("model", android.os.Build.MODEL))
+      .put("events", JSONArray()))
     save(value)
     observe(value.getString("transferId"), "capture_encrypted")
   }

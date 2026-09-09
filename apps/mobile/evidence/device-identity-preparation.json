@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "kind": "android-device-identity-preparation",
+  "recordedAt": "2026-09-09T22:21:47.141111+00:00",
+  "status": "built-signature-verified-not-installed",
+  "changes": [
+    "Native manufacturer/model in new encrypted capture journals only",
+    "Measured Fold identity required for both Fold-labelled workflow gates",
+    "Replacement Android candidate labels stay separate",
+    "Installer inspects first, skips matching APKs, retains mismatches without overwriting evidence"
+  ],
+  "candidateApk": {
+    "path": "android/app/build/outputs/apk/release/app-release.apk",
+    "sha256": "b3d5a9f2167d7adb773c97416bbd0bacf45e2df4eaa00b384c9b984b222d78f2",
+    "bytes": 31497827,
+    "packageName": "tech.adwen.psyrec.capture",
+    "versionName": "0.1.0",
+    "versionCode": 1,
+    "abi": [
+      "arm64-v8a"
+    ],
+    "minSdk": 24,
+    "targetSdk": 36,
+    "buildCommand": "gradlew.bat app:assembleRelease -PreactNativeArchitectures=arm64-v8a --offline --console=plain",
+    "buildPassed": true,
+    "signatureVerified": true,
+    "signatureVerifiedAt": "2026-09-09T22:20:15.1559826Z",
+    "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+    "signingScope": "Existing Android Debug development certificate; not publication signing",
+    "installed": false
+  },
+  "validation": {
+    "rootTests": {
+      "passed": 71,
+      "failed": 0,
+      "skipped": 0
+    },
+    "mobileTypeScriptPassed": true,
+    "nativeJvmTests": {
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "kotlinCompiled": true,
+    "androidInstrumentationCompiled": true,
+    "androidInstrumentationExecuted": false,
+    "mockInstallerCases": {
+      "passed": 6,
+      "realDeviceOperations": false,
+      "cases": [
+        "matching-default-skips-install",
+        "matching-verify-only",
+        "mismatch-verify-only-retains-identity",
+        "mismatch-updates-after-inspection",
+        "absent-verify-only-retains-identity",
+        "absent-installs-once"
+      ]
+    },
+    "physicalReleaseGate": "fails: fresh reviewed physical receipt is absent"
+  },
+  "deviceObservation": {
+    "observedAt": "2026-09-09T22:19:39.971Z",
+    "method": "adb devices read-only inventory",
+    "connectedDevices": 0,
+    "replacementIdentity": null
+  },
+  "lastVerifiedFoldInstallation": {
+    "reference": "capture-quality-candidate.json",
+    "observedAt": "2026-09-09T21:11:54.781345Z",
+    "model": "SM-F966B",
+    "apkSha256": "283425bdd88a6a01fc6c71baea8d9455bdcf04d7b6906e4d1c492d8650bc416b",
+    "reverifiedThisContinuation": false
+  },
+  "newInferenceRuns": 0,
+  "newPhysicalCapture": false,
+  "humanApprovalPerformed": false,
+  "privateVaultAccessed": false,
+  "physicalWorkflowAccepted": false,
+  "historicalEvidenceModified": false
+}

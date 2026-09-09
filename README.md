@@ -19,6 +19,10 @@ The submission must demonstrate the complete user workflow, not only an SDK call
 
 Real desktop workflow evidence is linked below. Physical-device, complete privacy and independent-setup acceptance remain open until their receipts are linked. Current progress is tracked in [Factory status](docs/plans/qvac-psy/00-status.md) and the [Wayfinder map](.scratch/qvac-psy/map.md).
 
+## Device identity checkpoint · September 9
+
+The [current continuation](docs/handoffs/2026-09-09-device-identity-checkpoint.md) records a new Android build with encrypted native manufacturer/model identity. Replacement phones now export separately labelled Android candidates; both Fold workflow gates require the observed Samsung SM-F966B. The installer inspects/hashes first and skips a matching APK. The new APK is built and signature-verified, **not installed**; ADB still showed no device at 22:19:39 UTC. Validation: 71 root tests, six native JVM tests, six mocked installer cases, mobile TypeScript and native/instrumentation compilation passed; no device instrumentation or new inference occurred. The existing desktop stays open pending saved-edit confirmation. Full physical/human acceptance remains open.
+
 ## Development
 
 Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `npm run build` / `npm test`. Desktop launch is `npm start`. Provision model files using `node dist/diagnostics/qvac-spike/provision.js`, then run `npm run test:runtime`. `node dist/diagnostics/qvac-spike/validate-evidence.js` checks required native evidence. Native Expo Android capture is implemented in `apps/mobile/`; its local build and Fold acceptance are tracked separately. No inference API keys are required.

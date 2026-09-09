@@ -19,7 +19,7 @@ function fixture() {
   add('tls_pin_verified', { attemptId: 'success' });
   add('matching_receipt_received', { attemptId: 'success', receipt });
   add('photo_replaced_by_encrypted_receipt', { attemptId: 'success', photoPresent: false, receiptPersisted: true, receipt });
-  const report: any = { schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'native-camera-capture', binding: { ...receipt, imageSha256: receipt.sha256 }, build: { packageName: 'tech.adwen.psyrec.capture', versionName: '0.1.0', versionCode: 1, apkSha256: 'f'.repeat(64) }, events };
+  const report: any = { schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'native-camera-capture', device: { manufacturer: 'samsung', model: 'SM-F966B' }, binding: { ...receipt, imageSha256: receipt.sha256 }, build: { packageName: 'tech.adwen.psyrec.capture', versionName: '0.1.0', versionCode: 1, apkSha256: 'f'.repeat(64) }, events };
   return { report, receipt };
 }
 test('phone gate accepts a complete bound observation schema without claiming the invented fixture as evidence', () => {
@@ -32,6 +32,9 @@ test('phone gate rejects missing, simulated, stale and disconnected lifecycle ob
     'instrumentation is not camera capture': v => { v.report.provenance = 'synthetic-instrumentation'; },
     'another image': v => { v.report.binding.imageSha256 = '0'.repeat(64); },
     'another encounter': v => { v.report.binding.encounterId = 'other'; },
+    'missing hardware identity': v => { delete v.report.device; },
+    'empty manufacturer': v => { v.report.device.manufacturer = ' '; },
+    'invalid model': v => { v.report.device.model = 123; },
     'missing installed build': v => { v.report.build.apkSha256 = ''; },
     'mixed installed builds': v => { v.report.events[1].apkSha256 = '0'.repeat(64); },
     'no process restart': v => { v.report.events[1].processSessionId = 'capture-process'; },
@@ -61,4 +64,15 @@ test('phone gate rejects missing, simulated, stale and disconnected lifecycle ob
     const value = fixture(); mutate(value);
     assert.throws(() => validatePhoneLifecycle(value.report, value.receipt), /Phone lifecycle evidence:/, name);
   }
+});
+
+// These observations remain invented test fixtures, never physical receipts.
+test('replacement Android lifecycle cannot satisfy the primary Fold device gate', () => {
+  const { report, receipt } = fixture();
+  assert.equal(validatePhoneLifecycle(report, receipt, { primaryFold: true }).status, 'passed');
+  report.device = { manufacturer: 'Google', model: 'Pixel synthetic test model' };
+  assert.equal(validatePhoneLifecycle(report, receipt).status, 'passed');
+  assert.throws(() => validatePhoneLifecycle(report, receipt, { primaryFold: true }), /primary Fold/);
+  report.device = { manufacturer: 'not Samsung', model: 'SM-F966B' };
+  assert.throws(() => validatePhoneLifecycle(report, receipt, { primaryFold: true }), /primary Fold/);
 });

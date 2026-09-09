@@ -17,12 +17,18 @@ export function stablePhoneEvidence(value: unknown): string {
 export function validateStoredPhoneEvidence(value: unknown, receipt: CaptureReceipt): asserts value is PhoneLifecycleEvidence {
   need(object(value));
   const evidence = value as Record<string, any>;
-  need(keys(evidence, ['schemaVersion', 'kind', 'platform', 'provenance', 'binding', 'build', 'events']));
+  need(keys(evidence, ['schemaVersion', 'kind', 'platform', 'provenance', 'binding', 'build', 'device', 'events']));
   need(evidence.schemaVersion === 1 && evidence.kind === 'native-android-transfer-lifecycle' && evidence.platform === 'android');
   need(['native-camera-capture', 'synthetic-instrumentation'].includes(evidence.provenance));
   const binding = evidence.binding;
   need(object(binding) && keys(binding, ['transferId', 'encounterId', 'imageSha256', 'deviceId', 'captureId']));
   need(binding.transferId === receipt.transferId && binding.encounterId === receipt.encounterId && binding.deviceId === receipt.deviceId && binding.captureId === receipt.captureId && binding.imageSha256 === receipt.sha256);
+  // Legacy reports remain readable/storable, without inventing hardware identity.
+  if (evidence.device !== undefined) {
+    const device = evidence.device;
+    need(object(device) && keys(device, ['manufacturer', 'model']));
+    need(text(device.manufacturer) && device.manufacturer.trim().length > 0 && text(device.model) && device.model.trim().length > 0);
+  }
   const build = evidence.build;
   need(object(build) && keys(build, ['packageName', 'versionName', 'versionCode', 'apkSha256']));
   need(text(build.packageName, 200) && text(build.versionName, 100) && Number.isSafeInteger(build.versionCode) && build.versionCode >= 1 && hash(build.apkSha256));

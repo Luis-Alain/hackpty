@@ -26,6 +26,8 @@ class CaptureSenderTest {
     try {
       store.createCapture(queued, "synthetic-instrumentation")
       assertEquals("synthetic-instrumentation", store.evidence(id).getString("provenance"))
+      assertEquals(android.os.Build.MANUFACTURER, store.evidence(id).getJSONObject("device").getString("manufacturer"))
+      assertEquals(android.os.Build.MODEL, store.evidence(id).getJSONObject("device").getString("model"))
       val failing = CaptureSender(store) { _, _, _, _, _, certificate, _ -> certificate(true); throw TransportFailure(64, 128, true, IOException("synthetic injected disconnect")) }
       assertThrows(Exception::class.java) { failing.send("https://192.168.1.2:9443", "a".repeat(64), "synthetic-device", "synthetic-token", encounter, id) }
       assertEquals(photo, PendingStore(context).read(id).getString("image"))

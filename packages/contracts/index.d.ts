@@ -46,6 +46,8 @@ export interface PhoneLifecycleEvidence {
   platform: 'android';
   provenance: 'native-camera-capture' | 'synthetic-instrumentation';
   binding: { transferId: string; encounterId: string; imageSha256: string; deviceId: string | null; captureId: string | null };
+  /** Measured when a new native journal is created. Absent legacy identity is never backfilled. */
+  device?: { manufacturer: string; model: string };
   build: { packageName: string; versionName: string; versionCode: number; apkSha256: string };
   events: PhoneLifecycleEvent[];
 }

@@ -30,3 +30,23 @@ test('workflow evidence rejects disconnected input, prompts, patient history, ap
     assert.throws(() => validateWorkflow(receipt, false), undefined, name);
   }
 });
+
+// Composed schema fixture only, never a physical observation or approval receipt.
+test('exploratory Fold workflow also rejects a replacement phone before human acceptance', () => {
+  const receipt = actual();
+  const extraction = receipt.runs.find(r => r.operation === 'extract');
+  const captureReceipt = { deviceId: 'test-device', transferId: 'test-transfer', encounterId: extraction.encounterId,
+    captureId: 'test-capture', sha256: extraction.metrics.request.attachment.sha256, receivedAt: receipt.completedAt };
+  Object.assign(receipt, { kind: 'exploratory-physical-fold-review-workflow', physicalFoldAcceptance: false, clinicianHumanAcceptance: true });
+  receipt.steps.push({ operation: 'paired-fold-photo-received', passed: true, evidence: {
+    nativeAndroidBuild: true, certificatePinVerified: true, encryptedPendingQueue: true, deletedOnlyAfterReceipt: true,
+    inputClassification: 'AI-generated handwriting-style synthetic note', sourceMedium: 'unconfirmed', receipt: captureReceipt,
+  } });
+  receipt.phoneLifecycle = {
+    schemaVersion: 1, kind: 'native-android-transfer-lifecycle', platform: 'android', provenance: 'native-camera-capture',
+    binding: { ...captureReceipt, imageSha256: captureReceipt.sha256 },
+    build: { packageName: 'tech.adwen.psyrec.capture', versionName: 'test', versionCode: 1, apkSha256: 'a'.repeat(64) },
+    device: { manufacturer: 'Google', model: 'Synthetic replacement' }, events: [],
+  };
+  assert.throws(() => validateWorkflow(receipt, 'exploratory'), /primary Fold/);
+});
