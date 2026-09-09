@@ -23,7 +23,9 @@ export async function executeJob(job: JobRequest): Promise<RuntimeResult> {
   const startedAt = new Date().toISOString(); let stage = 'verify-models';
   let sdk: typeof import('@qvac/sdk') | undefined; let modelId: string | undefined;
   const partialEvidence: Record<string, unknown> = { operation: job.operation };
-  const setStage = (value: string) => {stage = value; process.send?.({type:'stage', runId:job.runId, stage:value});};
+  // Snapshots stay on private IPC. The parent retains the last available exact
+  // request/configuration if this process must be killed before final metrics.
+  const setStage = (value: string) => {stage = value; process.send?.({type:'evidence',runId:job.runId,partialEvidence});process.send?.({type:'stage', runId:job.runId, stage:value});};
   let outcome: RuntimeResult | undefined;
   let failure: RuntimeFailure | undefined;
   try {

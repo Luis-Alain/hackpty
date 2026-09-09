@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T17:57:48.812Z",
+  "scope": "Lifecycle, fixed synthetic quality outputs, and sampled runtime network sockets; not full UI/phone acceptance or enforced network isolation",
+  "outcomes": [
+    {
+      "mode": "cancel",
+      "status": "passed"
+    },
+    {
+      "mode": "timeout",
+      "status": "passed"
+    },
+    {
+      "fixture": "missing",
+      "operation": "extract",
+      "status": "metrics-accepted-quality-review-required",
+      "output": "Synthetic Training Note  \n Source ID: MISSING  \n Reports Poor Sleep  \n DURATION NOT RECORDED .  \n NO DIAGNOSIS RECORDED .",
+      "runId": "667d4fc7-f3bb-4380-8f4b-4c143f501321"
+    },
+    {
+      "fixture": "missing",
+      "operation": "draft",
+      "status": "metrics-accepted-quality-review-required",
+      "output": "Reports poor sleep. Duration not recorded. No diagnosis recorded.",
+      "runId": "c5f8c38a-9a72-4ac3-bab1-f86126a92ba7"
+    },
+    {
+      "fixture": "ambiguous",
+      "operation": "extract",
+      "status": "metrics-accepted-quality-review-required",
+      "output": "Synthetic Training Note  \n Source ID: AMBIGUOUS  \n Reports Poor Sleep.  \n DURATION MAY BE THREE NIGHTS.  \n Patient Is Unsure.",
+      "runId": "6056fd0c-afa9-460b-ac3a-af14037f5a15"
+    },
+    {
+      "fixture": "ambiguous",
+      "operation": "draft",
+      "status": "metrics-accepted-quality-review-required",
+      "output": "Reports poor sleep. Duration may be three nights. Patient is unsure.",
+      "runId": "bdf899c1-ec8b-4a52-96b9-25b69a27aa42"
+    },
+    {
+      "fixture": "unreadable",
+      "operation": "extract",
+      "status": "metrics-accepted-quality-review-required",
+      "output": "Synthetic Training Note  \n Source ID: UNREADABLE  \n Reports Poor Sleep.  \nNo Diagnosis Recorded.",
+      "runId": "5c51ea53-0b56-40f9-97ea-fc90e1eabe40"
+    },
+    {
+      "fixture": "unreadable",
+      "operation": "draft",
+      "status": "metrics-accepted-quality-review-required",
+      "output": "Reports poor sleep. Duration [unclear in source image]. No diagnosis recorded.",
+      "runId": "009b65f0-b8e8-4561-b14c-3dbaea045ba1"
+    }
+  ],
+  "stages": [
+    {
+      "runId": "9baaf7e2-43f5-4fdc-91b2-2f21caab31d4",
+      "stage": "load-model",
+      "processId": 46364,
+      "at": "2026-09-09T17:56:55.978Z"
+    },
+    {
+      "runId": "9baaf7e2-43f5-4fdc-91b2-2f21caab31d4",
+      "stage": "completion",
+      "processId": 46364,
+      "at": "2026-09-09T17:57:01.55Z"
+    },
+    {
+      "runId": "f87b52ae-d119-41f4-bf9e-4476c4335d11",
+      "stage": "load-model",
+      "processId": 36504,
+      "at": "2026-09-09T17:57:03.659Z"
+    },
+    {
+      "runId": "667d4fc7-f3bb-4380-8f4b-4c143f501321",
+      "stage": "load-model",
+      "processId": 27300,
+      "at": "2026-09-09T17:57:07.789Z"
+    },
+    {
+      "runId": "667d4fc7-f3bb-4380-8f4b-4c143f501321",
+      "stage": "completion",
+      "processId": 27300,
+      "at": "2026-09-09T17:57:11.73Z"
+    },
+    {
+      "runId": "667d4fc7-f3bb-4380-8f4b-4c143f501321",
+      "stage": "validate-evidence",
+      "processId": 27300,
+      "at": "2026-09-09T17:57:12.708Z"
+    },
+    {
+      "runId": "667d4fc7-f3bb-4380-8f4b-4c143f501321",
+      "stage": "cleanup",
+      "processId": 27300,
+      "at": "2026-09-09T17:57:12.708Z"
+    },
+    {
+      "runId": "c5f8c38a-9a72-4ac3-bab1-f86126a92ba7",
+      "stage": "load-model",
+      "processId": 36996,
+      "at": "2026-09-09T17:57:14.893Z"
+    },
+    {
+      "runId": "c5f8c38a-9a72-4ac3-bab1-f86126a92ba7",
+      "stage": "completion",
+      "processId": 36996,
+      "at": "2026-09-09T17:57:19.681Z"
+    },
+    {
+      "runId": "c5f8c38a-9a72-4ac3-bab1-f86126a92ba7",
+      "stage": "validate-evidence",
+      "processId": 36996,
+      "at": "2026-09-09T17:57:19.894Z"
+    },
+    {
+      "runId": "c5f8c38a-9a72-4ac3-bab1-f86126a92ba7",
+      "stage": "cleanup",
+      "processId": 36996,
+      "at": "2026-09-09T17:57:19.895Z"
+    },
+    {
+      "runId": "6056fd0c-afa9-460b-ac3a-af14037f5a15",
+      "stage": "load-model",
+      "processId": 21644,
+      "at": "2026-09-09T17:57:21.807Z"
+    },
+    {
+      "runId": "6056fd0c-afa9-460b-ac3a-af14037f5a15",
+      "stage": "completion",
+      "processId": 21644,
+      "at": "2026-09-09T17:57:25.901Z"
+    },
+    {
+      "runId": "6056fd0c-afa9-460b-ac3a-af14037f5a15",
+      "stage": "validate-evidence",
+      "processId": 21644,
+      "at": "2026-09-09T17:57:26.954Z"
+    },
+    {
+      "runId": "6056fd0c-afa9-460b-ac3a-af14037f5a15",
+      "stage": "cleanup",
+      "processId": 21644,
+      "at": "2026-09-09T17:57:26.955Z"
+    },
+    {
+      "runId": "bdf899c1-ec8b-4a52-96b9-25b69a27aa42",
+      "stage": "load-model",
+      "processId": 38052,
+      "at": "2026-09-09T17:57:29.391Z"
+    },
+    {
+      "runId": "bdf899c1-ec8b-4a52-96b9-25b69a27aa42",
+      "stage": "completion",
+      "processId": 38052,
+      "at": "2026-09-09T17:57:34.4Z"
+    },
+    {
+      "runId": "bdf899c1-ec8b-4a52-96b9-25b69a27aa42",
+      "stage": "validate-evidence",
+      "processId": 38052,
+      "at": "2026-09-09T17:57:34.623Z"
+    },
+    {
+      "runId": "bdf899c1-ec8b-4a52-96b9-25b69a27aa42",
+      "stage": "cleanup",
+      "processId": 38052,
+      "at": "2026-09-09T17:57:34.623Z"
+    },
+    {
+      "runId": "5c51ea53-0b56-40f9-97ea-fc90e1eabe40",
+      "stage": "load-model",
+      "processId": 36832,
+      "at": "2026-09-09T17:57:36.402Z"
+    },
+    {
+      "runId": "5c51ea53-0b56-40f9-97ea-fc90e1eabe40",
+      "stage": "completion",
+      "processId": 36832,
+      "at": "2026-09-09T17:57:40.407Z"
+    },
+    {
+      "runId": "5c51ea53-0b56-40f9-97ea-fc90e1eabe40",
+      "stage": "validate-evidence",
+      "processId": 36832,
+      "at": "2026-09-09T17:57:41.323Z"
+    },
+    {
+      "runId": "5c51ea53-0b56-40f9-97ea-fc90e1eabe40",
+      "stage": "cleanup",
+      "processId": 36832,
+      "at": "2026-09-09T17:57:41.323Z"
+    },
+    {
+      "runId": "009b65f0-b8e8-4561-b14c-3dbaea045ba1",
+      "stage": "load-model",
+      "processId": 25748,
+      "at": "2026-09-09T17:57:43.463Z"
+    },
+    {
+      "runId": "009b65f0-b8e8-4561-b14c-3dbaea045ba1",
+      "stage": "completion",
+      "processId": 25748,
+      "at": "2026-09-09T17:57:48.224Z"
+    },
+    {
+      "runId": "009b65f0-b8e8-4561-b14c-3dbaea045ba1",
+      "stage": "validate-evidence",
+      "processId": 25748,
+      "at": "2026-09-09T17:57:48.455Z"
+    },
+    {
+      "runId": "009b65f0-b8e8-4561-b14c-3dbaea045ba1",
+      "stage": "cleanup",
+      "processId": 25748,
+      "at": "2026-09-09T17:57:48.456Z"
+    }
+  ],
+  "network": {
+    "method": "Win32_Process parent-descendant snapshots followed by netstat -ano; 250 ms delay between completed samples; short-lived activity between samples may be missed",
+    "samples": 49,
+    "ownedProcessIds": [
+      46364,
+      28248,
+      62976,
+      36504,
+      61800,
+      53348,
+      27300,
+      30900,
+      46448,
+      36996,
+      55520,
+      28612,
+      21644,
+      33576,
+      41540,
+      38052,
+      38832,
+      55712,
+      36832,
+      19560,
+      47812,
+      25748,
+      55008,
+      2508
+    ],
+    "socketObservations": [],
+    "samplingErrors": [],
+    "enforcedIsolation": false
+  },
+  "temporaryFilesRemaining": [],
+  "processCleanup": {
+    "method": "Get-Process -Id for all 24 observed runtime descendant PIDs after harness completion; follow-up check rather than inline harness observation",
+    "checkedAt": "2026-09-09T17:59:24.0613604Z",
+    "remainingOwnedProcessIds": []
+  }
+}

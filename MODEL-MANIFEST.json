@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
-  "sdk": { "package": "@qvac/sdk", "version": "0.18.2", "reason": "Shared team runtime compatibility with upstream commit 21f7f40736c201f8d3c14a36ced4cdb426639122" },
+  "sdk": {
+    "package": "@qvac/sdk",
+    "version": "0.18.2",
+    "reason": "Shared team runtime compatibility with upstream commit 21f7f40736c201f8d3c14a36ced4cdb426639122"
+  },
   "inferencePolicy": "Local absolute verified files only. No registry, HTTP, delegation, RAG, or audio during inference.",
   "models": [
     {
@@ -13,7 +17,9 @@
       "sha256": "fc70a6c6eed7d2f82ed48cbd52cc7118b249eff8b91112ef9cbfca6813a1eefa",
       "modelType": "llamacpp-completion",
       "variant": "base",
-      "imageNoUpscale": "unset"
+      "imageNoUpscale": "unset",
+      "license": "Apache-2.0",
+      "modelCard": "https://huggingface.co/qvac/VisionPsy-Nano-460M-GGUFs/blob/4138c5bd6e026d67cebf2dbd2d81c6229c14cdc1/README.md"
     },
     {
       "id": "visionpsy-nano-base-projector-q8",
@@ -24,7 +30,9 @@
       "expectedBytes": 108782144,
       "sha256": "92f1bb80acaba3e7b59b6534f47447b830330bc9051018d6d8b5d768e58503c2",
       "modelType": "llamacpp-completion",
-      "variant": "base"
+      "variant": "base",
+      "license": "Apache-2.0",
+      "modelCard": "https://huggingface.co/qvac/VisionPsy-Nano-460M-GGUFs/blob/4138c5bd6e026d67cebf2dbd2d81c6229c14cdc1/README.md"
     },
     {
       "id": "qwen3-1.7b-q4",
@@ -35,7 +43,9 @@
       "expectedBytes": 1056782912,
       "sha256": "c876f159707a4e4f70e045106c69db15bfc935a4981706fd4f65c6e7ea1e81c5",
       "modelType": "llamacpp-completion",
-      "reasoningBudget": 0
+      "reasoningBudget": 0,
+      "license": "Apache-2.0",
+      "modelCard": "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/blob/d7f544eead698dbd1f15126ef60b45a1e1933222/README.md"
     }
   ]
 }

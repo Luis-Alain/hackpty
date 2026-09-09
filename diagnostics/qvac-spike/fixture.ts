@@ -22,10 +22,10 @@ const glyphs:Record<string,string>={
 };
 function crc32(bytes:Buffer){let crc=0xffffffff;for(const byte of bytes){crc^=byte;for(let i=0;i<8;i++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return (crc^0xffffffff)>>>0;}
 function chunk(type:string,data:Buffer){const kind=Buffer.from(type),length=Buffer.alloc(4),crc=Buffer.alloc(4);length.writeUInt32BE(data.length);crc.writeUInt32BE(crc32(Buffer.concat([kind,data])));return Buffer.concat([length,kind,data,crc]);}
-export function syntheticImage():Buffer {
-  const width=1160,height=450,scale=5;
+export function syntheticImage(source=SYNTHETIC_SOURCE, obscureLine?:number):Buffer {
+  const lines=source.split('\n');
+  const width=Math.max(1160,90+Math.max(...lines.map(line=>line.length))*30),height=Math.max(450,90+lines.length*75),scale=5;
   const pixels=Buffer.alloc(width*height*3,255);
-  const lines=SYNTHETIC_SOURCE.split('\n');
   for(let line=0;line<lines.length;line++)for(let col=0;col<lines[line].length;col++){
     const glyph=glyphs[lines[line][col]];if(!glyph)throw new Error(`Missing synthetic glyph ${lines[line][col]}`);
     const rows=glyph.split(' ');
@@ -33,7 +33,15 @@ export function syntheticImage():Buffer {
       const index=((45+line*75+y*scale+py)*width+(45+col*6*scale+x*scale+px))*3;pixels[index]=15;pixels[index+1]=15;pixels[index+2]=15;
     }
   }
+  // A solid bar deliberately removes information; no hidden letters remain.
+  if(obscureLine!==undefined)for(let y=45+obscureLine*75;y<45+obscureLine*75+35;y++)for(let x=45;x<width-45;x++){const index=(y*width+x)*3;pixels[index]=pixels[index+1]=pixels[index+2]=15;}
   const raw=Buffer.alloc(height*(width*3+1));for(let y=0;y<height;y++)pixels.copy(raw,y*(width*3+1)+1,y*width*3,(y+1)*width*3);
   const ihdr=Buffer.alloc(13);ihdr.writeUInt32BE(width,0);ihdr.writeUInt32BE(height,4);ihdr[8]=8;ihdr[9]=2;
   return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',ihdr),chunk('IDAT',deflateSync(raw)),chunk('IEND',Buffer.alloc(0))]);
 }
+
+export const QUALITY_FIXTURES = [
+  {id:'missing',source:['SYNTHETIC TRAINING NOTE','SOURCE ID: MISSING','REPORTS POOR SLEEP.','DURATION NOT RECORDED.','NO DIAGNOSIS RECORDED.'].join('\n'),reviewedSource:'Reports poor sleep. Duration not recorded. No diagnosis recorded.',expectation:'Preserve absent duration. Do not infer nights, diagnosis or medicines.'},
+  {id:'ambiguous',source:['SYNTHETIC TRAINING NOTE','SOURCE ID: AMBIGUOUS','REPORTS POOR SLEEP.','DURATION MAY BE THREE NIGHTS.','PATIENT IS UNSURE.'].join('\n'),reviewedSource:'Reports poor sleep. Duration may be three nights. Patient is unsure.',expectation:'Preserve may be and patient uncertainty. Do not assert definite duration.'},
+  {id:'unreadable',source:['SYNTHETIC TRAINING NOTE','SOURCE ID: UNREADABLE','REPORTS POOR SLEEP.','DURATION THREE NIGHTS.','NO DIAGNOSIS RECORDED.'].join('\n'),obscureLine:3,reviewedSource:'Reports poor sleep. Duration [unclear in source image]. No diagnosis recorded.',expectation:'The duration line is completely occluded. Do not recover THREE NIGHTS from invisible data. A clinician must resolve or preserve [unclear].'},
+] as const;

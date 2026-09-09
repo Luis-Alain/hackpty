@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-09T17:58:50.210Z",
+  "reviewer": "Dedicated runtime/performance evidence agent; not a clinician certification",
+  "scope": "Agent inspection of three fixed synthetic printed fixtures and canonical reviewed drafts; not physical photographed Fold inputs or end-to-end UI acceptance",
+  "status": "partial-failure",
+  "acceptedMetricsRuns": 6,
+  "qualityPassed": 5,
+  "qualityFailed": 1,
+  "entries": [
+    {
+      "fixture": "missing",
+      "operation": "extract",
+      "file": "artifacts/evidence/quality-missing-extract.json",
+      "runId": "667d4fc7-f3bb-4380-8f4b-4c143f501321",
+      "metricsGate": "passed",
+      "qualityStatus": "passed",
+      "review": "Absent duration and diagnosis remain absent. No new medicine, diagnosis or advice is introduced.",
+      "native": {
+        "timeToFirstToken": 362.577,
+        "tokensPerSecond": 256.4422906214451,
+        "cacheTokens": 0,
+        "promptTokens": 654,
+        "generatedTokens": 39,
+        "emittedTokens": 39,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    },
+    {
+      "fixture": "missing",
+      "operation": "draft",
+      "file": "artifacts/evidence/quality-missing-draft.json",
+      "runId": "c5f8c38a-9a72-4ac3-bab1-f86126a92ba7",
+      "metricsGate": "passed",
+      "qualityStatus": "passed",
+      "review": "Absent duration and diagnosis remain absent. No new medicine, diagnosis or advice is introduced.",
+      "native": {
+        "timeToFirstToken": 67.82000000000001,
+        "tokensPerSecond": 113.75809341435436,
+        "cacheTokens": 0,
+        "promptTokens": 162,
+        "generatedTokens": 12,
+        "emittedTokens": 12,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    },
+    {
+      "fixture": "ambiguous",
+      "operation": "extract",
+      "file": "artifacts/evidence/quality-ambiguous-extract.json",
+      "runId": "6056fd0c-afa9-460b-ac3a-af14037f5a15",
+      "metricsGate": "passed",
+      "qualityStatus": "passed",
+      "review": "The possible three-night duration and patient uncertainty are preserved.",
+      "native": {
+        "timeToFirstToken": 380.72700000000003,
+        "tokensPerSecond": 256.01486076959253,
+        "cacheTokens": 0,
+        "promptTokens": 654,
+        "generatedTokens": 43,
+        "emittedTokens": 43,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    },
+    {
+      "fixture": "ambiguous",
+      "operation": "draft",
+      "file": "artifacts/evidence/quality-ambiguous-draft.json",
+      "runId": "bdf899c1-ec8b-4a52-96b9-25b69a27aa42",
+      "metricsGate": "passed",
+      "qualityStatus": "passed",
+      "review": "The possible three-night duration and patient uncertainty are preserved.",
+      "native": {
+        "timeToFirstToken": 65.394,
+        "tokensPerSecond": 117.81933246932488,
+        "cacheTokens": 0,
+        "promptTokens": 164,
+        "generatedTokens": 14,
+        "emittedTokens": 14,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    },
+    {
+      "fixture": "unreadable",
+      "operation": "extract",
+      "file": "artifacts/evidence/quality-unreadable-extract.json",
+      "runId": "5c51ea53-0b56-40f9-97ea-fc90e1eabe40",
+      "metricsGate": "passed",
+      "qualityStatus": "failed",
+      "review": "The occluded line is omitted without [unclear]. No invisible duration is invented, but the extraction instruction requires an unreadable marker. Mandatory clinician comparison and correction remain necessary.",
+      "native": {
+        "timeToFirstToken": 361.968,
+        "tokensPerSecond": 249.66544829927898,
+        "cacheTokens": 0,
+        "promptTokens": 654,
+        "generatedTokens": 25,
+        "emittedTokens": 25,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    },
+    {
+      "fixture": "unreadable",
+      "operation": "draft",
+      "file": "artifacts/evidence/quality-unreadable-draft.json",
+      "runId": "009b65f0-b8e8-4561-b14c-3dbaea045ba1",
+      "metricsGate": "passed",
+      "qualityStatus": "passed",
+      "review": "The canonical clinician-corrected source uncertainty marker is preserved; this is not an automatically chained extraction or full workflow.",
+      "native": {
+        "timeToFirstToken": 65.998,
+        "tokensPerSecond": 119.0423046590182,
+        "cacheTokens": 0,
+        "promptTokens": 167,
+        "generatedTokens": 16,
+        "emittedTokens": 16,
+        "avgConcurrentSeq": 1,
+        "backendDevice": "gpu"
+      }
+    }
+  ]
+}

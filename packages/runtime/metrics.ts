@@ -38,6 +38,8 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   text(m.modelDetails.modelId, 'modelDetails.modelId');
   if (m.modelDetails.type !== 'llamacpp-completion') fail('modelDetails.type');
   object(m.modelDetails.loadConfig, 'modelDetails.loadConfig');
+  const config=m.modelDetails.loadConfig;
+  if(config.device!=='gpu'||config.gpu_layers!==99||config.ctx_size!==4096||config.parallel!==1||config.verbosity!==0||config['main-gpu']!=='dedicated')fail('modelDetails.loadConfig.configuration');
   object(m.modelDetails.loadedModelInfo, 'modelDetails.loadedModelInfo');
   if (m.modelDetails.loadedModelInfo.modelId !== m.modelDetails.modelId) fail('loadedModelInfo.modelId');
   const assets = m.modelDetails.assets;
@@ -51,7 +53,7 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
     if (asset.sha256 !== asset.actualSha256 || asset.expectedBytes !== asset.actualBytes) fail('asset.integrity');
   }
   object(m.request, 'request');
-  if (m.request.kvCache !== false || m.request.stream !== true || !Array.isArray(m.request.context)) fail('request.configuration');
+  if (m.request.kvCache !== false || m.request.stream !== true || !Array.isArray(m.request.context) || m.request.context.length!==0) fail('request.configuration');
   text(m.request.promptTemplateVersion, 'request.promptTemplateVersion');
   if (!Array.isArray(m.request.history) || !m.request.history.length) fail('request.history');
   for (const message of m.request.history) {
@@ -61,11 +63,12 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   if (!m.request.history.some(message => message.role === 'user')) fail('request.history.user');
   object(m.request.generationParams, 'request.generationParams');
   for (const key of ['temp','seed','predict']) number(m.request.generationParams[key], `generationParams.${key}`);
+  if(m.request.generationParams.temp!==0||m.request.generationParams.seed!==42||m.request.generationParams.predict!==768)fail('generationParams.configuration');
   if (m.operation === 'extract') {
     object(m.request.attachment, 'request.attachment'); digest(m.request.attachment.sha256, 'attachment.sha256'); number(m.request.attachment.bytes, 'attachment.bytes', 1, true);
     if (!['image/png','image/jpeg'].includes(m.request.attachment.mime) || !m.request.history.some(message => message.attachments?.length)) fail('attachment');
-    if ('image_no_upscale' in m.modelDetails.loadConfig || !isAbsolute(m.modelDetails.loadConfig.projectionModelSrc as string)) fail('base.projector.config');
-  } else text(m.request.sourceId, 'request.sourceId');
+    if ('image_no_upscale' in config || typeof config.projectionModelSrc!=='string' || !isAbsolute(config.projectionModelSrc) || config['mmproj-use-gpu']!==true || !assets.some(asset=>asset.role==='projector'&&asset.path===config.projectionModelSrc)) fail('base.projector.config');
+  } else {text(m.request.sourceId, 'request.sourceId');if(config.reasoning_budget!==0||m.request.generationParams.reasoning_budget!==0)fail('draft.reasoning_budget');}
   object(m.native, 'native');
   for (const key of ['promptTokens','generatedTokens','emittedTokens']) number(m.native[key], `native.${key}`, 1, true);
   number(m.native.cacheTokens, 'native.cacheTokens', 0, true);
@@ -82,7 +85,7 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
     text(m.timings[key].method, `timings.${key}.method`);
     if (m.timings[key].unit !== (key === 'nativeThroughput' ? 'tokens/s' : 'ms')) fail(`timings.${key}.unit`);
   }
-  if (m.loadMs !== m.timings.modelLoadWall.value || m.durationMs !== m.timings.completionWall.value || m.ttftMs !== m.timings.nativeTimeToFirstToken.value) fail('timing.aliases');
+  if (m.loadMs !== m.timings.modelLoadWall.value || m.durationMs !== m.timings.completionWall.value || m.ttftMs !== m.timings.nativeTimeToFirstToken.value || m.tokensPerSecond!==m.timings.nativeThroughput.value) fail('timing.aliases');
   object(m.profiler, 'profiler');
   if (!Array.isArray(m.profiler.recentEvents) || !m.profiler.recentEvents.some(event => event.op === 'loadModel' && event.gauges?.modelInitializationTime === m.timings.nativeModelInitialization.value && event.gauges?.totalLoadTime === m.timings.sdkTotalLoad.value)) fail('profiler.loadModel');
   object(m.sharedRuntime, 'sharedRuntime');

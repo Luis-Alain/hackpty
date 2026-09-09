@@ -27,13 +27,15 @@ Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `n
 
 Continuation is active with dedicated runtime/performance, native Expo/transfer, and desktop/clinical-review owners. The coordinator owns shared contracts, dependencies and Git; real GPU jobs are serialized. The handoff remains an unfinished implementation checkpoint.
 
+Runtime cancellation/timeout cleanup and six further synthetic GPU completions are now recorded in [lifecycle evidence](artifacts/evidence/lifecycle-quality-summary.json). The [quality review](artifacts/evidence/quality-review.json) reports an unreadable-line omission; mandatory clinician correction remains part of the release. Socket sampling observed no owned connections but does not establish enforced offline operation. [Demo instructions and Spanish narration](docs/DEMO.md) are prepared for the physical workflow.
+
 Electron was patched from 40.0.0 to **40.10.6** with the scoped install-script allowance preserved. All 13 existing tests, TypeScript checking and the locked-screen smoke pass. Production dependency audit reports zero findings; the full audit retains one Electron advisory, [GHSA-9f4c-93c8-jc8g](https://github.com/advisories/GHSA-9f4c-93c8-jc8g). The application denies all new windows with `setWindowOpenHandler`, the publisher's documented mitigation. This is not a claim of a clean full audit.
 
 13 tests pass. Real VisionPsy base extraction and Qwen3-1.7B drafting ran on Jeff's Windows NVIDIA GPU using SDK 0.18.2, with exact prompts, load timings, native token counts, TTFT and throughput retained in [synthetic evidence](artifacts/evidence/feasibility-summary.json). Desktop startup and its locked screen were smoke-tested. The full clinician UI workflow, transport/device acceptance, adversarial quality set and offline network test remain open. Continue from the [fresh-session handoff](docs/handoffs/2026-09-09-qvac-psy.md).
 
 `@qvac/sdk` is pinned to **0.18.2**, aligned with the team's shared runtime from commit `21f7f40736c201f8d3c14a36ced4cdb426639122`. That runtime retains P2P delegation needed by other entries; this PsyRec release uses local PC inference. This supersedes the original 0.19.0 plan pin. VisionPsy base uses its matching base projector and leaves `image_no_upscale` unset. Models are provisioned before offline use; model bytes and private vaults are not committed.
 
-The upstream `src/core/` runtime is being adapted into the TypeScript `packages/runtime/` interface with projector support, exact prompt capture, strict evidence validation and an encrypted application sink. Upstream `evidencia/` and `THIRD_PARTY.md` retain team provenance; they do not establish PsyRec acceptance or expand this branch's submission scope.
+The upstream `src/core/` runtime is being adapted into the TypeScript `packages/runtime/` interface with projector support, exact prompt capture, strict evidence validation and an encrypted application sink. Upstream `evidencia/` and `THIRD_PARTY.md` retain team provenance; they do not establish PsyRec acceptance or expand this branch's submission scope. [PsyRec attribution](docs/PSYREC-THIRD-PARTY.md) identifies this release's actual models, licences and inherited code.
 
 ## Submission portability
 

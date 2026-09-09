@@ -12,7 +12,7 @@ export type { RunMetrics, RuntimeResult, RuntimeFailure } from './types.js';
 
 export interface RuntimeOptions {
   projectRoot?: string; modelDirectory?: string; timeoutMs?: number; nodeExecutable?: string;
-  onStage?: (event: {runId:string;stage:string}) => void;
+  onStage?: (event: {runId:string;stage:string;processId:number}) => void;
 }
 async function terminateOwnedTree(child: ChildProcess) {
   if (!child.pid || child.exitCode !== null) return;
@@ -65,17 +65,19 @@ export class QvacRuntime {
     const capture=(chunk:Buffer)=>{diagnosticTail=(diagnosticTail+chunk.toString()).slice(-12000);};
     child.stdout?.on('data',capture);child.stderr?.on('data',capture);
     let stage='worker-startup'; let result:RuntimeResult | undefined;let failure:RuntimeFailure | undefined;
+    let partialEvidence:Record<string,unknown>={};
     const job:JobRequest={...input,runId,projectRoot:this.projectRoot,modelDirectory:this.modelDirectory,tempDirectory} as JobRequest;
     try {
       await new Promise<void>((resolve,reject)=>{
         let settled=false,terminating=false;
         const finish=(error?:Error)=>{if(settled)return;settled=true;clearTimeout(timer);signal?.removeEventListener('abort',abort);this.active.delete(runId);error?reject(error):resolve();};
-        const stop=async(reason:string)=>{if(terminating||settled)return;terminating=true;failure={schemaVersion:1,status:'failed',runId,operation:input.operation,stage,error:{name:reason==='timeout'?'RuntimeTimeoutError':'RuntimeCancelledError',message:reason==='timeout'?`Local runtime exceeded ${this.timeoutMs} ms.`:'Local runtime cancelled.'},startedAt,endedAt:new Date().toISOString(),partialEvidence:{timeoutMs:this.timeoutMs,diagnosticTail}};await terminateOwnedTree(child);finish(new RuntimeEvidenceError(failure.error.message,failure));};
+        const stop=async(reason:string)=>{if(terminating||settled)return;terminating=true;failure={schemaVersion:1,status:'failed',runId,operation:input.operation,stage,error:{name:reason==='timeout'?'RuntimeTimeoutError':'RuntimeCancelledError',message:reason==='timeout'?`Local runtime exceeded ${this.timeoutMs} ms.`:'Local runtime cancelled.'},startedAt,endedAt:new Date().toISOString(),partialEvidence:{...partialEvidence,timeoutMs:this.timeoutMs,diagnosticTail,evidenceAccepted:false,interruptionReason:reason}};await terminateOwnedTree(child);finish(new RuntimeEvidenceError(failure.error.message,failure));};
         const abort=()=>{void stop('cancelled');};
         const timer=setTimeout(()=>{void stop('timeout');},this.timeoutMs);
         this.active.set(runId,{child,stop:abort}); signal?.addEventListener('abort',abort,{once:true});
         child.on('message',(message:any)=>{
-          if(message?.type==='stage'){stage=message.stage;this.options.onStage?.({runId,stage});}
+          if(message?.type==='evidence' && message.runId===runId && message.partialEvidence && typeof message.partialEvidence==='object')partialEvidence=message.partialEvidence;
+          if(message?.type==='stage'){stage=message.stage;this.options.onStage?.({runId,stage,processId:child.pid!});}
           if(message?.type==='result'){try{assertCompleteMetrics(message.result?.metrics);result=message.result;}catch(error){failure={schemaVersion:1,status:'failed',runId,operation:input.operation,stage:'client-evidence-gate',error:{name:(error as Error).name,message:(error as Error).message},startedAt,endedAt:new Date().toISOString(),partialEvidence:{candidate:message.result?.metrics}};}}
           if(message?.type==='failure')failure=message.evidence;
         });

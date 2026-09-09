@@ -62,3 +62,25 @@ test('cancelled/failed/empty/truncated metadata cannot masquerade as a completed
   const cancelled=actualMetrics();cancelled.output.stopReason='cancelled';assert.throws(()=>assertCompleteMetrics(cancelled),IncompleteEvidenceError);
   const empty=actualMetrics();empty.output.characters=0;assert.throws(()=>assertCompleteMetrics(empty),IncompleteEvidenceError);
 });
+
+test('load and generation configuration must be complete and native throughput must match',needsEvidence,()=>{
+  for(const key of ['ctx_size','device','gpu_layers','parallel','verbosity','main-gpu']){
+    const metrics=actualMetrics();delete metrics.modelDetails.loadConfig[key];
+    assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError,key);
+  }
+  const sampling=actualMetrics();sampling.request.generationParams.temp=1;
+  assert.throws(()=>assertCompleteMetrics(sampling),IncompleteEvidenceError);
+  const throughput=actualMetrics();throughput.timings.nativeThroughput.value+=1;
+  assert.throws(()=>assertCompleteMetrics(throughput),IncompleteEvidenceError);
+  const context=actualMetrics('draft');context.request.context=[{text:'unreviewed'}];
+  assert.throws(()=>assertCompleteMetrics(context),IncompleteEvidenceError);
+});
+
+test('wrong or missing projector is rejected by the evidence gate',needsEvidence,()=>{
+  for(const wrong of [undefined,null,'relative.gguf','https://example.com/projector.gguf']){
+    const metrics=actualMetrics();metrics.modelDetails.loadConfig.projectionModelSrc=wrong;
+    assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);
+  }
+  const metrics=actualMetrics();metrics.modelDetails.assets.find(asset=>asset.role==='projector').path+='.different.gguf';
+  assert.throws(()=>assertCompleteMetrics(metrics),IncompleteEvidenceError);
+});
