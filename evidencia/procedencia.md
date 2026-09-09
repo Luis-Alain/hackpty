@@ -31,6 +31,8 @@ Disponible al jurado a solicitud.
 | Reglas del reto | `src/equipos/reglas.js` | Confianza y estado por campo según la hoja «Agent Question Logic», año de instalación, y la siguiente pregunta útil (una a la vez, sin repetir) | Nuevo, escrito desde la hoja del xlsx | 9-sep |
 | Duplicados explicables | `src/equipos/duplicados.js` | Fellegi-Sunter a mano: pesos log2(m/u) por campo declarados, nulos aportan 0, probabilidad y veredicto mismo/revisar/nuevo con la explicación campo por campo; nunca fusiona sola | Nuevo (método de splink, sin librería) | 9-sep |
 | Pruebas de equipos | `src/equipos/equipos.test.js` | 6 pruebas puras + los 10 prompts oficiales del xlsx, uno en español y uno en portugués contra el modelo real (12/12 el 9-sep, 1.4-3.3 s cada uno en la RTX 4060) | Nuevo | 9-sep |
+| Dictado por voz | `src/core/voz.js` | Audio del navegador → WAV 16 kHz normalizado (highpass + dynaudnorm) → Whisper por QVAC; guarda de silencio por pico en dBFS y registro con factor de tiempo real | Nuevo. De la referencia se tomó el dato medido de que el audio del HONOR llega a −22 dB y hay que normalizar antes de transcribir | 9-sep |
+| Base instalada | `src/equipos/almacen.js`, `src/equipos/almacen.test.js` | Observaciones inmutables encadenadas; el inventario se calcula consolidando por identidad de activo (Fellegi-Sunter); Confirmed solo con dos observadores distintos y sin sumar unidades; Customer 360, agregados por país/ciudad/modalidad, renovaciones con la regla COCIR (≤5 al día, 6-10 planificar, >10 reemplazar) e información incompleta | Nuevo | 9-sep |
 
 ## Componentes de terceros
 
