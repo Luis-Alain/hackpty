@@ -46,6 +46,18 @@ fixtures/        datos sintéticos
 evidencia/       procedencia, rendimiento, pruebas de no salida de datos
 ```
 
+## Dónde está cada track
+
+Un solo proyecto, un solo repositorio (rama `main`), un solo video. Cada jurado encuentra aquí su parte.
+
+| Track | Módulo | Carpeta | Minuto del video |
+|---|---|---|---|
+| 01 Philips · Base instalada | Equipos: captura por voz/texto/foto, extracción, identidad y duplicados, inventario, Customer 360 | `src/equipos/`, `app/` | _(por definir)_ |
+| 02 Tether · QVAC Psy | VisionPsy Nano lee la placa; reglas deterministas sacan marca, modelo y serie; registro de rendimiento | `src/equipos/placa.js`, `evidencia/rendimiento.jsonl` | _(por definir)_ |
+| 03 General · Sovereign Intelligence at the Edge | Todo lo anterior + delegación entre pares por llave pública, respaldo local en el teléfono, actas verificables, prueba de no salida de datos | `src/core/`, `evidencia/` | _(por definir)_ |
+| 05 Caja de Ahorros · Banca | Sucursal: procedimiento citado sin conexión, acta sellada y verificable | `src/sucursal/` | _(solo si queda completo)_ |
+| 04 Ovnicom · Sentinel-DNS | Red: consumidor del stream DNS, clasificación, alerta a Wazuh, score por zona | `src/red/`, `infra/` | _(solo si queda completo)_ |
+
 ## Cómo ejecutarlo
 
 _(se completa con la primera versión funcional)_

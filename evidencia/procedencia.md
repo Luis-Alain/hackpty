@@ -23,6 +23,8 @@ Disponible al jurado a solicitud.
 |---|---|---|---|---|
 | Registro de rendimiento | `src/core/rendimiento.js` | Una línea JSON por carga y por inferencia: modelo, hardware, origen local/delegado, carga, tokens, TTFT, throughput | Nuevo. La referencia solo guardaba el último resumen en memoria | 9-sep |
 | Runtime QVAC común | `src/core/runtime.js`, `src/core/runtime.test.js` | Carga (local o delegada por llave pública con respaldo local) y completion medida sobre `@qvac/sdk` 0.18.2; el modo de ejecución se registra según lo que pasó (`getLoadedModelInfo`), no según lo pedido | Nuevo. Toma de la referencia el dato de que `gpu_layers`/`ctx_size` son las claves de `modelConfig` y que Qwen3 antepone `<think>` | 9-sep |
+| Sellado de actas | `src/core/sello.js` | JSON canónico + SHA-256 + firma Ed25519 con la llave del nodo (crypto de Node, sin dependencias); `verificar()` funciona con la llave pública que viaja en el sello | Nuevo. La referencia tenía un sellado propio; aquí se reescribió con canonización recursiva y sin librerías | 9-sep |
+| Almacén de eventos encadenado | `src/core/eventos.js`, `src/core/sello-eventos.test.js` | JSONL solo-agregar; cada evento lleva la huella del anterior; `verificarCadena()` señala el primer evento alterado | Nuevo | 9-sep |
 
 ## Componentes de terceros
 

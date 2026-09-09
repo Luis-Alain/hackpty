@@ -7,3 +7,4 @@ datos/*.jsonl
 *.gguf
 .env
 *.env
+datos/*.pem
