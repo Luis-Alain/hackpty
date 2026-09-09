@@ -108,3 +108,33 @@ test('crash recovery removes only marked dead-owner temporary directories',async
     assert.deepEqual(await recoverAbandonedTemporaryFiles(root),[]);
   }finally{await rm(root,{recursive:true,force:true});}
 });
+
+
+test('loaded model identity cannot contradict the verified local assets',needsEvidence,()=>{
+  const mutations = {
+    'delegation claimed': m => { m.modelDetails.loadedModelInfo.isDelegated=true; },
+    'delegation absent': m => { delete m.modelDetails.loadedModelInfo.isDelegated; },
+    'wrong loaded file': m => { m.modelDetails.loadedModelInfo.path=m.modelDetails.assets[1].path; },
+    'relabelled model': m => { m.model='UNAVAILABLE_MODEL_REPLACEMENT'; },
+    'wrong native addon': m => { m.modelDetails.loadedModelInfo.addonPackage='other-addon'; },
+    'wrong native type': m => { m.modelDetails.loadedModelInfo.modelType='other-model'; },
+    'missing primary role': m => { m.modelDetails.assets[0].role='draft'; },
+    'wrong filename': m => { m.modelDetails.assets[0].filename='other.gguf'; },
+    'invalid verification time': m => { m.modelDetails.assets[0].verifiedAt='unknown'; },
+  };
+  for (const [name,mutate] of Object.entries(mutations)) {const m=actualMetrics();mutate(m);assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError,name);}
+});
+
+test('shared performance rows must bind the same native run, model, request and measurements',needsEvidence,()=>{
+  const mutations = {
+    'different run': row => { row.run_id='another-run'; },
+    'different SDK': row => { row.sdk_version='0.19.0'; },
+    'different model': row => { row.model='other-model'; },
+    'delegated execution': row => { row.execution_mode='delegated'; },
+  };
+  for(const stage of ['load','completion']) for(const [name,mutate] of Object.entries(mutations)){const m=actualMetrics();mutate(m.sharedRuntime.performanceRows.find(row=>row.stage===stage));assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError,stage+': '+name);}
+  for(const key of ['token_count_source','output_count_method','generated_tokens','emitted_tokens','cache_tokens','backend_actual','throughput_tps','ttft_ms_sdk','ttft_ms','end_to_end_ms','generation_params','native_stats']){
+    const m=actualMetrics();delete m.sharedRuntime.performanceRows.find(row=>row.stage==='completion')[key];assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError,key);
+  }
+  const m=actualMetrics();m.sharedRuntime.performanceRows.push(structuredClone(m.sharedRuntime.performanceRows[0]));assert.throws(()=>assertCompleteMetrics(m),IncompleteEvidenceError,'duplicate successful load');
+});

@@ -1,4 +1,5 @@
-import { isAbsolute } from 'node:path';
+import { basename, isAbsolute } from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 import type { RunMetrics } from './types.js';
 
 export class IncompleteEvidenceError extends Error {
@@ -41,17 +42,24 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   const config=m.modelDetails.loadConfig;
   if(config.device!=='gpu'||config.gpu_layers!==99||config.ctx_size!==4096||config.parallel!==1||config.verbosity!==0||config['main-gpu']!=='dedicated')fail('modelDetails.loadConfig.configuration');
   object(m.modelDetails.loadedModelInfo, 'modelDetails.loadedModelInfo');
-  if (m.modelDetails.loadedModelInfo.modelId !== m.modelDetails.modelId) fail('loadedModelInfo.modelId');
+  const loaded = m.modelDetails.loadedModelInfo;
+  if (loaded.modelId !== m.modelDetails.modelId) fail('loadedModelInfo.modelId');
+  if (loaded.isDelegated !== false || loaded.modelType !== m.modelDetails.type || loaded.addonPackage !== '@qvac/llm-llamacpp') fail('loadedModelInfo.localRuntime');
   const assets = m.modelDetails.assets;
   if (!Array.isArray(assets) || assets.length !== (m.operation === 'extract' ? 2 : 1)) fail('modelDetails.assets');
   for (const [index, asset] of assets.entries()) {
     object(asset, `assets[${index}]`);
     for (const key of ['id','constant','filename','path','verifiedAt']) text(asset[key], `assets[${index}].${key}`);
-    if (!isAbsolute(asset.path) || !asset.path.endsWith('.gguf')) fail(`assets[${index}].path`);
+    if (!isAbsolute(asset.path) || !asset.path.endsWith('.gguf') || basename(asset.path) !== asset.filename) fail(`assets[${index}].path`);
+    if (asset.modelType !== m.modelDetails.type || !Number.isFinite(Date.parse(asset.verifiedAt)) || Date.parse(asset.verifiedAt) > Date.parse(m.endedAt)) fail(`assets[${index}].identity`);
     number(asset.expectedBytes, 'asset.expectedBytes', 1, true); number(asset.actualBytes, 'asset.actualBytes', 1, true);
     digest(asset.sha256, 'asset.sha256'); digest(asset.actualSha256, 'asset.actualSha256');
     if (asset.sha256 !== asset.actualSha256 || asset.expectedBytes !== asset.actualBytes) fail('asset.integrity');
   }
+  const primary = assets.filter(asset => asset.role === m.operation);
+  const projectors = assets.filter(asset => asset.role === 'projector');
+  if (primary.length !== 1 || projectors.length !== (m.operation === 'extract' ? 1 : 0) || new Set(assets.map(asset => asset.path)).size !== assets.length) fail('modelDetails.assets.roles');
+  if (m.model !== primary[0].constant || loaded.path !== primary[0].path) fail('loadedModelInfo.assetBinding');
   object(m.request, 'request');
   if (m.request.kvCache !== false || m.request.stream !== true || !Array.isArray(m.request.context) || m.request.context.length!==0) fail('request.configuration');
   text(m.request.promptTemplateVersion, 'request.promptTemplateVersion');
@@ -91,5 +99,12 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   object(m.sharedRuntime, 'sharedRuntime');
   if(m.sharedRuntime.commit !== '21f7f40736c201f8d3c14a36ced4cdb426639122' || !Array.isArray(m.sharedRuntime.performanceRows)) fail('sharedRuntime.provenance');
   const rows=m.sharedRuntime.performanceRows;
-  if(!rows.some(row=>row.stage==='load'&&row.status==='ok'&&row.load_ms===m.loadMs) || !rows.some(row=>row.stage==='completion'&&row.status==='ok'&&row.request_id===m.requestId&&row.input_tokens===m.inputTokens&&row.output_tokens===m.outputTokens&&JSON.stringify(row.history)===JSON.stringify(m.request.history))) fail('sharedRuntime.performanceRows');
+  const loads=rows.filter(row=>row.stage==='load'&&row.status==='ok');
+  const completions=rows.filter(row=>row.stage==='completion'&&row.status==='ok');
+  if (loads.length!==1 || completions.length!==1) fail('sharedRuntime.performanceRows');
+  const load=loads[0], completion=completions[0];
+  for (const row of [load,completion]) if(row.run_id!==m.runId || row.sdk_version!==m.sdkVersion || row.model!==m.model || row.execution_mode!=='local') fail('sharedRuntime.runBinding');
+  if (load.load_ms!==m.loadMs || load.model_id!==m.modelDetails.modelId || load.model_source!==primary[0].path || load.fallback_a_local!==false || !isDeepStrictEqual(load.model_config,config) || !isDeepStrictEqual(load.loaded_model_info,loaded)) fail('sharedRuntime.loadBinding');
+  if (completion.request_id!==m.requestId || completion.input_tokens!==m.inputTokens || completion.output_tokens!==m.outputTokens || completion.generated_tokens!==m.native.generatedTokens || completion.emitted_tokens!==m.native.emittedTokens || completion.cache_tokens!==m.native.cacheTokens || completion.token_count_source!=='sdk' || completion.backend_actual!==m.native.backendDevice || completion.throughput_tps!==m.tokensPerSecond || completion.ttft_ms_sdk!==m.ttftMs || completion.ttft_ms!==m.timings.timeToFirstContent.value || completion.end_to_end_ms!==m.durationMs || completion.kv_cache!==false || !isDeepStrictEqual(completion.native_stats,m.native) || !isDeepStrictEqual(completion.generation_params,m.request.generationParams) || !isDeepStrictEqual(completion.history,m.request.history)) fail('sharedRuntime.completionBinding');
+  text(completion.output_count_method,'sharedRuntime.output_count_method');
 }
