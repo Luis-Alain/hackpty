@@ -3,6 +3,7 @@
 - Product and architecture direction: APPROVED by Jeff's explicit implementation request, September 9, 2026.
 - Program design and slice sequence: implementing the approved plan; concrete contracts recorded alongside code. No fabricated separate approval events.
 - Later correction incorporated: approved patient-note browsing now; optional patient-scoped RAG adapter later, supplied by teammate.
+- Shared runtime integration: Jeff requested commit `21f7f40736c201f8d3c14a36ced4cdb426639122`; preserve its ancestry and adapt its runtime in TypeScript. SDK pin is now 0.18.2 for team compatibility. Original 0.19.0 plan pin is superseded. Clinical inference remains local on the PC.
 
 ## Slices
 - [ ] Skeleton: imported image to review screen

@@ -23,7 +23,9 @@ Real-model, physical-device, privacy and independent-setup acceptance remain ope
 
 Node >=22.17; npm; Windows x64 with Vulkan >=1.4. Install with `npm ci`, then `npm run build` / `npm test`. Desktop launch is `npm start` once the desktop slice is present. Android setup and provisioning commands will be added with that slice. No inference API keys are required.
 
-`@qvac/sdk` is pinned to 0.19.0. VisionPsy base uses its matching base projector and leaves `image_no_upscale` unset. Models are provisioned before offline use; model bytes and private vaults are not committed.
+`@qvac/sdk` is pinned to **0.18.2**, aligned with the team's shared runtime from commit `21f7f40736c201f8d3c14a36ced4cdb426639122`. That runtime retains P2P delegation needed by other entries; this PsyRec release uses local PC inference. This supersedes the original 0.19.0 plan pin. VisionPsy base uses its matching base projector and leaves `image_no_upscale` unset. Models are provisioned before offline use; model bytes and private vaults are not committed.
+
+The upstream `src/core/` runtime is being adapted into the TypeScript `packages/runtime/` interface with projector support, exact prompt capture, strict evidence validation and an encrypted application sink. Upstream `evidencia/` and `THIRD_PARTY.md` retain team provenance; they do not establish PsyRec acceptance or expand this branch's submission scope.
 
 ## Submission portability
 
