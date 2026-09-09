@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "recovered-design-reference",
+  "sourceTaskId": "01a087d4-b26b-7e22-a38c-5366e3443b83",
+  "files": [
+    {
+      "file": "psyrec-mobile-design.html",
+      "sha256": "9627410ab932153930c9f75bc1a64c2013bc506a06949ddb060f0a7b1fd8311f",
+      "bytes": 49487
+    },
+    {
+      "file": "psyrec-mobile-design-notes.md",
+      "sha256": "bd93f94903991ee26d767701cac1c9f3d86b479fe39b9f0189d068d839aabe6a",
+      "bytes": 5785
+    },
+    {
+      "file": "psyrec-mobile-capture.png",
+      "sha256": "a717236bed99a877ecc0a9a2e17737ad6b718d511e8a5347ff33becc8757b199",
+      "bytes": 157153
+    },
+    {
+      "file": "psyrec-mobile-history.png",
+      "sha256": "e76b342194dc5fffc86de27d7563da971c48feaf8d25770524c6ff4a08a87790",
+      "bytes": 139575
+    },
+    {
+      "file": "render-checks.json",
+      "sha256": "f774b263dfce7843c78f224fae1f9f3b5386607b5b422096a394c722c7d6e0e8",
+      "bytes": 8193
+    }
+  ],
+  "originalStatus": "Standalone design preview; no app or Git changes in the design task",
+  "notPhysicalEvidence": true
+}

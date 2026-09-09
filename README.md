@@ -1,5 +1,9 @@
 # PsyRec — QVAC Psy challenge
 
+## Android capture UI · September 9, 18:00 Panama
+
+The [Android UI handoff](docs/handoffs/2026-09-09-android-update-startup-fix.md) supersedes historical installation status below. The [recovered design study](docs/design/mobile-study/README.md) now informs the native connect, capture, pending/retry and receipt screens. APK `4c9d47a2...` is installed and hash-verified on Samsung SM-F966B. Mobile TypeScript, local Release build and delayed 30-second startup checks passed; the earlier native startup crash is fixed. Live visual inspection remains pending because the phone locked. The same PC workspace was reopened with Jeff's authorization. Claude's chart-review work is separate; full physical workflow acceptance remains open.
+
 Native Android capture and local Windows clinician documentation, built in TypeScript, with an iPhone port validated by an iOS simulator build. **Work in progress:** this branch is being developed in small tested checkpoints. Nothing in this README certifies clinical safety or sponsor eligibility.
 
 ## Release workflow

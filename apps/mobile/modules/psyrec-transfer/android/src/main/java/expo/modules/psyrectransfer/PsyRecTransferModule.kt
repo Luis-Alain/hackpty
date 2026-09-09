@@ -7,10 +7,15 @@ import org.json.JSONObject
 
 class PsyRecTransferModule : Module() {
   private val store by lazy { PendingStore(requireNotNull(appContext.reactContext)) }
+  private fun protectWindow() {
+    val activity = appContext.currentActivity ?: return
+    // Expo can replay the foreground event while initializing the module on the JS thread.
+    activity.runOnUiThread { activity.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) }
+  }
   override fun definition() = ModuleDefinition {
     Name("PsyRecTransfer")
-    OnCreate { appContext.currentActivity?.runOnUiThread { appContext.currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) } }
-    OnActivityEntersForeground { appContext.currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) }
+    OnCreate { protectWindow() }
+    OnActivityEntersForeground { protectWindow() }
     AsyncFunction("pending") { store.observeReopened(); store.list() }
     AsyncFunction("completed") { encounterId: String -> store.completed(encounterId) }
     AsyncFunction("pair") { endpoint: String, pin: String, secret: String ->

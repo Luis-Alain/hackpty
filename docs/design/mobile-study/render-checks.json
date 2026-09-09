@@ -1,0 +1,410 @@
+{
+  "errors": [],
+  "geometry": [
+    {
+      "class": "phone-body",
+      "screen": "pair",
+      "client": 706,
+      "scroll": 706,
+      "bounds": {
+        "width": 334,
+        "height": 706
+      }
+    },
+    {
+      "class": "phone-body",
+      "screen": "capture",
+      "client": 706,
+      "scroll": 706,
+      "bounds": {
+        "width": 334,
+        "height": 706
+      }
+    },
+    {
+      "class": "phone-body",
+      "screen": "pending",
+      "client": 706,
+      "scroll": 706,
+      "bounds": {
+        "width": 334,
+        "height": 706
+      }
+    },
+    {
+      "class": "phone-body",
+      "screen": "received",
+      "client": 706,
+      "scroll": 706,
+      "bounds": {
+        "width": 334,
+        "height": 706
+      }
+    },
+    {
+      "class": "phone-body",
+      "screen": "history-phone",
+      "client": 662,
+      "scroll": 662,
+      "bounds": {
+        "width": 328,
+        "height": 662
+      }
+    },
+    {
+      "class": "device fold",
+      "screen": "history-fold",
+      "client": 738,
+      "scroll": 738,
+      "bounds": {
+        "width": 1076,
+        "height": 750
+      }
+    },
+    {
+      "class": "history-work",
+      "screen": "history-fold",
+      "client": 624,
+      "scroll": 624,
+      "bounds": {
+        "width": 840,
+        "height": 624
+      }
+    }
+  ],
+  "checks": {
+    "certificateRejected": true,
+    "answerVisible": true,
+    "missing": {
+      "unavailable": true,
+      "records": true
+    }
+  },
+  "layouts": [
+    {
+      "width": 1200,
+      "doc": 1200,
+      "body": 1200
+    },
+    {
+      "width": 900,
+      "doc": 900,
+      "body": 900
+    },
+    {
+      "width": 650,
+      "doc": 650,
+      "body": 650
+    },
+    {
+      "width": 390,
+      "doc": 390,
+      "body": 390
+    }
+  ],
+  "interactions": {
+    "citationOne": true,
+    "sourceToast": true,
+    "sourceToastContent": "×\nSleep log review · approved source\n\n“Sleep log brought to review. Two interruptions recorded. No diagnosis recorded.”\n\nRecord DEMO-R02 · revision 1 · synthetic example",
+    "escapeCloses": true
+  },
+  "pageErrors": [],
+  "layoutDetails": [
+    {
+      "width": 1600,
+      "documentWidth": 1600,
+      "phones": [
+        {
+          "screen": "pair",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "capture",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "pending",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "received",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "history-phone",
+          "client": 662,
+          "scroll": 662
+        }
+      ],
+      "actions": [
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        },
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        },
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        },
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        }
+      ]
+    },
+    {
+      "width": 1400,
+      "documentWidth": 1400,
+      "phones": [
+        {
+          "screen": "pair",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "capture",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "pending",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "received",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "history-phone",
+          "client": 662,
+          "scroll": 662
+        }
+      ],
+      "actions": [
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        },
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        },
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        },
+        {
+          "bottom": -285.234375,
+          "deviceBottom": -254.234375
+        }
+      ]
+    },
+    {
+      "width": 1200,
+      "documentWidth": 1200,
+      "phones": [
+        {
+          "screen": "pair",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "capture",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "pending",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "received",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "history-phone",
+          "client": 662,
+          "scroll": 662
+        }
+      ],
+      "actions": [
+        {
+          "bottom": -228.234375,
+          "deviceBottom": -197.234375
+        },
+        {
+          "bottom": -228.234375,
+          "deviceBottom": -197.234375
+        },
+        {
+          "bottom": 678.765625,
+          "deviceBottom": 709.765625
+        },
+        {
+          "bottom": 678.765625,
+          "deviceBottom": 709.765625
+        }
+      ]
+    },
+    {
+      "width": 900,
+      "documentWidth": 900,
+      "phones": [
+        {
+          "screen": "pair",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "capture",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "pending",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "received",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "history-phone",
+          "client": 662,
+          "scroll": 662
+        }
+      ],
+      "actions": [
+        {
+          "bottom": -228.234375,
+          "deviceBottom": -197.234375
+        },
+        {
+          "bottom": -228.234375,
+          "deviceBottom": -197.234375
+        },
+        {
+          "bottom": 678.765625,
+          "deviceBottom": 709.765625
+        },
+        {
+          "bottom": 678.765625,
+          "deviceBottom": 709.765625
+        }
+      ]
+    },
+    {
+      "width": 650,
+      "documentWidth": 650,
+      "phones": [
+        {
+          "screen": "pair",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "capture",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "pending",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "received",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "history-phone",
+          "client": 662,
+          "scroll": 662
+        }
+      ],
+      "actions": [
+        {
+          "bottom": -263.53125,
+          "deviceBottom": -232.53125
+        },
+        {
+          "bottom": 645.46875,
+          "deviceBottom": 676.46875
+        },
+        {
+          "bottom": 1554.46875,
+          "deviceBottom": 1585.46875
+        },
+        {
+          "bottom": 2463.46875,
+          "deviceBottom": 2494.46875
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "documentWidth": 390,
+      "phones": [
+        {
+          "screen": "pair",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "capture",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "pending",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "received",
+          "client": 706,
+          "scroll": 706
+        },
+        {
+          "screen": "history-phone",
+          "client": 662,
+          "scroll": 662
+        }
+      ],
+      "actions": [
+        {
+          "bottom": -263.84375,
+          "deviceBottom": -232.84375
+        },
+        {
+          "bottom": 645.15625,
+          "deviceBottom": 676.15625
+        },
+        {
+          "bottom": 1554.15625,
+          "deviceBottom": 1585.15625
+        },
+        {
+          "bottom": 2463.15625,
+          "deviceBottom": 2494.15625
+        }
+      ]
+    }
+  ],
+  "checkedAt": "2026-09-09T20:38:31.658Z",
+  "renderer": "Playwright with headless Microsoft Edge; reduced motion; no external network requests"
+}

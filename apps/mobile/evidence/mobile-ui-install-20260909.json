@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "kind": "recovered-mobile-ui-install-review",
+  "baseCommit": "5d2d7d8f9f69f1b25a5eb4f47ce66e997b6e199e",
+  "requiredTeamAncestry": "21f7f40736c201f8d3c14a36ced4cdb426639122",
+  "sdkVersion": "0.18.2",
+  "installation": {
+    "schemaVersion": 1,
+    "kind": "android-install-identity",
+    "observedAt": "2026-09-09T23:00:20.9264205Z",
+    "packageName": "tech.adwen.psyrec.capture",
+    "deviceManufacturer": "samsung",
+    "deviceModel": "SM-F966B",
+    "apkSha256": "4c9d47a2a26621da7c1d17eb63fe3922bd7d7b7544396693fa47e87326c34db2",
+    "beforeInstalledApkSha256": "ff72fddfa488cfe18b7142e64aa2a4044ca1b75c02ae555cb31049a648788bd1",
+    "installedApkSha256": "4c9d47a2a26621da7c1d17eb63fe3922bd7d7b7544396693fa47e87326c34db2",
+    "installedHashMatchesBuild": true,
+    "replacementInstallPerformed": true,
+    "matchingInstallSkipped": false,
+    "verificationOnly": false,
+    "method": "Read installed identity first; adb install -r for absent/different APK, then pm path, adb pull and host SHA-256 comparison; no uninstall or data clear",
+    "packageVersionObservations": [
+      "versionCode=1 minSdk=24 targetSdk=36",
+      "versionName=0.1.0",
+      "lastUpdateTime=2026-09-09 18:00:20",
+      "firstInstallTime=2026-09-09 13:15:05",
+      "firstInstallTime=2026-09-09 13:15:05"
+    ],
+    "physicalWorkflowAccepted": false
+  },
+  "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+  "sourceSha256": {
+    "apps/mobile/App.tsx": "302dd0c6fa06c3d329e71951c748330ef39d742f09f37b0bdc21ce18244e6458",
+    "apps/mobile/src/capture-ui.tsx": "25fd3ed511d21b54e5838f4cd7066a1da2b0f1e1793b513644b171911abffedc",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/PsyRecTransferModule.kt": "92046001c2c93cb649d402b0d9dcf9218d14e695851a2d8afea00cb23c1c0d39"
+  },
+  "uiScope": "Native connect, capture, encrypted pending/retry and receipt-complete screens derived from recovered standalone study; phone history and local inference remain planned",
+  "validation": {
+    "mobileTypeScriptPassed": true,
+    "localOfflineReleaseBuildPassed": true,
+    "buildCommand": "gradlew.bat app:assembleRelease -PreactNativeArchitectures=arm64-v8a --offline --console=plain",
+    "apkBundleContainsAllFourCaptureHeadlines": true,
+    "startupSmoke": {
+      "schemaVersion": 1,
+      "kind": "android-native-ui-smoke",
+      "apkSha256": "4c9d47a2a26621da7c1d17eb63fe3922bd7d7b7544396693fa47e87326c34db2",
+      "launchedAt": "2026-09-09T23:00:52.5029157Z",
+      "launchResponse": [
+        "Starting: Intent { cmp=tech.adwen.psyrec.capture/.MainActivity }",
+        "Status: ok",
+        "LaunchState: COLD",
+        "Activity: tech.adwen.psyrec.capture/.MainActivity",
+        "TotalTime: 153",
+        "WaitTime: 154",
+        "Complete"
+      ],
+      "samples": [
+        {
+          "elapsedSeconds": 5.08,
+          "processIds": "22619"
+        },
+        {
+          "elapsedSeconds": 15.095,
+          "processIds": "22619"
+        },
+        {
+          "elapsedSeconds": 30.084,
+          "processIds": "22619"
+        }
+      ],
+      "sameProcessSurvived30Seconds": true,
+      "latestExitBefore": [
+        "timestamp=2026-09-09 18:00:20.552 pid=18263 realUid=10520 packageUid=10520 definingUid=10520 user=0",
+        "process=tech.adwen.psyrec.capture reason=16 (PACKAGE UPDATED) subreason=0 (UNKNOWN) status=0",
+        "importance=400 pss=0.00 rss=156MB description=stop tech.adwen.psyrec.capture due to installPackageLI state=empty trace=null"
+      ],
+      "latestExitAfter": [
+        "timestamp=2026-09-09 18:00:20.552 pid=18263 realUid=10520 packageUid=10520 definingUid=10520 user=0",
+        "process=tech.adwen.psyrec.capture reason=16 (PACKAGE UPDATED) subreason=0 (UNKNOWN) status=0",
+        "importance=400 pss=0.00 rss=156MB description=stop tech.adwen.psyrec.capture due to installPackageLI state=empty trace=null"
+      ],
+      "noNewProcessExit": true,
+      "resumedActivities": [
+        "ResumedActivity: ActivityRecord{138454055 u0 tech.adwen.psyrec.capture/.MainActivity t1714}"
+      ],
+      "nativeUiLabels": [],
+      "method": "ADB process/exit comparison and whitelisted Android accessibility labels/bounds; no screenshots or private content retained",
+      "fullPhysicalWorkflowAccepted": false,
+      "inferenceRuns": 0
+    },
+    "accessibilityAttempt": {
+      "observedAt": "2026-09-09T23:03:43.274458Z",
+      "xmlFound": true,
+      "nodeCount": 53,
+      "matchingKnownLabels": [],
+      "method": "Whitelisted labels and bounds from Android accessibility; full hierarchy discarded"
+    },
+    "liveVisualInspectionPassed": false,
+    "visualInspectionLimitation": "Device locked; Android system UI was the only accessibility package. No app labels or screenshot-based visual verification were obtained.",
+    "nativeJvmTestsEarlierThisCheckpoint": {
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "receipt": "apps/mobile/evidence/android-startup-fix-20260909.json"
+    },
+    "rootSuiteRerun": false,
+    "deviceInstrumentationExecuted": false,
+    "newCapturePerformed": false,
+    "captureQueueRecoveryVerified": false,
+    "fullPhysicalWorkflowAccepted": false,
+    "inferenceRuns": 0
+  },
+  "desktop": {
+    "reopenedAt": "2026-09-09T22:46:24.2777281Z",
+    "sameExistingEncryptedWorkspace": true,
+    "newVaultCreated": false,
+    "rootBuildRun": false,
+    "passphraseEnteredByAssistant": false,
+    "userAuthorizedReopen": true,
+    "newDesktopDesignImplemented": false,
+    "reason": "Recovered study used the existing desktop UI as visual authority"
+  },
+  "ownership": "Coordinator integration/docs/Git; Android visual primitives and native fix preceded Spark handoff; gpt-5.3-codex-spark authored App integration; coordinator applied three final storage/camera-permission control guards. Dedicated evidence review retained; Claude changes excluded. No GLM, Kimi or Fable used or relabelled.",
+  "privacyScope": "In-place install with no uninstall/data clear. No private vault read, pairing change, capture or clinical approval. Public receipt contains metadata only."
+}

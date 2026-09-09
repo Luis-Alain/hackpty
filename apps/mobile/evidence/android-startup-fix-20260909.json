@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "kind": "android-startup-fix-review",
+  "baseCommit": "5d2d7d8f9f69f1b25a5eb4f47ce66e997b6e199e",
+  "requiredTeamAncestry": "21f7f40736c201f8d3c14a36ced4cdb426639122",
+  "sdkVersion": "0.18.2",
+  "initialInstallation": {
+    "schemaVersion": 1,
+    "kind": "android-install-identity",
+    "observedAt": "2026-09-09T22:34:40.8107574Z",
+    "packageName": "tech.adwen.psyrec.capture",
+    "deviceManufacturer": "samsung",
+    "deviceModel": "SM-F966B",
+    "apkSha256": "b3d5a9f2167d7adb773c97416bbd0bacf45e2df4eaa00b384c9b984b222d78f2",
+    "beforeInstalledApkSha256": "283425bdd88a6a01fc6c71baea8d9455bdcf04d7b6906e4d1c492d8650bc416b",
+    "installedApkSha256": "b3d5a9f2167d7adb773c97416bbd0bacf45e2df4eaa00b384c9b984b222d78f2",
+    "installedHashMatchesBuild": true,
+    "replacementInstallPerformed": true,
+    "matchingInstallSkipped": false,
+    "verificationOnly": false,
+    "method": "Read installed identity first; adb install -r for absent/different APK, then pm path, adb pull and host SHA-256 comparison; no uninstall or data clear",
+    "packageVersionObservations": [
+      "versionCode=1 minSdk=24 targetSdk=36",
+      "versionName=0.1.0",
+      "lastUpdateTime=2026-09-09 17:34:40",
+      "firstInstallTime=2026-09-09 13:15:05",
+      "firstInstallTime=2026-09-09 13:15:05"
+    ],
+    "physicalWorkflowAccepted": false
+  },
+  "initialStartup": {
+    "passed": false,
+    "observedAt": "2026-09-09T22:35:02.198Z",
+    "reason": "APP CRASH(NATIVE)",
+    "exception": "Only the original thread that created a view hierarchy can touch its views. Expected: main Calling: mqt_v_js",
+    "initialAmStartReportedOk": true,
+    "explanation": "The initial activity launch response preceded the JS module initialization crash."
+  },
+  "fix": "Capture the current Activity and marshal FLAG_SECURE updates onto its UI thread for both module creation and foreground replay.",
+  "finalInstallation": {
+    "schemaVersion": 1,
+    "kind": "android-install-identity",
+    "observedAt": "2026-09-09T22:38:41.3744693Z",
+    "packageName": "tech.adwen.psyrec.capture",
+    "deviceManufacturer": "samsung",
+    "deviceModel": "SM-F966B",
+    "apkSha256": "ff72fddfa488cfe18b7142e64aa2a4044ca1b75c02ae555cb31049a648788bd1",
+    "beforeInstalledApkSha256": "b3d5a9f2167d7adb773c97416bbd0bacf45e2df4eaa00b384c9b984b222d78f2",
+    "installedApkSha256": "ff72fddfa488cfe18b7142e64aa2a4044ca1b75c02ae555cb31049a648788bd1",
+    "installedHashMatchesBuild": true,
+    "replacementInstallPerformed": true,
+    "matchingInstallSkipped": false,
+    "verificationOnly": false,
+    "method": "Read installed identity first; adb install -r for absent/different APK, then pm path, adb pull and host SHA-256 comparison; no uninstall or data clear",
+    "packageVersionObservations": [
+      "versionCode=1 minSdk=24 targetSdk=36",
+      "versionName=0.1.0",
+      "lastUpdateTime=2026-09-09 17:38:41",
+      "firstInstallTime=2026-09-09 13:15:05",
+      "firstInstallTime=2026-09-09 13:15:05"
+    ],
+    "physicalWorkflowAccepted": false
+  },
+  "signerCertificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+  "validation": {
+    "localOfflineReleaseBuildPassed": true,
+    "nativeJvmTests": {
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "buildCommand": "gradlew.bat psyrec-transfer:testReleaseUnitTest app:assembleRelease -PreactNativeArchitectures=arm64-v8a --offline --console=plain",
+    "startupSmoke": {
+      "schemaVersion": 1,
+      "kind": "android-startup-smoke",
+      "apkSha256": "ff72fddfa488cfe18b7142e64aa2a4044ca1b75c02ae555cb31049a648788bd1",
+      "packageName": "tech.adwen.psyrec.capture",
+      "deviceManufacturer": "samsung",
+      "deviceModel": "SM-F966B",
+      "launchedAt": "2026-09-09T22:39:14.6262764Z",
+      "launchResponse": [
+        "Starting: Intent { cmp=tech.adwen.psyrec.capture/.MainActivity }",
+        "Status: ok",
+        "LaunchState: COLD",
+        "Activity: tech.adwen.psyrec.capture/.MainActivity",
+        "TotalTime: 118",
+        "WaitTime: 121",
+        "Complete"
+      ],
+      "samples": [
+        {
+          "elapsedSeconds": 5.106,
+          "processIds": "18263",
+          "observedAt": "2026-09-09T22:39:19.9190231Z"
+        },
+        {
+          "elapsedSeconds": 15.101,
+          "processIds": "18263",
+          "observedAt": "2026-09-09T22:39:29.9095769Z"
+        },
+        {
+          "elapsedSeconds": 30.074,
+          "processIds": "18263",
+          "observedAt": "2026-09-09T22:39:44.8822282Z"
+        }
+      ],
+      "sameProcessSurvived30Seconds": true,
+      "latestExitBefore": [
+        "timestamp=2026-09-09 17:38:57.825 pid=18012 realUid=10520 packageUid=10520 definingUid=10520 user=0",
+        "process=tech.adwen.psyrec.capture reason=10 (USER REQUESTED) subreason=22 (REMOVE TASK) status=0",
+        "importance=400 pss=0.00 rss=0.00 description=remove task state=empty trace=null"
+      ],
+      "latestExitAfter": [
+        "timestamp=2026-09-09 17:38:57.825 pid=18012 realUid=10520 packageUid=10520 definingUid=10520 user=0",
+        "process=tech.adwen.psyrec.capture reason=10 (USER REQUESTED) subreason=22 (REMOVE TASK) status=0",
+        "importance=400 pss=0.00 rss=0.00 description=remove task state=empty trace=null"
+      ],
+      "noNewProcessExit": true,
+      "resumedActivityObservations": [
+        "topResumedActivity=ActivityRecord{87870673 u0 tech.adwen.psyrec.capture/.MainActivity t1712}",
+        "ResumedActivity: ActivityRecord{87870673 u0 tech.adwen.psyrec.capture/.MainActivity t1712}"
+      ],
+      "lockStateObservations": [
+        "showing=false"
+      ],
+      "userScreenReadinessConfirmed": false,
+      "physicalWorkflowAccepted": false,
+      "inferenceRuns": 0
+    },
+    "rootSuiteRerun": false,
+    "deviceInstrumentationExecuted": false,
+    "newCapturePerformed": false,
+    "captureQueueRecoveryVerified": false,
+    "fullUiWorkflowVerified": false,
+    "physicalWorkflowAccepted": false,
+    "inferenceRuns": 0
+  },
+  "sourceSha256": {
+    "apps/mobile/App.tsx": "f5c25ea63d83bd8b53a15e31866e74065838396ccef812284ad4c8fac7147232",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/PsyRecTransferModule.kt": "92046001c2c93cb649d402b0d9dcf9218d14e695851a2d8afea00cb23c1c0d39"
+  },
+  "uiScope": "Existing PsyRec Capture screens; no mobile visual redesign included.",
+  "privacyScope": "Metadata only. No app-data clear, uninstall, private-vault read, pairing change, photo capture or approval performed.",
+  "ownership": "Coordinator and two disjoint cells (Android module; dedicated performance/evidence). Claude runtime/contracts/chart-review/plans and the open desktop session preserved. No GLM/Kimi/Fable execution or substitute labels."
+}

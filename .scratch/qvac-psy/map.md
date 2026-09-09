@@ -1,5 +1,9 @@
 # QVAC Psy — Wayfinder map
 
+## Current Android capture UI
+
+The [Android UI handoff](../../docs/handoffs/2026-09-09-android-update-startup-fix.md) is the current pointer. Recovered capture design is implemented and APK `4c9d47a2...` is installed with matching device/build hashes. Mobile TypeScript, local build and 30-second startup survival passed. The phone locked before live visual inspection; full physical/human acceptance remains open. The existing desktop workspace reopened with Jeff's authorization. Preserve Claude's separate chart-review/runtime work.
+
 ## Destination
 A self-contained PsyRec submission: native Fold capture, local VisionPsy extraction, clinician-reviewed documentation, encrypted records and patient-scoped approved-note history. September 9 later steering adds scored transcription evaluations and bounded local natural-language queries over approved notes. Semantic embedding retrieval retains its future teammate integration boundary.
 

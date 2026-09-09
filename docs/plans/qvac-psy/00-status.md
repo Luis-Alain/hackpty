@@ -1,5 +1,9 @@
 # Status: PsyRec QVAC Psy
 
+## Current Android capture UI
+
+See the [Android UI handoff](../../handoffs/2026-09-09-android-update-startup-fix.md) and [installation receipt](../../../apps/mobile/evidence/mobile-ui-install-20260909.json). The recovered standalone design now supplies the native capture flow. APK `4c9d47a2...` is installed and hash-verified at 23:00:20 UTC; mobile TypeScript, offline Release build and delayed 30-second startup checks passed. Six native JVM checks passed after the earlier lifecycle crash fix. Live visual inspection remains pending because the phone locked. The existing desktop workspace was reopened with Jeff's authorization; its UI was the study's design authority. Claude's separate changes are preserved. Phone history/local inference and full physical workflow acceptance remain open. Earlier states below are historical.
+
 ## Current device identity checkpoint
 
 Continue from the [device-identity handoff](../../handoffs/2026-09-09-device-identity-checkpoint.md). New native reports retain measured manufacturer/model; encrypted history is not backfilled. Replacement Android candidates cannot pass either Fold-labelled workflow gate. The installer hashes first and skips matching APKs. New build `b3d5a9f…` is signature-verified but not installed; the last verified Fold installation remains `283425bd…`. ADB had no device at 22:19:39 UTC.
