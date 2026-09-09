@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "syntheticOnly": true,
+  "date": "2026-09-09",
+  "sourceCommit": "028ab6b",
+  "sourceMethod": "git archive into a new ignored directory, with fresh independent root and mobile node_modules",
+  "platform": "Windows x64, existing developer machine",
+  "checks": [
+    { "command": "npm ci", "scope": "root", "passed": true, "packagesInstalled": 248 },
+    { "command": "npm test", "scope": "root", "passed": true, "tests": 29, "failed": 0, "skipped": 0 },
+    { "command": "node dist/scripts/validate-release.js --desktop-only", "scope": "reviewed desktop evidence", "passed": true },
+    { "command": "npm ci", "scope": "apps/mobile", "passed": true, "packagesInstalled": 582 },
+    { "command": "npm run check", "scope": "apps/mobile", "passed": true }
+  ],
+  "audit": { "root": { "high": 1, "note": "Known Electron advisory, deny-all window-open mitigation; not a clean full audit" }, "mobile": { "moderate": 9, "note": "Transitive build dependency advisories, no forced downgrade" } },
+  "limitations": [
+    "This is a clean source/dependency test on the same machine, not an independent computer installation.",
+    "No model bytes, prior node_modules, private vaults or sibling-repository files were copied into the archive.",
+    "No real GPU job was run in this check; existing real evidence was validated.",
+    "Android SDK and JDK provisioning/native build were not repeated in this archive.",
+    "Later mobile linkage and receipt guard at e8e8515 have separate current-worktree TypeScript and local native build evidence."
+  ]
+}

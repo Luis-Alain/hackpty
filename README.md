@@ -47,6 +47,8 @@ The upstream `src/core/` runtime is being adapted into the TypeScript `packages/
 
 Development uses the shared hackathon repository and `QVAC-Psy` branch. Per organizer guidance reported by Jeff, each challenge will be submitted in its own repository. This branch carries relative documentation links, MIT attribution, lockfile and self-contained dependencies so its history can be moved intact. Do not require another challenge's repository to run PsyRec.
 
+A [clean source archive check](artifacts/evidence/clean-source-check.json) installed fresh root/mobile dependencies, passed 29 tests and validated the desktop receipt on the same Windows machine. Independent-machine installation and a new submission repository remain separate; no repository was created automatically.
+
 ## Boundaries
 
 Synthetic English inputs; Spanish final demo video. No diagnosis, therapy, treatment advice, cloud inference, cross-patient retrieval, patient sharing, Pi5, or promise of handwriting/background recording. Separate formal validation is needed before real clinical use.
