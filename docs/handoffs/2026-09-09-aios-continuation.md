@@ -18,7 +18,7 @@ The iPhone port is now committed in `98ce270`, superseding the recovery checkpoi
 
 The [SYN-HW-002 physical workflow](../../artifacts/evidence/physical-fold-exploratory-provisional.json) is explicitly provisional. Its [independent performance review](../../artifacts/evidence/physical-performance-binding-review.json) binds the photo, receipt, outputs, exact prompts, configuration/load timings, native token counters, TTFT and throughput to the actual runs. Human source review/approval and assisted history/reload are retained with distinct attribution. However:
 
-- The diagnostic observer's actual failure remains true, and an encrypted lock-purge observation is missing. A later fix cannot repair that receipt.
+- The diagnostic observer's actual failure remains true, and the encrypted assisted lock-purge observation is missing. An earlier automatic lock observation exists, before assisted verification; it does not replace the missing assisted observation. A later fix cannot repair that receipt.
 - Paper-versus-display capture is unconfirmed. This generated handwriting-style fixture does not establish the primary photo-of-printed-note acceptance path.
 - Four per-transfer phone assertions remain null: native Android build identity, certificate pin verification, encrypted pending-queue observation and deletion only after the matching receipt. PC receipt evidence cannot establish all phone-side behavior. See the [phone review](../../apps/mobile/evidence/physical-binding-review.json).
 - Process/socket sampling observed no inference-owned connections, including 213 samples for this physical run. No enforced-offline test is claimed.
