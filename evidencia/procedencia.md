@@ -21,7 +21,8 @@ Disponible al jurado a solicitud.
 
 | Componente | Archivos | Qué hace | Relación con la referencia | Commit |
 |---|---|---|---|---|
-| _(se llena con cada entrega)_ | | | | |
+| Registro de rendimiento | `src/core/rendimiento.js` | Una línea JSON por carga y por inferencia: modelo, hardware, origen local/delegado, carga, tokens, TTFT, throughput | Nuevo. La referencia solo guardaba el último resumen en memoria | 9-sep |
+| Runtime QVAC común | `src/core/runtime.js`, `src/core/runtime.test.js` | Carga (local o delegada por llave pública con respaldo local) y completion medida sobre `@qvac/sdk` 0.18.2; el modo de ejecución se registra según lo que pasó (`getLoadedModelInfo`), no según lo pedido | Nuevo. Toma de la referencia el dato de que `gpu_layers`/`ctx_size` son las claves de `modelConfig` y que Qwen3 antepone `<think>` | 9-sep |
 
 ## Componentes de terceros
 
