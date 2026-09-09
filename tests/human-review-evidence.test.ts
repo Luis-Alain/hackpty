@@ -56,3 +56,14 @@ test('human review gate rejects fabricated flags, missing raw output, automation
     assert.throws(() => validateHumanReview(r.receipt, r.extraction, r.draft), /Human review evidence:/, name);
   }
 });
+
+test('assistant navigation is explicitly attributed and cannot replace human clinical approval', () => {
+  const { receipt, extraction, draft } = observations();
+  receipt.physicalObservations[7].details.trusted = false;
+  receipt.physicalObservations[9].details.trusted = false;
+  assert.throws(() => validateHumanReview(receipt, extraction, draft));
+  const annotated = { ...receipt, navigationVerification: { actor: 'assistant', method: 'PsyRec diagnostic interface', startedAt: receipt.physicalObservations[7].at } };
+  assert.doesNotThrow(() => validateHumanReview(annotated, extraction, draft));
+  receipt.physicalObservations[3].details.trusted = false;
+  assert.throws(() => validateHumanReview(annotated, extraction, draft), /trusted exact approval/);
+});

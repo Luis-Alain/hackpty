@@ -24,6 +24,10 @@ export function validateHumanReview(receipt: any, extraction: any, draft: any) {
     return events[index].details;
   };
   const input = (event: any, controls: string[]) => event.event === 'renderer-input' && event.details.trusted === true && controls.includes(event.details.control);
+  const navigation = receipt.navigationVerification;
+  const assistantNavigation = navigation?.actor === 'assistant' && navigation.method === 'PsyRec diagnostic interface' && Number.isFinite(Date.parse(navigation.startedAt));
+  if (navigation) need(assistantNavigation, 'navigation actor and method must be explicit');
+  const navigationInput = (event: any, controls: string[]) => input(event, controls) || (assistantNavigation && event.event === 'renderer-input' && event.details.trusted === false && controls.includes(event.details.control) && Date.parse(event.at) >= Date.parse(navigation.startedAt));
   const target = (d: any) => d.encounterId === encounterId && d.patientId === patientId;
   const operation = (event: any, method: string) => event.event === 'operation-completed' && event.details.method === method;
   next('trusted source review', e => input(e, ['reviewSource', 'confirmCorrection']) && target(e.details) && e.details.sourceText?.trim() === receipt.source.corrected);
@@ -38,11 +42,11 @@ export function validateHumanReview(receipt: any, extraction: any, draft: any) {
   const historyVisible = (e: any) => e.event === 'renderer-view' && e.details.patientId === patientId && e.details.historyVisible === true && e.details.historyText?.includes(receipt.approval.exactText.trim()) && e.details.canonicalApprovedRecords?.some(r => r.id === recordId && r.text === receipt.approval.exactText);
   // Approval automatically opens history; no redundant close/open click needed.
   next('selected patient approved history', historyVisible);
-  next('trusted other patient selection', e => input(e, ['patient']) && e.details.eventType === 'change');
+  next('observed other patient selection', e => navigationInput(e, ['patient']) && e.details.eventType === 'change');
   next('other patient history isolation', e => e.event === 'renderer-view' && e.details.patientId && e.details.patientId !== patientId && e.details.historyVisible === true && Array.isArray(e.details.canonicalApprovedRecords) && e.details.canonicalApprovedRecords.length === 0 && e.details.historyText === 'No approved notes for this patient.');
   // History browsing may happen before or after the lock/reload demonstration.
   cursor = afterApproval;
-  next('trusted vault lock', e => input(e, ['lock']));
+  next('observed vault lock', e => navigationInput(e, ['lock']));
   next('locked renderer purge', e => e.event === 'lock-renderer-purge' && ['workspaceHidden', 'fields', 'content', 'images'].every(k => e.details[k] === true));
   next('encrypted record reload', e => operation(e, 'unlock') && e.details.result?.records?.some(r => r.id === recordId && target(r) && r.sourceRevision === draft.sourceRevision && r.text === receipt.approval.exactText));
   next('visible immutable approved record after reload', e => e.event === 'renderer-view' && e.details.patientId === patientId && e.details.approvedReadOnly === true && e.details.approvedText === receipt.approval.exactText);

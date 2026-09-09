@@ -12,7 +12,7 @@ function requireEvidence(condition: unknown, message: string): asserts condition
 }
 type WorkflowRun = { encounterId: string; sourceRevision: number; operation: string; metrics: RunMetrics };
 /** Validate the connected workflow, not a collection of unrelated SDK probes. */
-export function validateWorkflow(receipt: any, physical = true) {
+export function validateWorkflow(receipt: any, physical: boolean | 'exploratory' = true) {
   requireEvidence(receipt?.schemaVersion === 1 && receipt.syntheticOnly === true, 'Explicit synthetic workflow evidence required.');
   requireEvidence(typeof receipt.completedAt === 'string' && Number.isFinite(Date.parse(receipt.completedAt)), 'Workflow completion timestamp required.');
   requireEvidence(Array.isArray(receipt.steps) && receipt.steps.length > 0 && receipt.steps.every(s => s.passed === true && s.evidence), 'Every recorded workflow step must pass with evidence.');
@@ -58,9 +58,12 @@ export function validateWorkflow(receipt: any, physical = true) {
   requireEvidence(['fields', 'content', 'images'].every(key => step('lock-renderer-purge')[key] === receipt.lockPurge[key]), 'Lock purge step and retained result disagree.');
   requireEvidence(step('encrypted-reload').plaintextAbsentFromVaultEnvelope === true && step('encrypted-reload').reloadedSha256 === approvedHash && step('encrypted-reload').identicalToApproved === true, 'Encrypted persistence/reload evidence required.');
   if (physical) {
-    requireEvidence(receipt.kind === 'physical-fold-review-workflow' && receipt.physicalFoldAcceptance === true && receipt.clinicianHumanAcceptance === true, 'Physical Fold and human review acceptance remain missing; desktop automation is not a substitute.');
+    const primary = physical === true;
+    requireEvidence(receipt.kind === (primary ? 'physical-fold-review-workflow' : 'exploratory-physical-fold-review-workflow') && receipt.physicalFoldAcceptance === primary && receipt.clinicianHumanAcceptance === true, 'Physical Fold and human review acceptance remain missing; desktop automation is not a substitute.');
     const capture = step('paired-fold-photo-received');
-    requireEvidence(capture.nativeAndroidBuild === true && capture.printedSyntheticEnglishNote === true && capture.certificatePinVerified === true, 'Native Fold printed-note capture and certificate-pinned pairing required.');
+    requireEvidence(capture.nativeAndroidBuild === true && capture.certificatePinVerified === true, 'Native Fold capture and certificate-pinned pairing required.');
+    if (primary) requireEvidence(capture.printedSyntheticEnglishNote === true, 'Primary release requires the printed synthetic English note.');
+    else requireEvidence(capture.inputClassification === 'AI-generated handwriting-style synthetic note' && ['paper', 'screen', 'unconfirmed'].includes(capture.sourceMedium), 'Exploratory capture must accurately classify its synthetic source and observed medium.');
     requireEvidence(capture.receipt?.encounterId === draft.encounterId && capture.receipt?.sha256 === extraction.metrics.request.attachment?.sha256 && typeof capture.receipt?.transferId === 'string', 'Durable phone receipt must identify the actual extracted photo and encounter.');
     requireEvidence(capture.encryptedPendingQueue === true && capture.deletedOnlyAfterReceipt === true, 'Encrypted phone queue and receipt-before-deletion evidence required.');
     validateHumanReview(receipt, extraction, draft);
@@ -68,12 +71,16 @@ export function validateWorkflow(receipt: any, physical = true) {
     requireEvidence(receipt.kind === 'automated-electron-renderer-import-workflow', 'Expected an actual automated Electron renderer receipt.');
     requireEvidence(step('imported-synthetic-image').sha256 === extraction.metrics.request.attachment?.sha256, 'Imported image and actual VisionPsy attachment differ.');
   }
-  return { status: 'passed', scope: physical ? 'Physical Fold through clinician approval and encrypted reload' : 'Automated desktop import workflow only; physical Fold acceptance remains separate', runIds: [extraction.metrics.runId, draft.metrics.runId] };
+  return { status: 'passed', scope: physical === true ? 'Physical Fold through clinician approval and encrypted reload' : physical === 'exploratory' ? 'Exploratory synthetic Fold workflow; primary printed-note release acceptance remains separate' : 'Automated desktop import workflow only; physical Fold acceptance remains separate', ...(physical ? { clinicalReviewAndApprovalActor: 'human', navigationVerificationActor: receipt.navigationVerification?.actor ?? 'human' } : {}), runIds: [extraction.metrics.runId, draft.metrics.runId] };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const desktopOnly = process.argv.includes('--desktop-only');
-  const file = process.argv.find(value => value.startsWith('--receipt='))?.slice('--receipt='.length) ?? path.join('artifacts', 'evidence', desktopOnly ? 'desktop-workflow.json' : 'physical-fold-workflow.json');
-  try { console.log(JSON.stringify(validateWorkflow(JSON.parse(await readFile(file, 'utf8')), !desktopOnly), null, 2)); }
+  const exploratory = process.argv.includes('--exploratory-physical');
+  const file = process.argv.find(value => value.startsWith('--receipt='))?.slice('--receipt='.length) ?? path.join('artifacts', 'evidence', desktopOnly ? 'desktop-workflow.json' : exploratory ? 'physical-fold-exploratory-workflow.json' : 'physical-fold-workflow.json');
+  try {
+    requireEvidence(!(desktopOnly && exploratory), 'Choose exactly one evidence scope.');
+    console.log(JSON.stringify(validateWorkflow(JSON.parse(await readFile(file, 'utf8')), desktopOnly ? false : exploratory ? 'exploratory' : true), null, 2));
+  }
   catch (error) { console.error(`Workflow acceptance FAILED: ${(error as Error).message}`); process.exitCode = 1; }
 }
