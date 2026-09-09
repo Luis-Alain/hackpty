@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.expo/
+apps/mobile/android/
+apps/mobile/ios/
+.local/
+artifacts/private/
+*.log
+*.apk
+*.aab
+.env*
+!.env.example

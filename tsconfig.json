@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext",
+    "outDir": "dist", "rootDir": ".", "strict": false,
+    "noImplicitAny": false, "skipLibCheck": true, "esModuleInterop": true,
+    "types": ["node"], "sourceMap": true
+  },
+  "include": ["apps/desktop/**/*.ts", "packages/**/*.ts", "tests/**/*.ts", "diagnostics/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["apps/mobile", "node_modules", "dist"]
+}
