@@ -1,5 +1,7 @@
 import { initSchema } from '../src/db/sqlite';
 import * as repo from '../src/db/repository';
+import { obtenerModeloEmbedding } from '../src/provider/embedCache';
+import { embedTexto } from '../src/rag/embeddings';
 
 const testData = [
   {
@@ -74,25 +76,29 @@ const testData = [
   },
 ];
 
-// Generate dummy embedding (384-dim vector of zeros, used for demo)
-function dummyEmbedding(): Buffer {
-  const vec = new Float32Array(384);
-  vec.fill(0);
-  return Buffer.from(vec.buffer);
-}
-
-function seed() {
+async function seed() {
   console.log('🌱 Initializing DB schema...');
   initSchema();
 
-  console.log('📝 Creating test records...');
+  console.log('🧠 Loading embedding model (QVAC)...');
+  const modelo = await obtenerModeloEmbedding();
+
+  console.log('📝 Creating test records with real embeddings...');
   let count = 0;
   for (const data of testData) {
     try {
+      // Embedding real generado a partir del resumen, igual que en el flujo
+      // de guardado normal (/api/visita/:id/guardar). Un vector de ceros
+      // (como se usaba antes) tiene norma 0, así que la similitud coseno da
+      // siempre 0 contra cualquier pregunta -> el retriever los descarta a
+      // todos (filtro score > 0) y /api/query nunca encuentra nada.
+      const vector = await embedTexto(modelo.modelId, data.resumen);
+      const embedding = Buffer.from(vector.buffer);
+
       const id = repo.crearRegistro({
         ...data,
         timestamp: new Date().toISOString(),
-        embedding: dummyEmbedding(),
+        embedding,
       });
       console.log(`✓ Record ${id}: ${data.cliente}`);
       count++;

@@ -8,7 +8,16 @@ export class Retriever {
 
   constructor(dbEmbeddings: Array<{ id: number; embedding: Buffer }>) {
     this.embeddings = dbEmbeddings.map((e) => {
-      const vec = new Float32Array(e.embedding.buffer);
+      // OJO: e.embedding.buffer es el ArrayBuffer SUBYACENTE del Buffer, no los
+      // bytes exactos de este BLOB. Node agrupa buffers pequeños (<4KB; un
+      // embedding de 768 floats son 3072 bytes) en un pool compartido, así que
+      // sin byteOffset/length un Float32Array(buffer.buffer) puede leer bytes
+      // de OTRA fila adyacente en el pool -> similitud coseno con basura.
+      const vec = new Float32Array(
+        e.embedding.buffer,
+        e.embedding.byteOffset,
+        e.embedding.byteLength / Float32Array.BYTES_PER_ELEMENT
+      );
 
       if (vec.some(v => !Number.isFinite(v))) {
         console.warn(`Embedding ${e.id} has NaN/Infinity, clamping to 0`);
