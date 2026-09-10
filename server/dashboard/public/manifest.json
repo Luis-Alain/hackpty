@@ -1,0 +1,11 @@
+{
+  "name": "Vigía",
+  "short_name": "Vigía",
+  "description": "Inteligencia local de base instalada con evidencia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EDF0EE",
+  "theme_color": "#12232E",
+  "scope": "/",
+  "icons": []
+}

@@ -1,0 +1,9 @@
+{
+  "loggerLevel": "error",
+  "loggerConsoleOutput": false,
+  "cacheDirectory": "/Users/luis/.qvac/models",
+  "httpDownloadConcurrency": 3,
+  "httpConnectionTimeoutMs": 20000,
+  "registryDownloadMaxRetries": 3,
+  "registryStreamTimeoutMs": 60000
+}

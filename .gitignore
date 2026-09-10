@@ -1,10 +1,30 @@
-node_modules
+# Dependencies
 node_modules/
+package-lock.json
+
+# Build artifacts
+server/dist/
+server/dashboard/dist/
 *.log
-.qvac/
-evidencia/rendimiento.jsonl
-datos/*.jsonl
-*.gguf
+
+# Environment
 .env
-*.env
-datos/*.pem
+.env.local
+.qvac/
+
+# Runtime data
+evidencia/rendimiento.jsonl
+server/data/*.sqlite
+server/data/*.sqlite-shm
+server/data/*.sqlite-wal
+
+# Models & credentials
+*.gguf
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
