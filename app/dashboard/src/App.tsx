@@ -2,9 +2,10 @@ import { useRef, useEffect, useState } from 'react';
 import { Tablero } from './components/Tablero';
 import { Consulta } from './components/Consulta';
 import { Visita } from './components/Visita';
+import { Renovaciones } from './components/Renovaciones';
 
 export default function App() {
-  const [vista, setVista] = useState<'visita' | 'tablero' | 'consulta'>('visita');
+  const [vista, setVista] = useState<'visita' | 'tablero' | 'renovaciones' | 'consulta'>('visita');
   const abortControllerRef = useRef(new AbortController());
 
   useEffect(() => {
@@ -35,6 +36,12 @@ export default function App() {
               Tablero
             </button>
             <button
+              onClick={() => setVista('renovaciones')}
+              className={vista === 'renovaciones' ? 'font-bold' : 'opacity-60'}
+            >
+              Renovaciones
+            </button>
+            <button
               onClick={() => setVista('consulta')}
               className={vista === 'consulta' ? 'font-bold' : 'opacity-60'}
             >
@@ -46,6 +53,7 @@ export default function App() {
       <main className="p-6">
         {vista === 'visita' && <Visita />}
         {vista === 'tablero' && <Tablero abortSignal={abortControllerRef.current.signal} />}
+        {vista === 'renovaciones' && <Renovaciones abortSignal={abortControllerRef.current.signal} />}
         {vista === 'consulta' && <Consulta abortSignal={abortControllerRef.current.signal} />}
       </main>
     </div>

@@ -12,6 +12,16 @@ interface Registro {
   antiguedad?: number;
   estado: string;
   timestamp: string;
+  confianza?: number;
+  alertaFrescura?: boolean;
+  diasDesdeActualizacion?: number;
+}
+
+function badgeConfianza(score?: number): string {
+  if (score == null) return 'bg-gray-200 text-gray-600';
+  if (score < 0.6) return 'bg-red-100 text-red-800';
+  if (score < 0.8) return 'bg-orange-100 text-orange-800';
+  return 'bg-green-100 text-green-800';
 }
 
 export function Tablero({ abortSignal }: { abortSignal?: AbortSignal }) {
@@ -52,16 +62,32 @@ export function Tablero({ abortSignal }: { abortSignal?: AbortSignal }) {
             <th className="text-left p-2">Modalidad</th>
             <th className="text-left p-2">Edad</th>
             <th className="text-left p-2">Estado</th>
+            <th className="text-left p-2">Confianza</th>
           </tr>
         </thead>
         <tbody>
           {registros.map((r) => (
             <tr key={r.id} className="border-b border-(--color-superficie)">
-              <td className="p-2">{r.cliente}</td>
+              <td className="p-2">
+                {r.cliente}
+                {r.alertaFrescura && (
+                  <span
+                    className="ml-2 text-xs text-orange-800"
+                    title={`Sin verificar hace ${r.diasDesdeActualizacion} días`}
+                  >
+                    ⚠️
+                  </span>
+                )}
+              </td>
               <td className="p-2">{r.pais}</td>
               <td className="p-2">{r.modalidad}</td>
               <td className="p-2">{r.antiguedad ?? '—'}</td>
               <td className="p-2">{r.estado}</td>
+              <td className="p-2">
+                <span className={`px-2 py-1 rounded text-xs font-mono ${badgeConfianza(r.confianza)}`}>
+                  {r.confianza != null ? `${Math.round(r.confianza * 100)}%` : '—'}
+                </span>
+              </td>
             </tr>
           ))}
         </tbody>
