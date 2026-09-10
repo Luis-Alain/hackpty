@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "kind": "medpsy-1.7b-provisioning",
+  "status": "verified",
+  "startedAt": "2026-09-09T23:04:23.124Z",
+  "verifiedAt": "2026-09-09T23:05:36.224Z",
+  "asset": {
+    "id": "medpsy-1.7b-q4_k_m-imat-review",
+    "roles": [
+      "review",
+      "draft"
+    ],
+    "constant": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+    "filename": "medpsy-1.7b-q4_k_m-imat.gguf",
+    "url": "https://huggingface.co/qvac/MedPsy-1.7B-GGUF/resolve/fd4cecc90c2de8dce4b112795456a54be9c59363/medpsy-1.7b-q4_k_m-imat.gguf",
+    "expectedBytes": 1282439360,
+    "sha256": "41ee947d9cce72ec657577219fd1798fabeabf0d832217fe23c9d6d3d18d5880",
+    "modelType": "llamacpp-completion",
+    "license": "Apache-2.0",
+    "modelCard": "https://huggingface.co/qvac/MedPsy-1.7B-GGUF/blob/fd4cecc90c2de8dce4b112795456a54be9c59363/README.md",
+    "actualBytes": 1282439360,
+    "actualSha256": "41ee947d9cce72ec657577219fd1798fabeabf0d832217fe23c9d6d3d18d5880"
+  },
+  "installedSdkRegistryHashMatched": true,
+  "productionModelChanged": false,
+  "inferenceRuns": 0,
+  "method": "Public publisher immutable revision download, exact size and SHA-256 verified against installed SDK 0.18.2 registry; no model loaded."
+}

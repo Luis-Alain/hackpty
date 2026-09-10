@@ -1,0 +1,18 @@
+SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT
+Patient: SYNTHETIC CHART A (patientId SYN-CHART-A)
+Visit date: 2026-06-12
+Clinician: Clinician B, general outpatient clinic
+Reason for visit: follow-up for blood pressure and sleep.
+History: reports difficulty falling asleep about four nights per week for two months.
+History: reports headaches about twice per week, dull and frontal.
+Denies dizziness.
+Blood pressure in clinic 148/92 mmHg, seated, right arm.
+Weight 84.0 kg.
+Medication: amlodipine 5 mg once daily, prescribed and reported as taken.
+Medication: cetirizine at night for seasonal allergy, dose not documented.
+Caffeine: reports four cups of coffee daily, most after 4 pm.
+Spouse present and reports that the patient snores loudly most nights.
+Assessment: blood pressure above the 130/80 mmHg target.
+Assessment: sleep difficulty possibly related to caffeine timing; cause not established.
+Plan: reduce afternoon caffeine, continue amlodipine 5 mg once daily, recheck in three months.
+Plan: sleep-related breathing assessment not performed today.

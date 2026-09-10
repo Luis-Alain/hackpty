@@ -1,0 +1,321 @@
+{
+  "suiteId": "chart-review-dev-v1",
+  "schemaVersion": 1,
+  "split": "dev",
+  "task": "what-changed-and-unclear",
+  "createdAt": "2026-09-09",
+  "frozen": false,
+  "evidenceBudgetChars": 6000,
+  "patient": {
+    "patientId": "SYN-CHART-A",
+    "alias": "SYNTHETIC CHART A"
+  },
+  "description": "SYNTHETIC development cases for prompt and scorer iteration. NOT A REAL PATIENT. Content is disjoint from draft-v1.json; never tune on the held-out split.",
+  "cases": [
+    {
+      "id": "DEV-01",
+      "split": "dev",
+      "category": "explicit-facts",
+      "categories": [
+        "explicit-facts",
+        "dates",
+        "current-vs-historical"
+      ],
+      "title": "Ankle sprain follow-up with dated improvement",
+      "patient": {
+        "patientId": "SYN-CHART-A",
+        "alias": "SYNTHETIC CHART A"
+      },
+      "current": {
+        "encounterId": "ENC-DEV-01-CUR",
+        "sourceDate": "2026-09-09",
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nRight ankle sprain: reports pain 2 out of 10 with walking.\nWalks without a brace since 2026-08-20."
+      },
+      "historical": [
+        {
+          "recordId": "REC-DEV-01-H1",
+          "encounterId": "ENC-DEV-01-H1",
+          "sourceDate": "2026-08-05",
+          "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-08-05\nRight ankle sprain: reports pain 6 out of 10 with walking.\nAnkle brace advised for two weeks.",
+          "superseded": false,
+          "patientId": "SYN-CHART-A"
+        }
+      ],
+      "goldFindings": [
+        {
+          "id": "F1",
+          "kind": "changed",
+          "statement": "Reported ankle pain with walking changed from 6 out of 10 on 2026-08-05 to 2 out of 10 at the current visit.",
+          "requiredTerms": [
+            "ankle",
+            "6 out of 10",
+            "2 out of 10"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        },
+        {
+          "id": "F2",
+          "kind": "changed",
+          "statement": "The ankle brace is no longer used; the patient reports walking without it since 2026-08-20.",
+          "requiredTerms": [
+            "brace",
+            "2026-08-20"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        }
+      ],
+      "expectedClarifications": [],
+      "prohibited": [
+        {
+          "id": "P1",
+          "description": "Reversing the direction of change.",
+          "forbiddenTerms": [
+            "pain has worsened",
+            "pain increased to 6",
+            "brace was started"
+          ]
+        }
+      ],
+      "abstentionExpected": false,
+      "question": null,
+      "notes": "Development case for the scorer smoke test: two unambiguous numeric changes and one date."
+    },
+    {
+      "id": "DEV-02",
+      "split": "dev",
+      "category": "missing-vs-negative",
+      "categories": [
+        "missing-vs-negative",
+        "negation"
+      ],
+      "title": "Denied fever versus an X-ray that was never taken",
+      "patient": {
+        "patientId": "SYN-CHART-A",
+        "alias": "SYNTHETIC CHART A"
+      },
+      "current": {
+        "encounterId": "ENC-DEV-02-CUR",
+        "sourceDate": "2026-09-09",
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nDenies fever.\nPlan: ankle X-ray not performed; not indicated by the Ottawa rules today."
+      },
+      "historical": [
+        {
+          "recordId": "REC-DEV-02-H1",
+          "encounterId": "ENC-DEV-02-H1",
+          "sourceDate": "2026-08-05",
+          "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-08-05\nDenies fever.\nPlan: ankle X-ray not performed today.",
+          "superseded": false,
+          "patientId": "SYN-CHART-A"
+        }
+      ],
+      "goldFindings": [
+        {
+          "id": "F1",
+          "kind": "unchanged",
+          "statement": "Fever is denied at both visits.",
+          "requiredTerms": [
+            "denie",
+            "fever"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        },
+        {
+          "id": "F2",
+          "kind": "unchanged",
+          "statement": "An ankle X-ray has not been performed at either visit, so no imaging result exists.",
+          "requiredTerms": [
+            "x-ray",
+            "not",
+            "perform"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        }
+      ],
+      "expectedClarifications": [],
+      "prohibited": [
+        {
+          "id": "P1",
+          "description": "Inventing an imaging result or a fever.",
+          "forbiddenTerms": [
+            "x-ray was normal",
+            "no fracture was seen",
+            "imaging showed",
+            "reports fever",
+            "is febrile",
+            "x-ray was performed"
+          ]
+        }
+      ],
+      "abstentionExpected": false,
+      "question": null,
+      "notes": "Development case: the absent X-ray must not become a normal X-ray."
+    },
+    {
+      "id": "DEV-03",
+      "split": "dev",
+      "category": "medication-status",
+      "categories": [
+        "medication-status",
+        "missing-dose"
+      ],
+      "title": "One medication stopped with a documented reason, one dose missing",
+      "patient": {
+        "patientId": "SYN-CHART-A",
+        "alias": "SYNTHETIC CHART A"
+      },
+      "current": {
+        "encounterId": "ENC-DEV-03-CUR",
+        "sourceDate": "2026-09-09",
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nMedication: ibuprofen stopped on 2026-08-20 because of stomach upset.\nMedication: vitamin D once daily, dose not documented."
+      },
+      "historical": [
+        {
+          "recordId": "REC-DEV-03-H1",
+          "encounterId": "ENC-DEV-03-H1",
+          "sourceDate": "2026-08-05",
+          "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-08-05\nMedication: ibuprofen 400 mg up to three times daily as needed for ankle pain.\nMedication: vitamin D once daily, dose not documented.",
+          "superseded": false,
+          "patientId": "SYN-CHART-A"
+        }
+      ],
+      "goldFindings": [
+        {
+          "id": "F1",
+          "kind": "changed",
+          "statement": "Ibuprofen 400 mg as needed was stopped on 2026-08-20 because of stomach upset.",
+          "requiredTerms": [
+            "ibuprofen",
+            "stopped",
+            "stomach upset"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        },
+        {
+          "id": "F2",
+          "kind": "unchanged",
+          "statement": "The vitamin D dose is not documented at either visit.",
+          "requiredTerms": [
+            "vitamin d",
+            "dose",
+            "not documented"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        }
+      ],
+      "expectedClarifications": [
+        {
+          "id": "Q1",
+          "topic": "undocumented vitamin D dose",
+          "requiredTerms": [
+            "vitamin d",
+            "dose"
+          ],
+          "exampleQuestion": "What vitamin D dose is the patient taking? No dose is documented in either record."
+        }
+      ],
+      "prohibited": [
+        {
+          "id": "P1",
+          "description": "Guessing the missing dose or losing the documented reason.",
+          "forbiddenTerms": [
+            "vitamin d 1000",
+            "vitamin d 2000",
+            "reason for stopping is not documented"
+          ]
+        }
+      ],
+      "abstentionExpected": false,
+      "question": null,
+      "notes": "Development contrast to CR-04: here the reason for stopping IS documented, so calling it unknown is the error."
+    },
+    {
+      "id": "DEV-04",
+      "split": "dev",
+      "category": "unanswerable-question",
+      "categories": [
+        "unanswerable-question",
+        "missing-vs-negative"
+      ],
+      "title": "Thyroid question with no result in the supplied records",
+      "patient": {
+        "patientId": "SYN-CHART-A",
+        "alias": "SYNTHETIC CHART A"
+      },
+      "current": {
+        "encounterId": "ENC-DEV-04-CUR",
+        "sourceDate": "2026-09-09",
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nReports feeling more tired than usual for three weeks.\nPlan: thyroid function test discussed, not ordered today."
+      },
+      "historical": [
+        {
+          "recordId": "REC-DEV-04-H1",
+          "encounterId": "ENC-DEV-04-H1",
+          "sourceDate": "2026-08-05",
+          "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-08-05\nNo thyroid testing on record.",
+          "superseded": false,
+          "patientId": "SYN-CHART-A"
+        }
+      ],
+      "goldFindings": [
+        {
+          "id": "F1",
+          "kind": "unknown",
+          "statement": "No thyroid function result is documented in the supplied records; the test was discussed but not ordered.",
+          "requiredTerms": [
+            "thyroid",
+            "not",
+            "order"
+          ],
+          "permittedEvidenceIds": [
+            "C1",
+            "H1"
+          ]
+        }
+      ],
+      "expectedClarifications": [
+        {
+          "id": "Q1",
+          "topic": "absent thyroid function result",
+          "requiredTerms": [
+            "thyroid"
+          ],
+          "exampleQuestion": "Is there a thyroid function result outside these records, or should the test be ordered for the reported tiredness?"
+        }
+      ],
+      "prohibited": [
+        {
+          "id": "P1",
+          "description": "Fabricating a thyroid result.",
+          "forbiddenTerms": [
+            "tsh",
+            "thyroid was normal",
+            "hypothyroid",
+            "euthyroid",
+            "test was ordered"
+          ]
+        }
+      ],
+      "abstentionExpected": true,
+      "question": "What was the result of the most recent thyroid function test?",
+      "notes": "Development abstention case, distinct content from CR-12."
+    }
+  ]
+}
