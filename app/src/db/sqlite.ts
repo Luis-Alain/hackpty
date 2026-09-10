@@ -4,7 +4,9 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dbPath = path.join(__dirname, '..', '..', 'data', 'vigía.sqlite');
+// DB_PATH permite aislar la base de datos (ej. en test-e2e.sh, para no escribir
+// sobre data/vigía.sqlite mientras corre un servidor de desarrollo real).
+const dbPath = process.env.DB_PATH || path.join(__dirname, '..', '..', 'data', 'vigía.sqlite');
 
 let _db: Database.Database | null = null;
 
