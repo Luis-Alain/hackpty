@@ -1,4 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import { crearWavDesdeFloat32 } from '../audioToWav';
+
+interface GrabadorPCM {
+  audioCtx: AudioContext;
+  source: MediaStreamAudioSourceNode;
+  processor: ScriptProcessorNode;
+  silencio: GainNode;
+  buffers: Float32Array[];
+  stream: MediaStream;
+}
 
 type CampoEstado = 'Confirmed' | 'Reported' | 'Estimated' | 'Unknown';
 
@@ -126,8 +136,7 @@ export function Visita() {
   const [grabando, setGrabando] = useState(false);
   const [transcribiendo, setTranscribiendo] = useState(false);
   const [procesandoFoto, setProcesandoFoto] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+  const grabadorRef = useRef<GrabadorPCM | null>(null);
   const fotoInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -141,39 +150,79 @@ export function Visita() {
 
   const manejarGrabar = async () => {
     if (grabando) {
-      mediaRecorderRef.current?.stop();
-      setGrabando(false);
+      await detenerGrabacion();
       return;
     }
 
     setError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioChunksRef.current = [];
-      const recorder = new MediaRecorder(stream);
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      const AudioContextCtor = window.AudioContext ?? (window as any).webkitAudioContext;
+      const audioCtx: AudioContext = new AudioContextCtor();
+      // Los navegadores crean el AudioContext en estado "suspended" por política
+      // de autoplay; sin resume() explícito, onaudioprocess nunca dispara y no
+      // se captura ninguna muestra.
+      await audioCtx.resume();
+      const source = audioCtx.createMediaStreamSource(stream);
+      // ScriptProcessorNode está deprecado en favor de AudioWorklet, pero sigue
+      // soportado universalmente y evita el round-trip MediaRecorder -> WebM ->
+      // decodeAudioData() que falla de forma intermitente (ver audioToWav.ts).
+      const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+      const buffers: Float32Array[] = [];
+      processor.onaudioprocess = (e) => {
+        buffers.push(new Float32Array(e.inputBuffer.getChannelData(0)));
       };
-      recorder.onstop = async () => {
-        stream.getTracks().forEach((t) => t.stop());
-        const blob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
-        await subirAudio(blob);
-      };
-      mediaRecorderRef.current = recorder;
-      recorder.start();
+      // onaudioprocess solo dispara si el nodo está conectado a un destino; lo
+      // enrutamos a través de una ganancia en 0 para no producir eco audible.
+      const silencio = audioCtx.createGain();
+      silencio.gain.value = 0;
+      source.connect(processor);
+      processor.connect(silencio);
+      silencio.connect(audioCtx.destination);
+
+      grabadorRef.current = { audioCtx, source, processor, silencio, buffers, stream };
       setGrabando(true);
     } catch (e) {
       setError('No se pudo acceder al micrófono: ' + String(e));
     }
   };
 
-  const subirAudio = async (blob: Blob) => {
+  const detenerGrabacion = async () => {
+    const g = grabadorRef.current;
+    grabadorRef.current = null;
+    setGrabando(false);
+    if (!g) return;
+
+    g.processor.disconnect();
+    g.source.disconnect();
+    g.silencio.disconnect();
+    g.stream.getTracks().forEach((t) => t.stop());
+    const sampleRate = g.audioCtx.sampleRate;
+    await g.audioCtx.close();
+
+    const totalMuestras = g.buffers.reduce((suma, b) => suma + b.length, 0);
+    if (totalMuestras === 0) {
+      setError('No se capturó audio. Intenta grabar de nuevo.');
+      return;
+    }
+    const combinado = new Float32Array(totalMuestras);
+    let offset = 0;
+    for (const b of g.buffers) {
+      combinado.set(b, offset);
+      offset += b.length;
+    }
+
+    const wavBlob = crearWavDesdeFloat32(combinado, sampleRate);
+    await subirAudio(wavBlob);
+  };
+
+  const subirAudio = async (wavBlob: Blob) => {
     if (!visitaId) return;
     setTranscribiendo(true);
     setError(null);
     try {
       const formData = new FormData();
-      formData.append('audio', blob, 'observacion.webm');
+      formData.append('audio', wavBlob, 'observacion.wav');
       const res = await fetch(`${API}/api/visita/${visitaId}/captura/audio`, {
         method: 'POST',
         body: formData,
