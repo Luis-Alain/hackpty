@@ -1,5 +1,41 @@
 # PsyRec first-cut execution report
 
+## Task 3 — complete; capture helpers validated, no render
+
+Delivered in the requested order: `scripts/record-desktop.ps1`, `scripts/record-phone.ps1`, `scripts/captures-manifest.mjs`, then `captures/README.md`. Updated `README.md` and this report. Required dry modes passed; the real empty-folder scan produced a valid manifest with **0 recordings and 0 selected captures**. `npm.cmd run check -- --no-layout-previews` exited **0**, with **194 text boxes, 45 browser samples, 177.700 seconds and zero failures**. No render, screenshot, device call, real recording, Git operation or secret access occurred. All writes stayed inside this project.
+
+Final verification commands/results:
+
+- `node --check scripts/captures-manifest.mjs`: exit 0. Both PowerShell scripts passed `System.Management.Automation.Language.Parser.ParseFile`; required `powershell.exe -NoProfile -ExecutionPolicy Bypass -File ... -WhatIf` runs are recorded below.
+- `$env:npm_config_cache = Join-Path (Get-Location) '.cache/npm'; $env:TEMP = Join-Path (Get-Location) '.cache/tmp'; $env:TMP = $env:TEMP; npm.cmd run check -- --no-layout-previews`: exit 0. Existing check/build code wrote `index.html`, `data/build.json`, `review/check.json`, `review/results-trace.json`, this report and project-local browser/cache files. No layout-preview images were requested.
+- `node .cache/validate-capture-helpers.mjs`: final exit 0. Uses copies of existing synthetic B-roll under unique `.cache/capture-validation-*` fixture folders and real ffprobe, never encoding. Verified empty scan, measured metadata/SHA-256, hash-bound attestation, exclusion of audio-bearing clips, note retention through disappearance/return, dry-run byte preservation and unchanged manifest after a corrupt MP4 probe. Initial fixture assertion incorrectly expected audio-bearing B-roll to be selectable; the scanner correctly rejected it. Corrected the fixture expectation; production scanner needed no fix for this result.
+- `node scripts/captures-manifest.mjs --dry-run`: exit 0 after the archive-note correction; actual capture inventory remains empty. Final JSON inspection confirmed captures=0, recordings=0, check passed=true, failures=0, duration=177.7. UTF-8 Spanish checklist inspection passed.
+- `Get-FileHash out/psyrec-demo-cut1.mp4,review/contact-sheet.png -Algorithm SHA256`: exit 0. Historical hashes remain `5cd1cef324e04cdf3e9930f45d8f5d820a5f2acd689050ee0e5ca406a6f1fdad` and `96db4899585369057ba83e85375cc0e17f796255448fe1fecd432afec32aacd3` respectively.
+
+During documentation validation, a PowerShell-to-Python pipe replaced Spanish accents with question marks; corrected through UTF-8 apply_patch and verified no question marks remain. An attempted combined delete/add patch was rejected without changing the file. A nested PowerShell parser command lost its quotes and failed before running; the direct parser invocation subsequently passed. These were tooling/documentation corrections, not recording or render failures.
+
+Remaining physical work: Jeff must exercise actual PsyRec window discovery/DPI behavior, Fold encoder support for the requested 1080x2340 size, and record/pull quality. Raw phone footage is preserved and prepared to 1080x1920 separately. Review each whole take before hash-bound synthetic attestation; S6 must use separate takes around off-record passphrase entry. The editor joins those takes in one final preparation encode. Helpers and video captures do not establish physical/human release acceptance. No implementation blocker remains for this task.
+
+Read CODEX-TASK-3.md, then BRIEF.md and captures/manifest.json, CODEX-TASK.md, existing scripts and the ten working-agreement checkpoints (read-only). No local AGENTS.md exists; the supplied working agreement applies. The initial combined read returned exit 1 for that missing file; subsequent reads succeeded. This task prohibits Git and changes outside this directory. Three read-only cells review runtime, phone transport and clinical presentation; the coordinator writes all files in the requested order. No capture, device operation, secret access or render is part of validation.
+
+Step 1 started: PowerShell 5.1 desktop helper, exact PsyRec window title with primary-screen fallback, optional physical-pixel region, bounded silent H.264 recording and side-effect-free WhatIf.
+
+Step 1 implemented in scripts/record-desktop.ps1. ffmpeg uses gdigrab at 30 fps, fit/pad to 1920x1080, libx264/yuv420p, no audio, -t and -n. Win32 compilation temporary files stay under .cache/capture-temp. WhatIf deliberately defers discovery and describes its illustrative fallback; Region produces an exact region plan. Validation follows step 4.
+
+Step 2 started: phone helper with exactly one authorized-device selection, model reporting, 1–180 second duration, checked record/pull/cleanup and no device calls in WhatIf.
+
+Step 2 implemented in scripts/record-phone.ps1. The required 1080x2340/8 Mbps screenrecord command is preserved; raw files need a separate 9:16 preparation pass. Existing device copies are refused, failed pulls preserve them, and the selected serial is reused throughout. ADB can be supplied via -AdbPath or PATH, with the task's SDK location as fallback.
+
+Step 3 started: ffprobe/SHA-256 inventory and deterministic slot mapping. Preserve human notes and explicit synthetic attestations for unchanged bytes, retain unready raw takes in recordings, and select only aspect/duration-compatible attested clips into captures for the existing composition. Trimming uses measured narration plus padding/frame rounding, not storyboard estimates.
+
+Step 3 implemented in scripts/captures-manifest.mjs. Inventory records duration in seconds, coded width/height and SHA-256 for every top-level MP4; unknown names remain visible but unselected. Human notes survive rescans, including absent takes. Modified bytes invalidate prior synthetic attestation. A --dry-run probes without writing; a bad probe leaves the existing manifest intact. No video is processed by this script.
+
+Step 4 started: bilingual scene checklist and commands, one-pass trim/normalization instructions, synthetic-only review, no pairing credentials or passphrase entry, and separate S6 takes around unlock.
+
+Step 4 completed in captures/README.md; the project README links to the helpers and replaces its obsolete manual-manifest instructions. Desktop read-only review found no blocking defects; phone review confirmed command shape, parser validity and a write-free WhatIf (exit 0). Physical recording remains untested. Step 5 now runs the required dry modes, empty-folder scan and npm check with screenshot previews disabled.
+
+Required dry commands succeeded: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/record-desktop.ps1 -Scene S4 -WhatIf`; desktop Region variant `-Scene S6 -Seconds 12 -Region '-1920,0,1920,1080' -WhatIf`; `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/record-phone.ps1 -Scene S3 -WhatIf`; `node scripts/captures-manifest.mjs --dry-run`; then `node scripts/captures-manifest.mjs`. Console showed the required command arguments and project-local output paths; no capture/device operations ran. Scan reported 0 recordings and 0 selected capture entries. Clinical review caught an absent-then-returned file notes edge case; archived entries are now loaded before current entries so their human notes survive return.
+
 ## Task 2 — complete; checks pass, no render
 
 Completed-results `review/check.json`: **passed: true, zero failures, 194 text boxes, 45 browser samples, 49 exact numeric JSON bindings, 177.700 s**. Pending preview: **passed: true, zero failures, 134 text boxes, 41 samples**. The composition is restored to the verified completed state. S7 accuracy runs from 128.166667 to 140.144 s; performance runs from 140.144 to 151.2 s. The screen switch is checked before, exactly at, and after its boundary; only one results screen is visible.
@@ -402,6 +438,10 @@ S7@151.100 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":7
 S7@151.100 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
 
 `npm run check -- --pending --no-layout-previews`: PASS. Palette, 134 declared text boxes, 41 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json with an in-memory pending preview override. Details: review/pending-check.json and review/pending-results-trace.json.
+
+`npm run check -- --no-layout-previews`: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
+
+`npm run check -- `: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
 
 `npm run check -- --no-layout-previews`: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
 

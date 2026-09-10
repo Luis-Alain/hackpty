@@ -1,5 +1,48 @@
 {
   "synthetic": true,
   "captures": [],
-  "instructions": "Add {scene, file, width, height, duration, synthetic: true}; files are relative to captures/. Desktop 16:9, phone 9:16. Supply cropped portrait capture if device aspect differs; no private data or pairing QR credentials."
+  "instructions": "recordings inventories every MP4; captures selects one ready synthetic-reviewed clip per slot. Name phone-S3-* or desktop-S4/S5/S6-*.mp4. Review and set recordings[].synthetic=true for the measured sha256, then rescan. Latest eligible filename wins unless slots[scene].selectedFile pins a take. Preserve raw takes; see README.md for one-pass trim/fit/pad.",
+  "generatedAt": "2026-09-10T03:24:45.636Z",
+  "timingMethod": "Seconds; ceil((ffprobe narration duration + 0.6) * 30) / 30, matching scripts/build.mjs.",
+  "trimMethod": "ffmpeg -ss START -i RAW -t SLOT_DURATION -an -vf scale=...:force_original_aspect_ratio=decrease:force_divisible_by=2,pad=...:(ow-iw)/2:(oh-ih)/2,setsar=1 -r 30 -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart PREPARED. One additional encode from raw; never chain encodes or use -c copy for frame-exact cuts.",
+  "slots": {
+    "S3": {
+      "kind": "phone",
+      "aspect": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "duration": 21.5,
+      "selectedFile": null,
+      "notes": ""
+    },
+    "S4": {
+      "kind": "desktop",
+      "aspect": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "duration": 18.966666666666665,
+      "selectedFile": null,
+      "notes": ""
+    },
+    "S5": {
+      "kind": "desktop",
+      "aspect": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "duration": 28.333333333333332,
+      "selectedFile": null,
+      "notes": ""
+    },
+    "S6": {
+      "kind": "desktop",
+      "aspect": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "duration": 19.666666666666668,
+      "selectedFile": null,
+      "notes": ""
+    }
+  },
+  "recordings": [],
+  "archivedEntries": []
 }
