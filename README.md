@@ -15,7 +15,7 @@ Z Fold photo of a printed synthetic clinician note → authenticated encrypted t
 
 ## Team integration
 
-- **This release:** photo capture, reviewed clinical records, scored transcription evaluations and bounded read-only questions over selected-patient approved notes (September 9 user steering).
+- **This release:** photo capture, reviewed clinical records, scored transcription evaluations, bounded read-only questions over selected-patient approved notes (September 9 user steering), and an experimental read-only [chart-review](docs/CHART-REVIEW.md) operation (September 10; adoption not established).
 - **Later semantic RAG, owned by teammate:** implement the optional `ApprovedNotesRetriever` port in `packages/contracts/index.d.ts`. Return approved-record/revision IDs and excerpt locators. The application checks patient and revision authorization itself. The bounded question flow uses local QVAC completion over application-selected passages; it does not add an embedding index or vector database.
 - **Later Philips voice integration:** implement `VoiceProcessor` to supply transcription/segments to source review. Voice processing cannot approve a clinical record. Audio is not part of this release.
 - Keep shared runtime logic separate from clinical approval and vault code. App/core/runtime source is TypeScript, with Kotlin Android and Swift iOS Expo modules for native capture, encrypted storage and pinned TLS. Python is not required.
@@ -25,6 +25,27 @@ Z Fold photo of a printed synthetic clinician note → authenticated encrypted t
 The submission must demonstrate the complete user workflow, not only an SDK call or benchmark. Structured synthetic-run JSONL must include model identity/configuration, model-load timing, **actual prompts**, SDK prompt/generated/emitted token counts, **TTFT**, and **throughput**, with units and measurement methods. Missing required fields fail the release evidence gate. Do not claim an unrun benchmark or infer metrics from string length. Clinical run records stay inside the encrypted vault; publish only synthetic evidence.
 
 Real desktop workflow evidence is linked below. Physical-device, complete privacy and independent-setup acceptance remain open until their receipts are linked. Current progress is tracked in [Factory status](docs/plans/qvac-psy/00-status.md) and the [Wayfinder map](.scratch/qvac-psy/map.md).
+
+## MedPsy chart-review checkpoint · September 10
+
+The [chart-review checkpoint](docs/handoffs/2026-09-10-medpsy-chart-review-checkpoint.md) records this coordination's separate track: the chart-review contract (`packages/contracts/chart-review.d.ts`), a 16-case held-out suite frozen after Jeff confirmed 75 of 75 items, the application-bound chart-review core and desktop panel (`packages/core/chart-review.ts`, [docs/CHART-REVIEW.md](docs/CHART-REVIEW.md)), the runtime review operation in `packages/runtime`, and a held-out evaluation across four configurations. [Binding coordinator decisions](docs/handoffs/2026-09-10-coordinator-decisions.md) (D1–D10) record the evidence budget, scorer standard, model roles and GPU-lease disclosure rules.
+
+Measured held-out results (16 frozen cases, `goldConfirmedByHuman: true`; targets: strict recall ≥ 0.80, zero forbidden-term hits, 100% first-pass validity):
+
+| Configuration | Strict gold recall (target ≥ 0.80) | Term-only recall | Forbidden hits | First-pass valid JSON |
+|---|---|---|---|---|
+| (i) MedPsy-1.7B, reasoning off + strict schema (production candidate) | 0.133 | 0.367 | 0 | 16/16 |
+| (ii) MedPsy-1.7B, thinking, no grammar | 0.133 | 0.267 | 0 | 15/16 |
+| (iii) Qwen3-1.7B Q4_0, reasoning off + strict schema (current generic) | 0.333 | 0.667 | 0 | 16/16 |
+| (iv) Qwen3-1.7B Q4_0, thinking, no grammar | 0.100 | 0.100 | 0 | 2/16 |
+
+**No configuration meets the predeclared targets.** The generic Qwen3-1.7B measured higher than the medically specialized MedPsy-1.7B on this suite (structured 0.333 vs 0.133 strict recall); thinking mode cannot be combined with the strict JSON-schema grammar on SDK 0.18.2 (`Unexpected empty grammar stack`), and the `/no_think` prompt suffix does not suppress thinking. Full methods, per-case records, disclosed retries and the verdict: [diagnostics/qvac-spike/CHART-REVIEW-EVALUATION.md](diagnostics/qvac-spike/CHART-REVIEW-EVALUATION.md).
+
+The feature ships as experimental, read-only, unapproved assistance exactly like the approved-note query before it: the application binds the evidence, the model never selects patients or records, and results never enter approved history. `MODEL-MANIFEST.json` now carries a `review` role entry for MedPsy-1.7B (reasoning disabled, strict schema) because the runtime verification passed; release **adoption of MedPsy is not established** by the evaluation — Jeff still has to decide whether to keep MedPsy in the review role with the comparison disclosed or switch the role to Qwen3-1.7B.
+
+OCR (development-split bitmap fixtures only, not paper-photo or handwriting evidence): the rerun with the fixed runner assertion completed as run `20260910T0312Z` (`artifacts/evidence/ocr-20260910T0312Z-summary.json`, `ocr-score-20260910T0312Z.json`) — two bitmap fixtures, aggregate WER 0.056 (5 errors over 90 words) and CER 0.035 (18 over 511 characters), zero exact matches; 4 of 15 clinical rules failed (stress-note fixture: blood-pressure value and the medication name with dose misread; masked-line fixture: the diagnosis negation and the `[unclear]` abstention marker were not preserved). Three paper-photo fixtures remain missing until the physical session.
+
+The [PsyRec demo video project](video/psyrec-demo/README.md) has a first cut (2:57.7) with its results scene bound to this verified evidence; screen captures remain placeholders pending the physical session. Open items: Jeff's physical session evidence (camera runs of frozen suite cases and the reviewed workflow export), the three missing paper-photo OCR fixtures, and the final video render.
 
 ## Device identity checkpoint · September 9
 

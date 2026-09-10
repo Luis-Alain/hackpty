@@ -3,6 +3,10 @@
 
 Current work: [mobile history and Hyperswarm integration](../../docs/handoffs/2026-09-10-mobile-history-integration.md). The combined APK is installed and hash-verified on the Fold. The history screen and production model preparation were observed; 37 native tests and one isolated real synthetic CPU lookup passed. Phone-to-PC Hyperswarm/history workflow acceptance remains pending. Earlier checkpoints below retain their historical status.
 
+## Current MedPsy chart-review checkpoint
+
+The [chart-review checkpoint](../../docs/handoffs/2026-09-10-medpsy-chart-review-checkpoint.md) adds the chart-review contract, a 16-case held-out suite frozen after Jeff's confirmation, the application-bound core/desktop panel and runtime review operation, and a four-configuration held-out evaluation. [Coordinator decisions](../../docs/handoffs/2026-09-10-coordinator-decisions.md) (D1–D10) bind the evidence budget, scorer and model roles. No configuration meets the predeclared targets on the frozen suite; the generic Qwen3-1.7B measured higher than MedPsy-1.7B — see [the evaluation](../../diagnostics/qvac-spike/CHART-REVIEW-EVALUATION.md) for the four-way results table and verdict. `MODEL-MANIFEST.json` carries a `review` role entry for MedPsy-1.7B; release adoption is not established. OCR rerun `20260910T0312Z` on the two development-split bitmap fixtures measured aggregate WER 0.056 / CER 0.035 with 4 of 15 clinical rules failed; three paper-photo fixtures are still missing. Physical session evidence and the final video render remain open.
+
 ## Current Android capture UI
 
 The [Android UI handoff](../../docs/handoffs/2026-09-09-android-update-startup-fix.md) is the current pointer. Recovered capture design is implemented and APK `4c9d47a2...` is installed with matching device/build hashes. Mobile TypeScript, local build and 30-second startup survival passed. The phone locked before live visual inspection; full physical/human acceptance remains open. The existing desktop workspace reopened with Jeff's authorization. Preserve Claude's separate chart-review/runtime work.

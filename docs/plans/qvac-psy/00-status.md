@@ -1,5 +1,18 @@
 # Status: PsyRec QVAC Psy
 
+## Current MedPsy chart-review checkpoint
+
+The [chart-review checkpoint](../../handoffs/2026-09-10-medpsy-chart-review-checkpoint.md) is the current continuation pointer, with [binding coordinator decisions](../../handoffs/2026-09-10-coordinator-decisions.md) (D1–D10). This coordination shipped the chart-review contract, a 16-case held-out suite frozen after Jeff confirmed 75 of 75 items, the application-bound chart-review core and desktop panel (see [docs/CHART-REVIEW.md](../../CHART-REVIEW.md)), the runtime review operation, and a held-out evaluation across four configurations on the frozen suite.
+
+Held-out results (16 cases, `goldConfirmedByHuman: true`): (i) MedPsy-1.7B reasoning off + strict schema scored strict recall 0.133 (term 0.367), 16/16 first-pass valid; (ii) MedPsy-1.7B thinking without grammar scored 0.133 (term 0.267), 15/16 valid; (iii) Qwen3-1.7B Q4_0 reasoning off + strict schema (current generic) scored 0.333 (term 0.667), 16/16 valid; (iv) Qwen3-1.7B Q4_0 thinking without grammar scored 0.100 (term 0.100), 2/16 valid. Targets are strict recall ≥ 0.80, zero forbidden-term hits, 100% first-pass validity. No configuration meets the targets; the generic Qwen3-1.7B measured higher than the specialized MedPsy-1.7B; thinking mode cannot be combined with the strict json_schema grammar on SDK 0.18.2, and `/no_think` does not suppress thinking. Full methods and the verdict: [diagnostics/qvac-spike/CHART-REVIEW-EVALUATION.md](../../../diagnostics/qvac-spike/CHART-REVIEW-EVALUATION.md).
+
+The feature ships experimental, read-only and unapproved; `MODEL-MANIFEST.json` now carries a `review` role entry for MedPsy-1.7B (reasoning disabled, strict schema) because the runtime verification passed, but release adoption of MedPsy is not established by the evaluation — the choice between keeping MedPsy (comparison disclosed) or switching the role to Qwen3-1.7B is open for Jeff.
+
+OCR (development-split bitmap fixtures, not paper-photo or handwriting evidence): the rerun with the fixed runner assertion completed as run `20260910T0312Z` (`artifacts/evidence/ocr-20260910T0312Z-summary.json`, `ocr-score-20260910T0312Z.json`) — two bitmap fixtures, aggregate WER 0.056 (5 errors over 90 words) and CER 0.035 (18 over 511 characters), zero exact matches; 4 of 15 clinical rules failed (stress-note fixture: blood-pressure value and medication name with dose misread; masked-line fixture: diagnosis negation and the `[unclear]` abstention marker not preserved). Three paper-photo fixtures remain missing until the physical session.
+
+The [demo video project](../../../video/psyrec-demo/README.md) has a first cut (2:57.7) with its results scene bound to this evidence; screen captures are placeholders pending the physical session. Open: Jeff's physical session evidence, the three missing paper-photo OCR fixtures and the final render.
+
+## Previous mobile history and Hyperswarm checkpoint
 
 Current work: [mobile history and Hyperswarm integration](../../handoffs/2026-09-10-mobile-history-integration.md). The combined APK is installed and hash-verified on the Fold. The history screen and production model preparation were observed; 37 native tests and one isolated real synthetic CPU lookup passed. Phone-to-PC Hyperswarm/history workflow acceptance remains pending. Earlier checkpoints below retain their historical status.
 
