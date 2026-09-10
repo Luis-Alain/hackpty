@@ -1,24 +1,37 @@
 @import "tailwindcss";
 
-:root {
-  --color-fondo: #EDF0EE;
-  --color-superficie: #F8F9F8;
-  --color-tinta: #12232E;
-  --color-acento: #145C7A;
-  --color-cocir-al-dia: #8FA3AC;
-  --color-cocir-planificar: #B98A44;
-  --color-cocir-reemplazar: #A13D2B;
-  --color-cocir-sin-dato: #C9C4BC;
+/*
+ * Sistema de color: los tokens base (ink/paper/surface/signal) y los 4 de
+ * COCIR (estándar real de la industria europea de imagenología médica para
+ * antigüedad de equipos: al-dia <5 años, planificar 5-10, reemplazar >10)
+ * definen el lenguaje visual completo del producto. COCIR no es decoración:
+ * "reemplazar" queda reservado exclusivamente para urgencia de renovación de
+ * equipo real (nunca para incertidumbre de un dato) — por eso la escala de
+ * confianza de campo reutiliza signal/al-dia/planificar/sin-dato pero no
+ * reemplazar.
+ */
+@theme {
+  --color-ink: #12232e;
+  --color-ink-soft: #4a5a63;
+  --color-paper: #edf0ee;
+  --color-surface: #f8f9f8;
+  --color-line: #c7ccc9;
+  --color-signal: #145c7a;
+  --color-signal-dim: #0f4759;
+
+  --color-cocir-al-dia: #8fa3ac;
+  --color-cocir-planificar: #b98a44;
+  --color-cocir-reemplazar: #a13d2b;
+  --color-cocir-sin-dato: #c9c4bc;
+
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas,
+    monospace;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
 }
 
-/*
- * Este reset debe vivir dentro de @layer base: las reglas CSS sin capa
- * siempre ganan sobre las reglas en capas (cascade layers), sin importar
- * especificidad ni orden. Como las utilidades de Tailwind (p-*, m-*, etc.)
- * viven en @layer utilities, un reset "*{ padding:0 }" fuera de toda capa
- * anulaba silenciosamente TODAS las utilidades de padding/margin de Tailwind
- * en todo el dashboard.
- */
 @layer base {
   * {
     margin: 0;
@@ -33,14 +46,74 @@
   }
 
   body {
-    background-color: var(--color-fondo);
-    color: var(--color-tinta);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.6;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
 
   #root {
     width: 100%;
     min-height: 100vh;
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-surface);
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: default;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Placa de identificación: motivo recurrente para bloques de dato agrupado
+     (fila de registro, tarjeta de pregunta, panel de alerta). Bordes rectos,
+     un solo trazo de línea — nunca sombra ni radio grande. */
+  .placa {
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+
+  .campo-label {
+    font-size: 12px;
+    color: var(--color-ink-soft);
+    letter-spacing: 0.01em;
+  }
+
+  .campo-valor {
+    font-family: var(--font-mono);
+    font-size: 14px;
   }
 }

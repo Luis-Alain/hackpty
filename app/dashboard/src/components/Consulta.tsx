@@ -3,6 +3,7 @@ import { useState } from 'react';
 interface Fuente {
   id: number;
   cliente: string;
+  score?: number;
 }
 
 export function Consulta({ abortSignal }: { abortSignal?: AbortSignal }) {
@@ -14,9 +15,8 @@ export function Consulta({ abortSignal }: { abortSignal?: AbortSignal }) {
   const manejarEnvio = async () => {
     if (!pregunta.trim()) return;
 
-    // EDGE CASE: input validation
     if (pregunta.length > 10240) {
-      setError('Pregunta muy larga (max 10KB)');
+      setError('La pregunta es muy larga (máximo 10KB)');
       return;
     }
 
@@ -41,39 +41,62 @@ export function Consulta({ abortSignal }: { abortSignal?: AbortSignal }) {
     }
   };
 
+  const manejarTecla = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      manejarEnvio();
+    }
+  };
+
   return (
-    <div className="p-4 space-y-4">
-      <h2 className="text-xl font-bold">Consulta</h2>
-      <div className="space-y-2">
+    <div className="max-w-2xl">
+      <h2 className="text-lg mb-1">Consulta</h2>
+      <p className="text-xs text-ink-soft mb-4">Pregunta en lenguaje natural sobre la base instalada</p>
+
+      <div className="placa">
         <textarea
           value={pregunta}
           onChange={(e) => setPregunta(e.target.value)}
-          placeholder="Pregunta sobre los registros..."
-          className="w-full p-2 border border-(--color-tinta) rounded"
-          rows={4}
+          onKeyDown={manejarTecla}
+          placeholder="¿Qué equipos de resonancia hay en Brasil con más de 5 años?"
+          className="w-full px-3.5 py-3 text-sm resize-none placeholder:text-ink-soft/70"
+          rows={3}
           disabled={loading}
         />
-        <button
-          onClick={manejarEnvio}
-          disabled={loading || !pregunta.trim()}
-          className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
-        >
-          {loading ? 'Enviando...' : 'Enviar'}
-        </button>
+        <div className="flex items-center justify-between border-t border-line px-3.5 py-2.5">
+          <span className="hidden sm:inline text-xs text-ink-soft font-mono">⌘⏎ para enviar</span>
+          <button
+            onClick={manejarEnvio}
+            disabled={loading || !pregunta.trim()}
+            className="ml-auto px-3.5 py-1.5 bg-signal text-surface text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-signal-dim transition-colors"
+          >
+            {loading ? 'Buscando…' : 'Preguntar'}
+          </button>
+        </div>
       </div>
 
-      {error && <div className="p-2 bg-red-100 text-red-800 rounded">{error}</div>}
+      {error && (
+        <div
+          className="placa p-3.5 mt-4 text-sm"
+          style={{ borderColor: 'var(--color-cocir-reemplazar)' }}
+        >
+          {error}
+        </div>
+      )}
 
       {respuesta && (
-        <div className="space-y-2">
-          <div className="p-3 bg-(--color-superficie) rounded">
-            <p className="font-serif italic">{respuesta.texto}</p>
-          </div>
+        <div className="mt-4 space-y-3">
+          <p className="text-[15px] leading-relaxed max-w-[62ch]">{respuesta.texto}</p>
           {respuesta.fuentes.length > 0 && (
-            <div className="text-sm">
-              <p className="font-mono text-(--color-tinta)">
-                Fuentes: {respuesta.fuentes.map((f) => `Reg. ${f.id}`).join(', ')}
-              </p>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {respuesta.fuentes.map((f) => (
+                <span
+                  key={f.id}
+                  className="font-mono text-xs text-ink-soft border border-line px-2 py-1"
+                >
+                  #{f.id} {f.cliente}
+                </span>
+              ))}
             </div>
           )}
         </div>

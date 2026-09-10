@@ -137,11 +137,14 @@ const ESTADO_LABEL: Record<CampoEstado, string> = {
   Unknown: "Desconocido",
 };
 
-const ESTADO_BADGE: Record<CampoEstado, string> = {
-  Confirmed: "bg-green-100 text-green-800",
-  Reported: "bg-amber-100 text-amber-800",
-  Estimated: "bg-orange-100 text-orange-800",
-  Unknown: "bg-gray-200 text-gray-600",
+// Mismo lenguaje de color que Tablero/Renovaciones: reutiliza COCIR para
+// confianza de dato, pero nunca --cocir-reemplazar (reservado a urgencia real
+// de renovación de equipo).
+const COLOR_ESTADO: Record<CampoEstado, string> = {
+  Confirmed: "var(--color-signal)",
+  Reported: "var(--color-cocir-al-dia)",
+  Estimated: "var(--color-cocir-planificar)",
+  Unknown: "var(--color-cocir-sin-dato)",
 };
 
 const CAMPO_ORDEN: Array<keyof CamposExtraidos> = [
@@ -577,91 +580,101 @@ export function Visita() {
   };
 
   return (
-    <div className="p-4 space-y-4 max-w-2xl">
-      <h2 className="text-xl font-bold">Comenzar Visita</h2>
+    <div className="max-w-2xl">
+      <h2 className="text-lg mb-4">Comenzar visita</h2>
 
       {error && (
-        <div className="p-2 bg-red-100 text-red-800 rounded">{error}</div>
+        <div
+          className="placa p-3.5 mb-4 text-sm"
+          style={{ borderColor: "var(--color-cocir-reemplazar)" }}
+        >
+          {error}
+        </div>
       )}
 
       {paso === "captura" && (
-        <div className="space-y-2">
-          <p className="text-sm opacity-70">
-            Describe lo que observaste. No te preocupes si falta información:
-            podrás completarla después.
+        <div className="space-y-3">
+          <p className="text-sm text-ink-soft">
+            Describe lo que observaste. Los datos que falten se pueden completar
+            después.
           </p>
-          <textarea
-            value={observacion}
-            onChange={(e) => setObservacion(e.target.value)}
-            placeholder="Ej: Vi un resonador GE Signa en el segundo piso, muy antiguo, en el Hospital Central Lima..."
-            className="w-full p-2 border border-(--color-tinta) rounded"
-            rows={6}
-            disabled={extrayendo}
-          />
 
-          <div className="flex gap-2 items-center flex-wrap">
-            <button
-              onClick={manejarGrabar}
-              disabled={transcribiendo || !visitaId}
-              className={`px-3 py-2 rounded border text-sm disabled:opacity-50 ${
-                grabando
-                  ? "bg-red-600 text-white border-red-600"
-                  : "border-(--color-tinta)"
-              }`}
-            >
-              {grabando ? "⏹ Detener grabación" : "🎤 Grabar voz"}
-            </button>
-            {transcribiendo && (
-              <span className="text-sm opacity-70">
-                Transcribiendo audio...
-              </span>
-            )}
-
-            <button
-              onClick={() => fotoInputRef.current?.click()}
-              disabled={procesandoFoto || !visitaId}
-              className="px-3 py-2 rounded border border-(--color-tinta) text-sm disabled:opacity-50"
-            >
-              📷 Tomar foto de placa
-            </button>
-            {procesandoFoto && (
-              <span className="text-sm opacity-70">Leyendo placa...</span>
-            )}
-            <input
-              ref={fotoInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              capture="environment"
-              className="hidden"
-              onChange={(e) => manejarSeleccionarFoto(e.target.files?.[0])}
+          <div className="placa">
+            <textarea
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Vi un resonador GE Signa en el segundo piso, muy antiguo, en el Hospital Central Lima…"
+              className="w-full px-3.5 py-3 text-sm resize-none placeholder:text-ink-soft/70"
+              rows={6}
+              disabled={extrayendo}
             />
+            <div className="border-t border-line px-3.5 py-2.5 space-y-2">
+              <div className="grid grid-cols-2 sm:flex gap-2">
+                <button
+                  onClick={manejarGrabar}
+                  disabled={transcribiendo || !visitaId}
+                  className={`px-3 py-2.5 sm:py-1.5 text-sm border disabled:opacity-50 transition-colors ${
+                    grabando
+                      ? "text-surface"
+                      : "border-line text-ink-soft hover:text-ink hover:border-ink"
+                  }`}
+                  style={
+                    grabando
+                      ? { background: "var(--color-cocir-reemplazar)", borderColor: "var(--color-cocir-reemplazar)" }
+                      : undefined
+                  }
+                >
+                  {grabando ? "Detener" : "Grabar voz"}
+                </button>
+
+                <button
+                  onClick={() => fotoInputRef.current?.click()}
+                  disabled={procesandoFoto || !visitaId}
+                  className="px-3 py-2.5 sm:py-1.5 text-sm border border-line text-ink-soft hover:text-ink hover:border-ink disabled:opacity-50 transition-colors"
+                >
+                  Foto de placa
+                </button>
+                <input
+                  ref={fotoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  capture="environment"
+                  className="hidden"
+                  onChange={(e) => manejarSeleccionarFoto(e.target.files?.[0])}
+                />
+              </div>
+
+              {transcribiendo && (
+                <span className="block text-xs text-ink-soft font-mono">transcribiendo…</span>
+              )}
+              {procesandoFoto && (
+                <span className="block text-xs text-ink-soft font-mono">leyendo placa…</span>
+              )}
+            </div>
           </div>
 
           <button
             onClick={manejarExtraer}
             disabled={extrayendo || !observacion.trim() || !visitaId}
-            className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-signal text-surface text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-signal-dim transition-colors"
           >
-            {extrayendo ? "Extrayendo datos..." : "Extraer datos"}
+            {extrayendo ? "Extrayendo datos…" : "Extraer datos"}
           </button>
         </div>
       )}
 
       {paso === "preguntas" && (
         <div className="space-y-4">
-          <p className="text-sm opacity-70">
-            Falta información. Responde lo que sepas, o marca "No sé" para lo
+          <p className="text-sm text-ink-soft">
+            Falta información. Responde lo que sepas, o marca "no sé" para lo
             demás.
           </p>
           <div className="space-y-3">
             {preguntas.map((p) => {
               const respondida = respuestasLocal[p.campo];
               return (
-                <div
-                  key={p.campo}
-                  className="p-3 bg-(--color-superficie) rounded space-y-2"
-                >
-                  <p className="text-sm font-medium">{p.pregunta}</p>
+                <div key={p.campo} className="placa p-3.5 space-y-2.5">
+                  <p className="text-sm">{p.pregunta}</p>
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -669,16 +682,16 @@ export function Visita() {
                       onChange={(e) =>
                         manejarResponderPregunta(p.campo, e.target.value)
                       }
-                      placeholder="Tu respuesta..."
+                      placeholder="Tu respuesta"
                       disabled={respondida === null}
-                      className="flex-1 p-1 border border-(--color-tinta) rounded text-sm disabled:opacity-40"
+                      className="flex-1 min-w-0 px-2.5 py-2 sm:py-1.5 border border-line text-sm disabled:opacity-40"
                     />
                     <button
                       onClick={() => manejarNoSe(p.campo)}
-                      className={`px-3 py-1 text-xs rounded border ${
+                      className={`shrink-0 px-3 py-2 sm:py-1.5 text-xs border transition-colors ${
                         respondida === null
-                          ? "bg-gray-300 border-gray-400"
-                          : "border-(--color-tinta)"
+                          ? "border-ink text-ink"
+                          : "border-line text-ink-soft hover:text-ink hover:border-ink"
                       }`}
                     >
                       No sé
@@ -688,20 +701,20 @@ export function Visita() {
               );
             })}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col-reverse sm:flex-row gap-2">
             <button
               onClick={() => manejarContinuarPreguntas(true)}
               disabled={enviandoRespuestas}
-              className="px-4 py-2 border border-(--color-tinta) rounded disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-line text-sm text-ink-soft hover:text-ink hover:border-ink disabled:opacity-50 transition-colors"
             >
               Saltar
             </button>
             <button
               onClick={() => manejarContinuarPreguntas(false)}
               disabled={enviandoRespuestas}
-              className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-signal text-surface text-sm disabled:opacity-40 hover:bg-signal-dim transition-colors"
             >
-              {enviandoRespuestas ? "Guardando respuestas..." : "Continuar"}
+              {enviandoRespuestas ? "Guardando respuestas…" : "Continuar"}
             </button>
           </div>
         </div>
@@ -710,103 +723,88 @@ export function Visita() {
       {paso === "preview" && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm">Confianza general:</span>
             <span
-              className={`px-2 py-1 rounded text-xs font-mono ${ESTADO_BADGE[estadoGlobal]}`}
-            >
-              {ESTADO_LABEL[estadoGlobal]}
+              className="w-2 h-2 shrink-0"
+              style={{ background: COLOR_ESTADO[estadoGlobal] }}
+            />
+            <span className="text-sm text-ink-soft">
+              Confianza general — {ESTADO_LABEL[estadoGlobal]}
             </span>
           </div>
 
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-(--color-tinta)">
-                <th className="text-left p-2">Campo</th>
-                <th className="text-left p-2">Valor</th>
-                <th className="text-left p-2">Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {CAMPO_ORDEN.map((campo) => (
-                <tr
-                  key={campo}
-                  className="border-b border-(--color-superficie)"
-                >
-                  <td className="p-2 text-sm">{CAMPOS_LABEL[campo]}</td>
-                  <td className="p-2">
-                    <input
-                      type={
-                        campo === "cantidad" || campo === "antiguedad"
-                          ? "number"
-                          : "text"
-                      }
-                      value={valores[campo]}
-                      onChange={(e) =>
-                        manejarCambioValor(campo, e.target.value)
-                      }
-                      className="w-full p-1 border border-(--color-superficie) rounded text-sm"
-                    />
-                  </td>
-                  <td className="p-2">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-mono ${ESTADO_BADGE[statuses[campo]]}`}
-                    >
-                      {ESTADO_LABEL[statuses[campo]]}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="placa divide-y divide-line">
+            {CAMPO_ORDEN.map((campo) => (
+              <div
+                key={campo}
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 px-3.5 py-2.5"
+              >
+                <div className="flex sm:contents items-center justify-between">
+                  <span className="campo-label sm:w-28 sm:shrink-0">{CAMPOS_LABEL[campo]}</span>
+                  <span
+                    className="w-2 h-2 shrink-0 sm:order-last"
+                    style={{ background: COLOR_ESTADO[statuses[campo]] }}
+                    title={ESTADO_LABEL[statuses[campo]]}
+                  />
+                </div>
+                <input
+                  type={campo === "cantidad" || campo === "antiguedad" ? "number" : "text"}
+                  value={valores[campo]}
+                  onChange={(e) => manejarCambioValor(campo, e.target.value)}
+                  className="campo-valor w-full sm:flex-1 sm:min-w-0 px-2 py-1.5 sm:py-1 border border-line"
+                />
+              </div>
+            ))}
+          </div>
 
           {duplicadoCandidato ? (
-            <div className="p-3 bg-amber-100 text-amber-900 rounded space-y-2">
-              <p className="text-sm font-medium">
-                ⚠️ Posible duplicado detectado
+            <div
+              className="placa p-3.5 space-y-2.5"
+              style={{ borderColor: "var(--color-cocir-planificar)" }}
+            >
+              <p className="text-sm">Posible duplicado detectado</p>
+              <p className="text-sm text-ink-soft">
+                Coincide con el registro #{duplicadoCandidato.registro_id}:{" "}
+                {duplicadoCandidato.cliente} — {duplicadoCandidato.modalidad}{" "}
+                {duplicadoCandidato.marca ?? ""} {duplicadoCandidato.modelo ?? ""}{" "}
+                ({Math.round(duplicadoCandidato.p * 100)}% de coincidencia)
               </p>
-              <p className="text-sm">
-                Coincide con el registro #{duplicadoCandidato.registro_id}: "
-                {duplicadoCandidato.cliente}" — {duplicadoCandidato.modalidad}{" "}
-                {duplicadoCandidato.marca ?? ""}{" "}
-                {duplicadoCandidato.modelo ?? ""} (
-                {Math.round(duplicadoCandidato.p * 100)}% de confianza)
-              </p>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => guardarFinal()}
                   disabled={guardando}
-                  className="px-3 py-1 text-sm border border-amber-900 rounded disabled:opacity-50"
+                  className="w-full sm:w-auto px-3 py-2 sm:py-1.5 text-sm border border-line text-ink-soft hover:text-ink hover:border-ink disabled:opacity-50 transition-colors"
                 >
-                  No, crear registro nuevo
+                  Crear registro nuevo
                 </button>
                 <button
                   onClick={() => guardarFinal(duplicadoCandidato.registro_id)}
                   disabled={guardando}
-                  className="px-3 py-1 text-sm bg-amber-900 text-white rounded disabled:opacity-50"
+                  className="w-full sm:w-auto px-3 py-2 sm:py-1.5 text-sm text-surface disabled:opacity-50 transition-colors"
+                  style={{ background: "var(--color-cocir-planificar)" }}
                 >
-                  {guardando ? "Combinando..." : "Sí, combinar con éste"}
+                  {guardando ? "Combinando…" : "Combinar con éste"}
                 </button>
               </div>
             </div>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex flex-col-reverse sm:flex-row gap-2">
               <button
                 onClick={() => setPaso("captura")}
                 disabled={guardando || verificandoDuplicados}
-                className="px-4 py-2 border border-(--color-tinta) rounded disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-line text-sm text-ink-soft hover:text-ink hover:border-ink disabled:opacity-50 transition-colors"
               >
-                ← Atrás
+                Atrás
               </button>
               <button
                 onClick={manejarIntentarGuardar}
                 disabled={guardando || verificandoDuplicados}
-                className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-signal text-surface text-sm disabled:opacity-40 hover:bg-signal-dim transition-colors"
               >
                 {verificandoDuplicados
-                  ? "Verificando duplicados..."
+                  ? "Verificando duplicados…"
                   : guardando
-                    ? "Guardando..."
-                    : "Guardar Registro"}
+                    ? "Guardando…"
+                    : "Guardar registro"}
               </button>
             </div>
           )}
@@ -815,13 +813,16 @@ export function Visita() {
 
       {paso === "guardado" && guardadoInfo && (
         <div className="space-y-4">
-          <div className="p-3 bg-green-100 text-green-800 rounded">
-            ✅ Registro #{guardadoInfo.registro_id} guardado exitosamente.
-            Confianza: {ESTADO_LABEL[guardadoInfo.estado]}
+          <div
+            className="placa p-3.5 text-sm"
+            style={{ borderColor: "var(--color-signal)" }}
+          >
+            Registro #{guardadoInfo.registro_id} guardado — confianza{" "}
+            {ESTADO_LABEL[guardadoInfo.estado]}
           </div>
           <button
             onClick={manejarNuevaVisita}
-            className="px-4 py-2 bg-(--color-acento) text-white rounded"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-signal text-surface text-sm hover:bg-signal-dim transition-colors"
           >
             Comenzar otra visita
           </button>

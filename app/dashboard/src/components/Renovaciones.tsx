@@ -14,12 +14,13 @@ interface RegistroRenovacion {
   alertaFrescura: boolean;
 }
 
-const PAIS_TODOS = 'Todos';
+const PAIS_TODOS = 'Todos los países';
 
-function badgeUrgencia(urgencia: number): string {
-  if (urgencia >= 0.7) return 'bg-red-100 text-red-800';
-  if (urgencia >= 0.4) return 'bg-orange-100 text-orange-800';
-  return 'bg-amber-100 text-amber-800';
+// Lenguaje COCIR real: al-dia / planificar / reemplazar según urgencia.
+function nivelCocir(urgencia: number): { color: string; label: string } {
+  if (urgencia >= 0.6) return { color: 'var(--color-cocir-reemplazar)', label: 'Reemplazar' };
+  if (urgencia >= 0.3) return { color: 'var(--color-cocir-planificar)', label: 'Planificar' };
+  return { color: 'var(--color-cocir-al-dia)', label: 'Al día' };
 }
 
 export function Renovaciones({ abortSignal }: { abortSignal?: AbortSignal }) {
@@ -46,20 +47,28 @@ export function Renovaciones({ abortSignal }: { abortSignal?: AbortSignal }) {
     fetchRenovaciones();
   }, []);
 
-  if (loading) return <div className="p-4">Cargando...</div>;
-  if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
+  if (loading) return <p className="text-sm text-ink-soft">Cargando oportunidades…</p>;
+  if (error)
+    return (
+      <div className="placa p-4 text-sm" style={{ borderColor: 'var(--color-cocir-reemplazar)' }}>
+        No se pudo cargar renovaciones: {error}
+      </div>
+    );
 
   const paises = [PAIS_TODOS, ...Array.from(new Set(registros.map((r) => r.pais))).sort()];
   const visibles = filtroPais === PAIS_TODOS ? registros : registros.filter((r) => r.pais === filtroPais);
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">Oportunidades de Renovación</h2>
+    <div>
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-4 gap-3">
+        <div>
+          <h2 className="text-lg">Oportunidades de renovación</h2>
+          <p className="text-xs text-ink-soft mt-0.5">Equipos con más de 5 años, ordenados por urgencia</p>
+        </div>
         <select
           value={filtroPais}
           onChange={(e) => setFiltroPais(e.target.value)}
-          className="p-1 border border-(--color-tinta) rounded text-sm"
+          className="border border-line bg-surface px-2.5 py-1.5 text-sm w-full sm:w-auto"
         >
           {paises.map((p) => (
             <option key={p} value={p}>
@@ -70,45 +79,51 @@ export function Renovaciones({ abortSignal }: { abortSignal?: AbortSignal }) {
       </div>
 
       {visibles.length === 0 ? (
-        <div className="text-sm opacity-70">
-          Sin equipos con más de 5 años de antigüedad{filtroPais !== PAIS_TODOS ? ` en ${filtroPais}` : ''}.
-        </div>
+        <p className="text-sm text-ink-soft">
+          Ningún equipo con más de 5 años{filtroPais !== PAIS_TODOS ? ` en ${filtroPais}` : ''}.
+        </p>
       ) : (
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-(--color-tinta)">
-              <th className="text-left p-2">Cliente</th>
-              <th className="text-left p-2">País</th>
-              <th className="text-left p-2">Equipo</th>
-              <th className="text-left p-2">Antigüedad</th>
-              <th className="text-left p-2">Urgencia</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visibles.map((r) => (
-              <tr key={r.id} className="border-b border-(--color-superficie)">
-                <td className="p-2">
-                  {r.cliente}
-                  {r.alertaFrescura && (
-                    <span className="ml-2 text-xs text-orange-800" title="Sin verificar hace más de 180 días">
-                      ⚠️
+        <div className="placa divide-y divide-line">
+          {visibles.map((r) => {
+            const nivel = nivelCocir(r.urgencia);
+            return (
+              <div key={r.id} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 px-3.5 sm:px-4 py-3 sm:py-3.5">
+                <div className="flex items-center gap-3">
+                  <span className="w-2 h-2 shrink-0" style={{ background: nivel.color }} />
+                  <div className="min-w-0 flex-1 sm:flex-initial">
+                    <span className="break-words">{r.cliente}</span>
+                    <span
+                      className="ml-2 text-xs font-mono sm:hidden"
+                      style={{ color: nivel.color }}
+                    >
+                      {nivel.label}
                     </span>
-                  )}
-                </td>
-                <td className="p-2">{r.pais}</td>
-                <td className="p-2">
-                  {r.modalidad} {r.marca ?? ''} {r.modelo ?? ''}
-                </td>
-                <td className="p-2">{r.antiguedad} años</td>
-                <td className="p-2">
-                  <span className={`px-2 py-1 rounded text-xs font-mono ${badgeUrgencia(r.urgencia)}`}>
-                    {Math.round(r.urgencia * 100)}%
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0 pl-5 sm:pl-0">
+                  <div className="flex flex-wrap items-baseline gap-x-2">
+                    <span className="text-xs text-ink-soft">{r.pais}</span>
+                    {r.alertaFrescura && (
+                      <span className="text-xs" style={{ color: 'var(--color-cocir-planificar)' }}>
+                        sin verificar hace tiempo
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-ink-soft font-mono mt-0.5">
+                    {r.modalidad} {r.marca ?? ''} {r.modelo ?? ''}
+                  </p>
+                </div>
+                <span className="pl-5 sm:pl-0 font-mono text-sm text-ink-soft shrink-0">{r.antiguedad}a</span>
+                <span
+                  className="hidden sm:inline text-xs font-mono shrink-0 w-24 text-right"
+                  style={{ color: nivel.color }}
+                >
+                  {nivel.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

@@ -4,8 +4,17 @@ import { Consulta } from './components/Consulta';
 import { Visita } from './components/Visita';
 import { Renovaciones } from './components/Renovaciones';
 
+type Vista = 'visita' | 'tablero' | 'renovaciones' | 'consulta';
+
+const NAV: Array<{ id: Vista; label: string }> = [
+  { id: 'visita', label: 'Visita' },
+  { id: 'tablero', label: 'Tablero' },
+  { id: 'renovaciones', label: 'Renovaciones' },
+  { id: 'consulta', label: 'Consulta' },
+];
+
 export default function App() {
-  const [vista, setVista] = useState<'visita' | 'tablero' | 'renovaciones' | 'consulta'>('visita');
+  const [vista, setVista] = useState<Vista>('visita');
   const abortControllerRef = useRef(new AbortController());
 
   useEffect(() => {
@@ -18,39 +27,29 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-(--color-fondo) text-(--color-tinta)">
-      <header className="border-b border-(--color-tinta) p-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Vigía</h1>
-          <div className="flex gap-4">
-            <button
-              onClick={() => setVista('visita')}
-              className={vista === 'visita' ? 'font-bold' : 'opacity-60'}
-            >
-              Visita
-            </button>
-            <button
-              onClick={() => setVista('tablero')}
-              className={vista === 'tablero' ? 'font-bold' : 'opacity-60'}
-            >
-              Tablero
-            </button>
-            <button
-              onClick={() => setVista('renovaciones')}
-              className={vista === 'renovaciones' ? 'font-bold' : 'opacity-60'}
-            >
-              Renovaciones
-            </button>
-            <button
-              onClick={() => setVista('consulta')}
-              className={vista === 'consulta' ? 'font-bold' : 'opacity-60'}
-            >
-              Consulta
-            </button>
-          </div>
+    <div className="min-h-screen bg-paper text-ink font-sans">
+      <header className="border-b border-line sticky top-0 bg-paper z-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <span className="font-mono text-[15px] tracking-tight pt-3.5 pb-2 sm:py-4">Vigía</span>
+          <nav className="grid grid-cols-4 sm:flex sm:gap-1 -mb-px">
+            {NAV.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setVista(item.id)}
+                aria-current={vista === item.id ? 'page' : undefined}
+                className={`px-1 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm leading-tight sm:whitespace-nowrap border-b-2 transition-colors ${
+                  vista === item.id
+                    ? 'border-signal text-ink'
+                    : 'border-transparent text-ink-soft hover:text-ink'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
         </div>
       </header>
-      <main className="p-6">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {vista === 'visita' && <Visita />}
         {vista === 'tablero' && <Tablero abortSignal={abortControllerRef.current.signal} />}
         {vista === 'renovaciones' && <Renovaciones abortSignal={abortControllerRef.current.signal} />}
