@@ -1,5 +1,40 @@
 # PsyRec first-cut execution report
 
+## Task 2 — complete; checks pass, no render
+
+Completed-results `review/check.json`: **passed: true, zero failures, 194 text boxes, 45 browser samples, 49 exact numeric JSON bindings, 177.700 s**. Pending preview: **passed: true, zero failures, 134 text boxes, 41 samples**. The composition is restored to the verified completed state. S7 accuracy runs from 128.166667 to 140.144 s; performance runs from 140.144 to 151.2 s. The screen switch is checked before, exactly at, and after its boundary; only one results screen is visible.
+
+The first-cut MP4 and contact sheet described below are historical pending-results artifacts. `data/results.json` now contains the coordinator's four verified configurations with `pending: false`; this task updates the composition and layout checks only.
+
+Read `CODEX-TASK-2.md`, `CODEX-TASK.md`, `BRIEF.md`, this report, `review/check.json`, and the eight working-agreement checkpoints (read-only). The initial combined `Get-Content -LiteralPath CODEX-TASK-2.md; Get-Content -LiteralPath AGENTS.md` returned exit 1 because no local AGENTS.md exists; the working agreement was supplied in the user prompt. Subsequent `Get-Content -Encoding UTF8 -LiteralPath ...` reads and `rg --files` completed successfully. No Git command was run.
+
+Initial check.json: `passed: false`, duration 177.7 s, 12 failures. These are three unique overflow boxes repeated across four S7 samples: configuration labels (i)/(iii) and the full disclosure. Coordinator owns all edits. Three read-only cells review runtime metrics, transport continuity and clinical wording; no model jobs are needed.
+
+Ordered step 1: replacing the four tall cards with separate accuracy and performance tables within the existing S7 audio duration. Preserve every evidence value and the complete disclosure; use exact JSON bindings for numeric text.
+
+Step 1 implemented: accuracy table includes strictGoldRecall, termOnlyRecall, forbiddenHits and firstPassValidity; performance table includes nativeTtftMs, tokensPerSecond, loadMs, promptTokens and generatedTokens. Full configuration labels, hardware and disclosure remain bound verbatim. The switch is at 52% of S7; captions and audio remain unchanged. Full disclosure now has a dedicated wrapped area above the caption rail. Browser verification follows after steps 2 and 3.
+
+Step 2: adding a numeric strictGoldRecallTarget field transcribed from the existing disclosure (0.80), deriving the headline from comparison against that target, and selecting the strongest label by strictGoldRecall. No measured configuration or evidence metadata is being changed.
+
+Step 2 implemented: current data produces “Ninguna configuración alcanza el objetivo”; objective 0.8 and the strongest configuration's complete label are separate exact JSON bindings. Highest strict recall is configuration (iii), selected by data index, not a hard-coded winner. Pending mode requires neither a target nor completed metrics and retains its placeholder.
+
+Step 3: S8 retains synthetic/no clinical validation and pending physical/human acceptance. It now states no demonstrated MedPsy advantage in this suite (not universal inferiority) and that reasoning with strict schema is not viable in the documented SDK 0.18.2 test. Review caveat: MedPsy beats generic Qwen within thinking-enabled runs, whereas the generic non-thinking run is strongest overall; zero forbidden-term hits do not establish clinical safety.
+
+### Task 2 commands, verification and files
+
+- `Get-Content -Encoding UTF8 -LiteralPath scripts/build.mjs,scripts/check.mjs,scripts/lib.mjs,scripts/run.mjs,scenes.css,data/results.json,package.json,README.md` and targeted reads of the installed HyperFrames README, results example and remaining report/checkpoint sections: exit 0. Used `apply_patch` for all source/documentation edits.
+- `npm.cmd run check -- --results-layout`: first invocation's completion status was not retained by the tool wrapper; repeated the same command to capture a definitive result. The captured run exited 1 with 25 failures: five two-line performance headers required 70 px but declared 66 px, repeated across five samples. Increased their boxes to 72 px. All original long-label/disclosure failures were resolved. The checker recorded failures below as it ran.
+- The existing Puppeteer layout-preview mechanism wrote only `review/S7-results-layout.png`. Visually inspected this single S7 performance still: full labels, all five metric columns, hardware and complete disclosure fit above the captions in the approved palette. The subsequent header-height correction changes the declared boxes, not their visible typography. No other new scene stills, video render or frame extraction was requested or run.
+- `npm.cmd run check -- --pending --no-layout-previews`: exit 0; empty configurations and absent target exercised via an in-memory fixture. No results.json mutation or screenshot. `review/pending-check.json` and `review/pending-results-trace.json` retain this separate result.
+- `npm.cmd run check -- --no-layout-previews`: exit 0; final completed state restored to index.html/data/build.json. `review/check.json` contains `passed: true`, `pending: false`, `previewOverride: false`, `totalDuration: 177.7`, 45 observations and `failures: []`. Palette, declared/actual glyph safe zones, overflow, captions/media separation, all nine audio hashes/durations, mandatory metrics, target headline, strongest-label selection, results-screen visibility and all 49 numeric bindings pass.
+- Read-only `node --input-type=module` inspection of check/pending-check/results-trace/build JSON and SHA-256 of the existing MP4/contact sheet: exit 0. MP4 remains `5cd1cef324e04cdf3e9930f45d8f5d820a5f2acd689050ee0e5ca406a6f1fdad`; contact sheet remains `96db4899585369057ba83e85375cc0e17f796255448fe1fecd432afec32aacd3`, identical to the first-cut report. No Git command, installation, TTS request, inference job or secret access occurred.
+
+Authored files changed: `scripts/build.mjs`, `scripts/check.mjs`, `scenes.css`, `data/results.json` (only adds strictGoldRecallTarget from the supplied disclosure), `data/results.example.json`, `README.md`, `REPORT.md`. Generated files changed/created: `index.html`, `data/build.json`, `review/check.json`, `review/results-trace.json`, `review/pending-check.json`, `review/pending-results-trace.json`, `review/S7-results-layout.png`, and project-local browser cache. No file outside this project was intentionally modified.
+
+Coordinator decisions: trigger the full render and later frame review when the GPU host is free; the existing MP4/contact sheet remain the historical pending-results cut. Decide whether the unchanged 23.033 s S7 narration allows sufficient reading time for both views (about 11.98 s accuracy / 11.06 s performance); the full disclosure is dense but fits. No timing or TTS change was made. Captures and physical/human acceptance remain pending; this layout pass does not close those gates. Review S8 comparison wording and suite/disclosure strings again if the supplied evidence changes.
+
+## Historical first-cut report (before Task 2)
+
 **Complete — final corrected first cut:** [out/psyrec-demo-cut1.mp4](out/psyrec-demo-cut1.mp4). H.264 video, AAC narration, **1920×1080, 30 fps, 177.700 seconds (2:57.7)**, 10,015,010 bytes. [Contact sheet](review/contact-sheet.png): 36 frames at exact five-second intervals, left-to-right then top-to-bottom. Final artifact hashes are in [data/delivery.json](data/delivery.json). Results remain `pending: true`.
 
 The final `npm run render` and `npm run frames` both exited 0 after the contrast correction. The final render took 7m 27.0s. All 133 text boxes passed the declared safe-zone checks and 41 browser samples; HyperFrames strict lint passed. Final MP4/contact-sheet visual review is recorded at the end of this report.
@@ -241,3 +276,133 @@ BRIEF.md, CODEX-TASK.md and the three supplied B-roll files were preserved. All 
 - **Captions and voice:** sentence changes are estimated from text length within measured narration duration. A human listening pass and exact speech-aligned caption timing are still useful before submission. No music is included.
 
 Final MP4 SHA-256: 5cd1cef324e04cdf3e9930f45d8f5d820a5f2acd689050ee0e5ca406a6f1fdad. Final contact-sheet SHA-256: 96db4899585369057ba83e85375cc0e17f796255448fe1fecd432afec32aacd3.
+
+`npm run check` failed: S7@128.967 {"id":"box-110","kind":"overflow","text":"(i) MedPsy-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@128.967 {"id":"box-136","kind":"overflow","text":"(iii) Qwen3-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@128.967 {"id":"box-163","kind":"overflow","text":"Promedios por caso de las métricas nativas del SDK (timeToFirstToken, tokensPerSecond, promptTokens, generatedTokens) sobre los registros de cada ejecución completa; carga = pared alrededor de loadModel (una sola carga en las configuraciones con razonamiento). Procesos GPU ajenos observados por el lease D7: (i): ninguno; (ii): ninguno; (iii): ninguno; (iv): ninguno. Suite congelada y confirmada por revisor humano (goldConfirmedByHuman: true). Ninguna configuración alcanza el objetivo predeclarado de cobertura estricta ≥ 0.80.","scroll":140,"height":46}
+
+S7@140.835 {"id":"box-110","kind":"overflow","text":"(i) MedPsy-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@140.835 {"id":"box-136","kind":"overflow","text":"(iii) Qwen3-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@140.835 {"id":"box-163","kind":"overflow","text":"Promedios por caso de las métricas nativas del SDK (timeToFirstToken, tokensPerSecond, promptTokens, generatedTokens) sobre los registros de cada ejecución completa; carga = pared alrededor de loadModel (una sola carga en las configuraciones con razonamiento). Procesos GPU ajenos observados por el lease D7: (i): ninguno; (ii): ninguno; (iii): ninguno; (iv): ninguno. Suite congelada y confirmada por revisor humano (goldConfirmedByHuman: true). Ninguna configuración alcanza el objetivo predeclarado de cobertura estricta ≥ 0.80.","scroll":140,"height":46}
+
+S7@128.467 {"id":"box-110","kind":"overflow","text":"(i) MedPsy-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@128.467 {"id":"box-136","kind":"overflow","text":"(iii) Qwen3-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@128.467 {"id":"box-163","kind":"overflow","text":"Promedios por caso de las métricas nativas del SDK (timeToFirstToken, tokensPerSecond, promptTokens, generatedTokens) sobre los registros de cada ejecución completa; carga = pared alrededor de loadModel (una sola carga en las configuraciones con razonamiento). Procesos GPU ajenos observados por el lease D7: (i): ninguno; (ii): ninguno; (iii): ninguno; (iv): ninguno. Suite congelada y confirmada por revisor humano (goldConfirmedByHuman: true). Ninguna configuración alcanza el objetivo predeclarado de cobertura estricta ≥ 0.80.","scroll":140,"height":46}
+
+S7@144.653 {"id":"box-110","kind":"overflow","text":"(i) MedPsy-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@144.653 {"id":"box-136","kind":"overflow","text":"(iii) Qwen3-1.7B · sin razonamiento + esquema estricto","scroll":105,"height":74}
+
+S7@144.653 {"id":"box-163","kind":"overflow","text":"Promedios por caso de las métricas nativas del SDK (timeToFirstToken, tokensPerSecond, promptTokens, generatedTokens) sobre los registros de cada ejecución completa; carga = pared alrededor de loadModel (una sola carga en las configuraciones con razonamiento). Procesos GPU ajenos observados por el lease D7: (i): ninguno; (ii): ninguno; (iii): ninguno; (iv): ninguno. Suite congelada y confirmada por revisor humano (goldConfirmedByHuman: true). Ninguna configuración alcanza el objetivo predeclarado de cobertura estricta ≥ 0.80.","scroll":140,"height":46}
+
+`npm run check` failed: S7@140.835 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+`npm run check` failed: S7@140.835 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@140.835 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@144.653 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@140.144 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@140.177 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-143","kind":"overflow","text":"TTFT nativo\nms","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-144","kind":"overflow","text":"Generación\ntokens/s","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-145","kind":"overflow","text":"Carga\nms","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-146","kind":"overflow","text":"Entrada\ntokens","scroll":70,"height":66}
+
+S7@151.100 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70,"height":66}
+
+`npm run check -- --pending --no-layout-previews`: PASS. Palette, 134 declared text boxes, 41 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json with an in-memory pending preview override. Details: review/pending-check.json and review/pending-results-trace.json.
+
+`npm run check -- --no-layout-previews`: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
+
+`npm run check -- `: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.

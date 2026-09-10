@@ -30,3 +30,9 @@ body { font-family:'IBM Plex Sans',Arial,sans-serif; color:var(--ink); }
 .metric-label { font-size:22px; line-height:1.25; }
 .metric-value { font-size:28px; line-height:1.25; font-family:'IBM Plex Mono',Consolas,monospace; }
 .bar { background:var(--teal); height:8px; border-radius:4px; }
+.results-title { font-size:56px; letter-spacing:-1px; }
+.compact-metric { font-size:25px; }
+.results-hardware { font-size:22px; line-height:1.35; }
+.results-disclosure { font-size:21px; line-height:1.3; }
+.limits-title { font-size:37px; line-height:1.3; }
+.limits-body { font-size:29px; line-height:1.35; }

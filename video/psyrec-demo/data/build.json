@@ -173,6 +173,7 @@
       "duration": 23.033333333333335,
       "audioDuration": 22.430476,
       "budget": 50,
+      "resultsSwitch": 140.144,
       "captions": [
         {
           "id": "caption-S7-0",
@@ -1169,7 +1170,7 @@
       "y": 64,
       "w": 1000,
       "h": 44,
-      "text": "Evaluación · pendiente"
+      "text": "Evaluación · evidencia"
     },
     {
       "id": "box-107",
@@ -1186,65 +1187,596 @@
       "x": 108,
       "y": 140,
       "w": 1704,
-      "h": 140,
-      "text": "Resultados medidos"
+      "h": 80,
+      "text": "Ninguna configuración alcanza el objetivo"
     },
     {
       "id": "box-109",
       "scene": "S7",
-      "x": 108,
-      "y": 336,
-      "w": 1704,
-      "h": 165,
-      "text": "Resultados pendientes de la evaluación"
+      "x": 116,
+      "y": 234,
+      "w": 1680,
+      "h": 42,
+      "text": "Suite sintética congelada · 16 casos · 4 configuraciones medidas · ninguna alcanza el objetivo"
     },
     {
       "id": "box-110",
       "scene": "S7",
       "x": 116,
-      "y": 552,
-      "w": 1650,
-      "h": 60,
-      "text": "Suite sintética congelada · 16 casos · 4 configuraciones planificadas"
+      "y": 284,
+      "w": 1250,
+      "h": 40,
+      "text": "Mayor cobertura estricta"
     },
     {
       "id": "box-111",
       "scene": "S7",
-      "x": 116,
-      "y": 651,
-      "w": 1650,
-      "h": 58,
-      "text": "Cobertura · Afirmaciones no respaldadas · Validez JSON"
+      "x": 1450,
+      "y": 284,
+      "w": 185,
+      "h": 40,
+      "text": "Objetivo ≥"
     },
     {
       "id": "box-112",
       "scene": "S7",
-      "x": 116,
-      "y": 735,
-      "w": 1650,
-      "h": 60,
-      "text": "TTFT nativo · Tokens/s · Tiempo de carga"
+      "x": 1645,
+      "y": 284,
+      "w": 150,
+      "h": 40,
+      "text": "0.8"
     },
     {
       "id": "box-113",
       "scene": "S7",
       "x": 116,
-      "y": 836,
+      "y": 326,
       "w": 1680,
-      "h": 50,
-      "text": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · Q4_K_M imatrix / Q4_0"
+      "h": 42,
+      "text": "(iii) Qwen3-1.7B · sin razonamiento + esquema estricto"
     },
     {
       "id": "box-114",
       "scene": "S7",
-      "x": 116,
-      "y": 886,
-      "w": 1680,
-      "h": 46,
-      "text": "Divulgación de procesos GPU: pendiente del resumen final."
+      "x": 136,
+      "y": 392,
+      "w": 550,
+      "h": 64,
+      "text": "Configuración"
     },
     {
       "id": "box-115",
+      "scene": "S7",
+      "x": 734,
+      "y": 386,
+      "w": 236,
+      "h": 72,
+      "text": "Cobertura\nestricta"
+    },
+    {
+      "id": "box-116",
+      "scene": "S7",
+      "x": 1000,
+      "y": 386,
+      "w": 236,
+      "h": 72,
+      "text": "Sólo\ntérminos"
+    },
+    {
+      "id": "box-117",
+      "scene": "S7",
+      "x": 1266,
+      "y": 386,
+      "w": 236,
+      "h": 72,
+      "text": "Términos\nprohibidos"
+    },
+    {
+      "id": "box-118",
+      "scene": "S7",
+      "x": 1532,
+      "y": 386,
+      "w": 252,
+      "h": 72,
+      "text": "JSON válido\nal primer intento"
+    },
+    {
+      "id": "box-119",
+      "scene": "S7",
+      "x": 136,
+      "y": 486,
+      "w": 550,
+      "h": 72,
+      "text": "(i) MedPsy-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "id": "box-120",
+      "scene": "S7",
+      "x": 734,
+      "y": 503,
+      "w": 236,
+      "h": 40,
+      "text": "0.133"
+    },
+    {
+      "id": "box-121",
+      "scene": "S7",
+      "x": 1000,
+      "y": 503,
+      "w": 236,
+      "h": 40,
+      "text": "0.367"
+    },
+    {
+      "id": "box-122",
+      "scene": "S7",
+      "x": 1266,
+      "y": 503,
+      "w": 236,
+      "h": 40,
+      "text": "0"
+    },
+    {
+      "id": "box-123",
+      "scene": "S7",
+      "x": 1532,
+      "y": 503,
+      "w": 252,
+      "h": 40,
+      "text": "1"
+    },
+    {
+      "id": "box-124",
+      "scene": "S7",
+      "x": 136,
+      "y": 590,
+      "w": 550,
+      "h": 72,
+      "text": "(ii) MedPsy-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "id": "box-125",
+      "scene": "S7",
+      "x": 734,
+      "y": 607,
+      "w": 236,
+      "h": 40,
+      "text": "0.133"
+    },
+    {
+      "id": "box-126",
+      "scene": "S7",
+      "x": 1000,
+      "y": 607,
+      "w": 236,
+      "h": 40,
+      "text": "0.267"
+    },
+    {
+      "id": "box-127",
+      "scene": "S7",
+      "x": 1266,
+      "y": 607,
+      "w": 236,
+      "h": 40,
+      "text": "0"
+    },
+    {
+      "id": "box-128",
+      "scene": "S7",
+      "x": 1532,
+      "y": 607,
+      "w": 252,
+      "h": 40,
+      "text": "0.938"
+    },
+    {
+      "id": "box-129",
+      "scene": "S7",
+      "x": 136,
+      "y": 694,
+      "w": 550,
+      "h": 72,
+      "text": "(iii) Qwen3-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "id": "box-130",
+      "scene": "S7",
+      "x": 734,
+      "y": 711,
+      "w": 236,
+      "h": 40,
+      "text": "0.333"
+    },
+    {
+      "id": "box-131",
+      "scene": "S7",
+      "x": 1000,
+      "y": 711,
+      "w": 236,
+      "h": 40,
+      "text": "0.667"
+    },
+    {
+      "id": "box-132",
+      "scene": "S7",
+      "x": 1266,
+      "y": 711,
+      "w": 236,
+      "h": 40,
+      "text": "0"
+    },
+    {
+      "id": "box-133",
+      "scene": "S7",
+      "x": 1532,
+      "y": 711,
+      "w": 252,
+      "h": 40,
+      "text": "1"
+    },
+    {
+      "id": "box-134",
+      "scene": "S7",
+      "x": 136,
+      "y": 798,
+      "w": 550,
+      "h": 72,
+      "text": "(iv) Qwen3-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "id": "box-135",
+      "scene": "S7",
+      "x": 734,
+      "y": 815,
+      "w": 236,
+      "h": 40,
+      "text": "0.1"
+    },
+    {
+      "id": "box-136",
+      "scene": "S7",
+      "x": 1000,
+      "y": 815,
+      "w": 236,
+      "h": 40,
+      "text": "0.1"
+    },
+    {
+      "id": "box-137",
+      "scene": "S7",
+      "x": 1266,
+      "y": 815,
+      "w": 236,
+      "h": 40,
+      "text": "0"
+    },
+    {
+      "id": "box-138",
+      "scene": "S7",
+      "x": 1532,
+      "y": 815,
+      "w": 252,
+      "h": 40,
+      "text": "0.125"
+    },
+    {
+      "id": "box-139",
+      "scene": "S7",
+      "x": 116,
+      "y": 890,
+      "w": 1680,
+      "h": 34,
+      "text": "Proporciones de cobertura y validez · términos prohibidos: conteo de coincidencias"
+    },
+    {
+      "id": "box-140",
+      "scene": "S7",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 80,
+      "text": "Rendimiento nativo por configuración"
+    },
+    {
+      "id": "box-141",
+      "scene": "S7",
+      "x": 116,
+      "y": 234,
+      "w": 1680,
+      "h": 42,
+      "text": "Promedios por caso · carga medida alrededor de loadModel"
+    },
+    {
+      "id": "box-142",
+      "scene": "S7",
+      "x": 136,
+      "y": 294,
+      "w": 550,
+      "h": 66,
+      "text": "Configuración"
+    },
+    {
+      "id": "box-143",
+      "scene": "S7",
+      "x": 720,
+      "y": 284,
+      "w": 192,
+      "h": 72,
+      "text": "TTFT nativo\nms"
+    },
+    {
+      "id": "box-144",
+      "scene": "S7",
+      "x": 940,
+      "y": 284,
+      "w": 192,
+      "h": 72,
+      "text": "Generación\ntokens/s"
+    },
+    {
+      "id": "box-145",
+      "scene": "S7",
+      "x": 1160,
+      "y": 284,
+      "w": 160,
+      "h": 72,
+      "text": "Carga\nms"
+    },
+    {
+      "id": "box-146",
+      "scene": "S7",
+      "x": 1350,
+      "y": 284,
+      "w": 190,
+      "h": 72,
+      "text": "Entrada\ntokens"
+    },
+    {
+      "id": "box-147",
+      "scene": "S7",
+      "x": 1570,
+      "y": 284,
+      "w": 210,
+      "h": 72,
+      "text": "Salida\ntokens"
+    },
+    {
+      "id": "box-148",
+      "scene": "S7",
+      "x": 136,
+      "y": 373,
+      "w": 550,
+      "h": 72,
+      "text": "(i) MedPsy-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "id": "box-149",
+      "scene": "S7",
+      "x": 720,
+      "y": 391,
+      "w": 192,
+      "h": 40,
+      "text": "171"
+    },
+    {
+      "id": "box-150",
+      "scene": "S7",
+      "x": 940,
+      "y": 391,
+      "w": 192,
+      "h": 40,
+      "text": "118.4"
+    },
+    {
+      "id": "box-151",
+      "scene": "S7",
+      "x": 1160,
+      "y": 391,
+      "w": 160,
+      "h": 40,
+      "text": "4873"
+    },
+    {
+      "id": "box-152",
+      "scene": "S7",
+      "x": 1350,
+      "y": 391,
+      "w": 190,
+      "h": 40,
+      "text": "825"
+    },
+    {
+      "id": "box-153",
+      "scene": "S7",
+      "x": 1570,
+      "y": 391,
+      "w": 210,
+      "h": 40,
+      "text": "191"
+    },
+    {
+      "id": "box-154",
+      "scene": "S7",
+      "x": 136,
+      "y": 465,
+      "w": 550,
+      "h": 72,
+      "text": "(ii) MedPsy-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "id": "box-155",
+      "scene": "S7",
+      "x": 720,
+      "y": 483,
+      "w": 192,
+      "h": 40,
+      "text": "214"
+    },
+    {
+      "id": "box-156",
+      "scene": "S7",
+      "x": 940,
+      "y": 483,
+      "w": 192,
+      "h": 40,
+      "text": "100.7"
+    },
+    {
+      "id": "box-157",
+      "scene": "S7",
+      "x": 1160,
+      "y": 483,
+      "w": 160,
+      "h": 40,
+      "text": "8009"
+    },
+    {
+      "id": "box-158",
+      "scene": "S7",
+      "x": 1350,
+      "y": 483,
+      "w": 190,
+      "h": 40,
+      "text": "821"
+    },
+    {
+      "id": "box-159",
+      "scene": "S7",
+      "x": 1570,
+      "y": 483,
+      "w": 210,
+      "h": 40,
+      "text": "1084"
+    },
+    {
+      "id": "box-160",
+      "scene": "S7",
+      "x": 136,
+      "y": 557,
+      "w": 550,
+      "h": 72,
+      "text": "(iii) Qwen3-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "id": "box-161",
+      "scene": "S7",
+      "x": 720,
+      "y": 575,
+      "w": 192,
+      "h": 40,
+      "text": "179"
+    },
+    {
+      "id": "box-162",
+      "scene": "S7",
+      "x": 940,
+      "y": 575,
+      "w": 192,
+      "h": 40,
+      "text": "118.3"
+    },
+    {
+      "id": "box-163",
+      "scene": "S7",
+      "x": 1160,
+      "y": 575,
+      "w": 160,
+      "h": 40,
+      "text": "5191"
+    },
+    {
+      "id": "box-164",
+      "scene": "S7",
+      "x": 1350,
+      "y": 575,
+      "w": 190,
+      "h": 40,
+      "text": "808"
+    },
+    {
+      "id": "box-165",
+      "scene": "S7",
+      "x": 1570,
+      "y": 575,
+      "w": 210,
+      "h": 40,
+      "text": "273"
+    },
+    {
+      "id": "box-166",
+      "scene": "S7",
+      "x": 136,
+      "y": 649,
+      "w": 550,
+      "h": 72,
+      "text": "(iv) Qwen3-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "id": "box-167",
+      "scene": "S7",
+      "x": 720,
+      "y": 667,
+      "w": 192,
+      "h": 40,
+      "text": "203"
+    },
+    {
+      "id": "box-168",
+      "scene": "S7",
+      "x": 940,
+      "y": 667,
+      "w": 192,
+      "h": 40,
+      "text": "102"
+    },
+    {
+      "id": "box-169",
+      "scene": "S7",
+      "x": 1160,
+      "y": 667,
+      "w": 160,
+      "h": 40,
+      "text": "7115"
+    },
+    {
+      "id": "box-170",
+      "scene": "S7",
+      "x": 1350,
+      "y": 667,
+      "w": 190,
+      "h": 40,
+      "text": "804"
+    },
+    {
+      "id": "box-171",
+      "scene": "S7",
+      "x": 1570,
+      "y": 667,
+      "w": 210,
+      "h": 40,
+      "text": "1201"
+    },
+    {
+      "id": "box-172",
+      "scene": "S7",
+      "x": 116,
+      "y": 746,
+      "w": 1680,
+      "h": 62,
+      "text": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · MedPsy-1.7B q4_k_m imatrix / Qwen3-1.7B Q4_0"
+    },
+    {
+      "id": "box-173",
+      "scene": "S7",
+      "x": 116,
+      "y": 809,
+      "w": 1680,
+      "h": 115,
+      "text": "Promedios por caso de las métricas nativas del SDK (timeToFirstToken, tokensPerSecond, promptTokens, generatedTokens) sobre los registros de cada ejecución completa; carga = pared alrededor de loadModel (una sola carga en las configuraciones con razonamiento). Procesos GPU ajenos observados por el lease D7: (i): ninguno; (ii): ninguno; (iii): ninguno; (iv): ninguno. Suite congelada y confirmada por revisor humano (goldConfirmedByHuman: true). Ninguna configuración alcanza el objetivo predeclarado de cobertura estricta ≥ 0.80."
+    },
+    {
+      "id": "box-174",
       "scene": "S7",
       "x": 108,
       "y": 936,
@@ -1253,7 +1785,7 @@
       "text": "Medimos sobre una suite sintética congelada, confirmada por un revisor humano antes de ejecutar los modelos: cobertura de hechos, afirmaciones no respaldadas, validez del JSON y rendimiento nativo."
     },
     {
-      "id": "box-116",
+      "id": "box-175",
       "scene": "S7",
       "x": 108,
       "y": 936,
@@ -1262,7 +1794,7 @@
       "text": "Los números en pantalla salen de los registros de evidencia del repositorio."
     },
     {
-      "id": "box-117",
+      "id": "box-176",
       "scene": "S8",
       "x": 108,
       "y": 64,
@@ -1271,7 +1803,7 @@
       "text": "Límites de la evidencia"
     },
     {
-      "id": "box-118",
+      "id": "box-177",
       "scene": "S8",
       "x": 1260,
       "y": 62,
@@ -1280,7 +1812,7 @@
       "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
     },
     {
-      "id": "box-119",
+      "id": "box-178",
       "scene": "S8",
       "x": 108,
       "y": 140,
@@ -1289,61 +1821,79 @@
       "text": "Lo que no afirmamos"
     },
     {
-      "id": "box-120",
+      "id": "box-179",
       "scene": "S8",
       "x": 140,
-      "y": 334,
+      "y": 307,
       "w": 1620,
-      "h": 58,
+      "h": 54,
       "text": "Suite pequeña y sintética"
     },
     {
-      "id": "box-121",
+      "id": "box-180",
       "scene": "S8",
       "x": 140,
-      "y": 402,
+      "y": 365,
       "w": 1610,
-      "h": 56,
+      "h": 58,
       "text": "Sin validación clínica."
     },
     {
-      "id": "box-122",
+      "id": "box-181",
       "scene": "S8",
       "x": 140,
-      "y": 517,
+      "y": 462,
       "w": 1620,
-      "h": 58,
-      "text": "MedPsy · SDK 0.18.2"
+      "h": 54,
+      "text": "MedPsy · sin ventaja demostrada en esta suite"
     },
     {
-      "id": "box-123",
+      "id": "box-182",
       "scene": "S8",
       "x": 140,
-      "y": 585,
+      "y": 520,
       "w": 1610,
-      "h": 56,
-      "text": "Razonamiento y esquema estricto: incompatibles en la prueba documentada."
+      "h": 58,
+      "text": "El modelo genérico logra la mayor cobertura estricta entre las configuraciones evaluadas."
     },
     {
-      "id": "box-124",
+      "id": "box-183",
       "scene": "S8",
       "x": 140,
-      "y": 700,
+      "y": 617,
       "w": 1620,
+      "h": 54,
+      "text": "SDK 0.18.2 · razonamiento y esquema estricto"
+    },
+    {
+      "id": "box-184",
+      "scene": "S8",
+      "x": 140,
+      "y": 675,
+      "w": 1610,
       "h": 58,
+      "text": "Combinación no viable en la prueba documentada."
+    },
+    {
+      "id": "box-185",
+      "scene": "S8",
+      "x": 140,
+      "y": 772,
+      "w": 1620,
+      "h": 54,
       "text": "Evidencia física y aceptación humana"
     },
     {
-      "id": "box-125",
+      "id": "box-186",
       "scene": "S8",
       "x": 140,
-      "y": 768,
+      "y": 830,
       "w": 1610,
-      "h": 56,
+      "h": 58,
       "text": "Pendientes según el estado del repositorio."
     },
     {
-      "id": "box-126",
+      "id": "box-187",
       "scene": "S8",
       "x": 108,
       "y": 936,
@@ -1352,7 +1902,7 @@
       "text": "Los límites son parte del resultado: la suite es pequeña y sintética, no hay validación clínica, y en esta versión del SDK el modo de razonamiento no puede combinarse con la salida estructurada."
     },
     {
-      "id": "box-127",
+      "id": "box-188",
       "scene": "S8",
       "x": 108,
       "y": 936,
@@ -1361,7 +1911,7 @@
       "text": "Cada afirmación del video está ligada a un archivo de evidencia."
     },
     {
-      "id": "box-128",
+      "id": "box-189",
       "scene": "S9",
       "x": 108,
       "y": 64,
@@ -1370,7 +1920,7 @@
       "text": "Local. Verificable. Humano."
     },
     {
-      "id": "box-129",
+      "id": "box-190",
       "scene": "S9",
       "x": 1260,
       "y": 62,
@@ -1379,7 +1929,7 @@
       "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
     },
     {
-      "id": "box-130",
+      "id": "box-191",
       "scene": "S9",
       "x": 108,
       "y": 200,
@@ -1388,7 +1938,7 @@
       "text": "PsyRec"
     },
     {
-      "id": "box-131",
+      "id": "box-192",
       "scene": "S9",
       "x": 116,
       "y": 430,
@@ -1397,7 +1947,7 @@
       "text": "Local. Verificable.\nRevisado por humanos."
     },
     {
-      "id": "box-132",
+      "id": "box-193",
       "scene": "S9",
       "x": 116,
       "y": 729,
@@ -1406,7 +1956,7 @@
       "text": "Luis-Alain/hackpty · QVAC-Psy"
     },
     {
-      "id": "box-133",
+      "id": "box-194",
       "scene": "S9",
       "x": 116,
       "y": 815,
@@ -1415,7 +1965,7 @@
       "text": "MIT · @qvac/sdk 0.18.2"
     },
     {
-      "id": "box-134",
+      "id": "box-195",
       "scene": "S9",
       "x": 108,
       "y": 936,
@@ -1427,15 +1977,199 @@
   "resultsTrace": [
     {
       "path": "suiteLabel",
-      "text": "Suite sintética congelada · 16 casos · 4 configuraciones planificadas"
+      "text": "Suite sintética congelada · 16 casos · 4 configuraciones medidas · ninguna alcanza el objetivo"
+    },
+    {
+      "path": "strictGoldRecallTarget",
+      "text": "0.8"
+    },
+    {
+      "path": "configurations.2.label",
+      "text": "(iii) Qwen3-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "path": "configurations.0.label",
+      "text": "(i) MedPsy-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "path": "configurations.0.strictGoldRecall",
+      "text": "0.133"
+    },
+    {
+      "path": "configurations.0.termOnlyRecall",
+      "text": "0.367"
+    },
+    {
+      "path": "configurations.0.forbiddenHits",
+      "text": "0"
+    },
+    {
+      "path": "configurations.0.firstPassValidity",
+      "text": "1"
+    },
+    {
+      "path": "configurations.1.label",
+      "text": "(ii) MedPsy-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "path": "configurations.1.strictGoldRecall",
+      "text": "0.133"
+    },
+    {
+      "path": "configurations.1.termOnlyRecall",
+      "text": "0.267"
+    },
+    {
+      "path": "configurations.1.forbiddenHits",
+      "text": "0"
+    },
+    {
+      "path": "configurations.1.firstPassValidity",
+      "text": "0.938"
+    },
+    {
+      "path": "configurations.2.label",
+      "text": "(iii) Qwen3-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "path": "configurations.2.strictGoldRecall",
+      "text": "0.333"
+    },
+    {
+      "path": "configurations.2.termOnlyRecall",
+      "text": "0.667"
+    },
+    {
+      "path": "configurations.2.forbiddenHits",
+      "text": "0"
+    },
+    {
+      "path": "configurations.2.firstPassValidity",
+      "text": "1"
+    },
+    {
+      "path": "configurations.3.label",
+      "text": "(iv) Qwen3-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "path": "configurations.3.strictGoldRecall",
+      "text": "0.1"
+    },
+    {
+      "path": "configurations.3.termOnlyRecall",
+      "text": "0.1"
+    },
+    {
+      "path": "configurations.3.forbiddenHits",
+      "text": "0"
+    },
+    {
+      "path": "configurations.3.firstPassValidity",
+      "text": "0.125"
+    },
+    {
+      "path": "configurations.0.label",
+      "text": "(i) MedPsy-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "path": "configurations.0.nativeTtftMs",
+      "text": "171"
+    },
+    {
+      "path": "configurations.0.tokensPerSecond",
+      "text": "118.4"
+    },
+    {
+      "path": "configurations.0.loadMs",
+      "text": "4873"
+    },
+    {
+      "path": "configurations.0.promptTokens",
+      "text": "825"
+    },
+    {
+      "path": "configurations.0.generatedTokens",
+      "text": "191"
+    },
+    {
+      "path": "configurations.1.label",
+      "text": "(ii) MedPsy-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "path": "configurations.1.nativeTtftMs",
+      "text": "214"
+    },
+    {
+      "path": "configurations.1.tokensPerSecond",
+      "text": "100.7"
+    },
+    {
+      "path": "configurations.1.loadMs",
+      "text": "8009"
+    },
+    {
+      "path": "configurations.1.promptTokens",
+      "text": "821"
+    },
+    {
+      "path": "configurations.1.generatedTokens",
+      "text": "1084"
+    },
+    {
+      "path": "configurations.2.label",
+      "text": "(iii) Qwen3-1.7B · sin razonamiento + esquema estricto"
+    },
+    {
+      "path": "configurations.2.nativeTtftMs",
+      "text": "179"
+    },
+    {
+      "path": "configurations.2.tokensPerSecond",
+      "text": "118.3"
+    },
+    {
+      "path": "configurations.2.loadMs",
+      "text": "5191"
+    },
+    {
+      "path": "configurations.2.promptTokens",
+      "text": "808"
+    },
+    {
+      "path": "configurations.2.generatedTokens",
+      "text": "273"
+    },
+    {
+      "path": "configurations.3.label",
+      "text": "(iv) Qwen3-1.7B · razonamiento, sin gramática"
+    },
+    {
+      "path": "configurations.3.nativeTtftMs",
+      "text": "203"
+    },
+    {
+      "path": "configurations.3.tokensPerSecond",
+      "text": "102"
+    },
+    {
+      "path": "configurations.3.loadMs",
+      "text": "7115"
+    },
+    {
+      "path": "configurations.3.promptTokens",
+      "text": "804"
+    },
+    {
+      "path": "configurations.3.generatedTokens",
+      "text": "1201"
     },
     {
       "path": "hardware",
-      "text": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · Q4_K_M imatrix / Q4_0"
+      "text": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · MedPsy-1.7B q4_k_m imatrix / Qwen3-1.7B Q4_0"
     },
     {
       "path": "disclosure",
-      "text": "Divulgación de procesos GPU: pendiente del resumen final."
+      "text": "Promedios por caso de las métricas nativas del SDK (timeToFirstToken, tokensPerSecond, promptTokens, generatedTokens) sobre los registros de cada ejecución completa; carga = pared alrededor de loadModel (una sola carga en las configuraciones con razonamiento). Procesos GPU ajenos observados por el lease D7: (i): ninguno; (ii): ninguno; (iii): ninguno; (iv): ninguno. Suite congelada y confirmada por revisor humano (goldConfirmedByHuman: true). Ninguna configuración alcanza el objetivo predeclarado de cobertura estricta ≥ 0.80."
     }
   ],
   "assets": [

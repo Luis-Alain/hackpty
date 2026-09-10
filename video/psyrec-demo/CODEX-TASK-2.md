@@ -1,0 +1,12 @@
+# Codex task 2 — completed-results scene with verified data (no render in this run)
+
+Same rules as CODEX-TASK.md (work only inside video/psyrec-demo, never git, never print secrets, no Remotion). Read BRIEF.md (including the standing rule: generative clips carry no text) and REPORT.md first.
+
+State: `data/results.json` is now `pending: false` with four verified configurations filled by the coordinator from the repository's evidence (fields: label, model, quantization, reasoning, schema, strictGoldRecall, termOnlyRecall, forbiddenHits, firstPassValidity, abstentionCorrect, casesPassed, loadMs, nativeTtftMs, tokensPerSecond, promptTokens, generatedTokens, metricRecords, evidencePrefix; plus hardware, disclosure, suiteLabel, verification). `npm run check` now reports 12 failures because the completed-results layout was never exercised with real values.
+
+Do, in order, writing REPORT.md as you go:
+1. Read review/check.json and fix every failure in the completed-results state of S7: text inside safe zones, no overflow, one idea per screen (split S7 into two sub-screens within its audio duration if needed: a) the four configurations as a compact comparison table or bar rows for strictGoldRecall and termOnlyRecall with forbiddenHits and firstPassValidity as small mono labels; b) performance row: nativeTtftMs, tokensPerSecond, loadMs, promptTokens/generatedTokens, hardware line, disclosure line), every numeral bound to results.json (the trace must pass), Spanish labels, palette only.
+2. Make the honest headline of S7 data-driven: when no configuration meets the target the heading must say so (for example "Ninguna configuración alcanza el objetivo (≥ 0,80)") and the strongest configuration is named from the data, never hard-coded. Keep the pending state working when pending is true.
+3. S8 (límites) must stay consistent with the data (MedPsy shows no measured advantage over the generic model; thinking mode is not viable with strict schema on SDK 0.18.2).
+4. Run `npm run check` until it passes; do NOT run the full render or frames in this task (the coordinator will trigger the render later when the GPU host is free). You may render a single still of the S7 completed state to review/S7-results-layout.png with the project's existing layout-preview mechanism if one exists.
+5. Report: files changed, exact commands and results, the check.json summary, and anything the coordinator must decide.

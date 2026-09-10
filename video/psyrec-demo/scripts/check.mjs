@@ -6,10 +6,18 @@ import puppeteer from 'puppeteer-core';
 import { build } from './build.mjs';
 import { localEnv, report, ffprobe, command, cli } from './lib.mjs';
 
-await build();
+const pendingPreview=process.argv.includes('--pending');
+const reviewPrefix=pendingPreview?'pending-':'';
+const results=JSON.parse(readFileSync('data/results.json','utf8'));
+if(pendingPreview) {
+  results.pending=true;
+  results.configurations=[];
+  results.suiteLabel='Suite sintética · evaluación pendiente';
+  delete results.strictGoldRecallTarget;
+}
+await build({resultsOverride:results});
 const metadata=JSON.parse(readFileSync('data/build.json','utf8'));
 const audio=JSON.parse(readFileSync('audio/manifest.json','utf8'));
-const results=JSON.parse(readFileSync('data/results.json','utf8'));
 const failures=[];
 const assert=(condition,message)=>{if(!condition)failures.push(message);};
 const palette=new Set(['#1b3035','#18625f','#174e4b','#f3f5f5','#ffffff','#e8f2ee','#93b9ac','#657775','#974d39','#fbece8','#000000','#000','#fff']);
@@ -26,6 +34,7 @@ for(const scene of metadata.scenes) {
 }
 for(const b of metadata.boxes) assert(b.x>=96 && b.y>=54 && b.x+b.w<=1824 && b.y+b.h<=1026,`${b.scene}/${b.id}: declared box outside 5% safe zone.`);
 if(results.pending===false) {
+  assert(Number.isFinite(results.strictGoldRecallTarget)&&results.strictGoldRecallTarget>=0&&results.strictGoldRecallTarget<=1,'Completed results require a fractional strictGoldRecallTarget.');
   assert(!!results.generatedAt && results.source.length>0 && results.configurations.length===4,'Completed results require timestamp, sources and four configurations.');
   for(const [i,c] of results.configurations.entries()) {
     for(const key of ['strictGoldRecall','termOnlyRecall','forbiddenHits','firstPassValidity','abstentionCorrect','loadMs','nativeTtftMs','tokensPerSecond','promptTokens','generatedTokens']) assert(typeof c[key]==='number'&&Number.isFinite(c[key])&&c[key]>=0,`Configuration ${i}: missing real numeric ${key}.`);
@@ -51,11 +60,23 @@ try {
     assert(String(value)===t.text,`Results trace mismatch: ${t.path}`);
   }
   assert(results.pending===false || !await page.$('#S7 .metric-value'),'Pending results cannot show metric values.');
-  writeFileSync('review/results-trace.json',JSON.stringify({source:'data/results.json',pending:results.pending,numericText:trace,allBindings:metadata.resultsTrace},null,2)+'\n');
+  if(!results.pending) {
+    const expected=results.configurations.some(c=>c.strictGoldRecall>=results.strictGoldRecallTarget)?'El objetivo se alcanza en la evaluación':'Ninguna configuración alcanza el objetivo';
+    assert(await page.$eval('[data-results-headline]',el=>el.textContent)===expected,'Results headline contradicts target comparison.');
+    const best=results.configurations.reduce((best,c,i)=>c.strictGoldRecall>results.configurations[best].strictGoldRecall?i:best,0);
+    assert(await page.$eval('#results-accuracy [data-result-path][style*="top:326px"]',el=>el.dataset.resultPath)===`configurations.${best}.label`,'Strongest configuration label does not match strict recall.');
+    for(const [i,c] of results.configurations.entries())for(const key of ['strictGoldRecall','termOnlyRecall','forbiddenHits','firstPassValidity','nativeTtftMs','tokensPerSecond','loadMs','promptTokens','generatedTokens'])assert(!!await page.$(`#S7 [data-result-path="configurations.${i}.${key}"]`),`Missing displayed metric: configurations.${i}.${key}`);
+  }
+  writeFileSync(`review/${reviewPrefix}results-trace.json`,JSON.stringify({source:'data/results.json',pending:results.pending,previewOverride:pendingPreview,numericText:trace,allBindings:metadata.resultsTrace},null,2)+'\n');
   for(const scene of metadata.scenes) {
     const times=[scene.start+.8,scene.start+scene.duration*.55,...scene.captions.map(c=>c.start+Math.min(.3,c.duration/2))];
+    if(scene.resultsSwitch)times.push(scene.resultsSwitch-1/30,scene.resultsSwitch,scene.resultsSwitch+1/30,scene.start+scene.duration-.1);
     for(const t of times) {
       await page.evaluate(t=>{window.__timelines.psyrec.seek(t,false);},t);
+      if(scene.resultsSwitch) {
+        const visible=await page.evaluate(()=>['results-accuracy','results-performance'].filter(id=>getComputedStyle(document.getElementById(id)).visibility!=='hidden'));
+        assert(visible.length===1&&visible[0]===(t<scene.resultsSwitch?'results-accuracy':'results-performance'),`S7@${t.toFixed(3)}: results screens overlap or wrong screen visible.`);
+      }
       const issues=await page.evaluate(()=>{
         const issues=[];
         const visible=el=>{
@@ -78,12 +99,14 @@ try {
       observations.push({scene:scene.id,time:t,issues});
       for(const issue of issues)failures.push(`${scene.id}@${t.toFixed(3)} ${JSON.stringify(issue)}`);
     }
-    await page.evaluate(t=>{window.__timelines.psyrec.seek(t,false);},scene.start+scene.duration*.35);
-    await page.screenshot({path:`review/${scene.id}-layout.png`});
+    if(!process.argv.includes('--no-layout-previews') && (!process.argv.includes('--results-layout') || (scene.id==='S7'&&!results.pending))) {
+      await page.evaluate(t=>{window.__timelines.psyrec.seek(t,false);},scene.start+scene.duration*(process.argv.includes('--results-layout')?.75:.35));
+      await page.screenshot({path:process.argv.includes('--results-layout')?'review/S7-results-layout.png':`review/${scene.id}-layout.png`});
+    }
   }
 }finally{await browser.close();}
-writeFileSync('review/check.json',JSON.stringify({passed:failures.length===0,totalDuration:metadata.duration,palette:[...palette],observations,failures},null,2)+'\n');
+writeFileSync(`review/${reviewPrefix}check.json`,JSON.stringify({passed:failures.length===0,pending:results.pending,previewOverride:pendingPreview,totalDuration:metadata.duration,palette:[...palette],observations,failures},null,2)+'\n');
 console.log(`Palette checked; ${metadata.boxes.length} safe-zone boxes; ${observations.length} browser samples; ${metadata.duration.toFixed(3)} seconds; results numeric trace written.`);
-if(failures.length){report(`\`npm run check\` failed: ${[...new Set(failures)].join('\n\n')}`);throw new Error(`${failures.length} check failures; see review/check.json`);}
+if(failures.length){report(`\`npm run check ${process.argv.slice(2).join(' ')}\` failed: ${[...new Set(failures)].join('\n\n')}`);throw new Error(`${failures.length} check failures; see review/${reviewPrefix}check.json`);}
 console.log('All checks passed.');
-report(`\`npm run check\`: PASS. Palette, ${metadata.boxes.length} declared text boxes, ${observations.length} browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, ${metadata.duration.toFixed(3)} s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.`);
+report(`\`npm run check -- ${process.argv.slice(2).join(' ')}\`: PASS. Palette, ${metadata.boxes.length} declared text boxes, ${observations.length} browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, ${metadata.duration.toFixed(3)} s <= 300 s, and every results-scene numeral traced to data/results.json${pendingPreview?' with an in-memory pending preview override':''}. Details: review/${reviewPrefix}check.json and review/${reviewPrefix}results-trace.json.`);

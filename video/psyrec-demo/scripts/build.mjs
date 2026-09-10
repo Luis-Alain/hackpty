@@ -5,11 +5,11 @@ import { root, ffprobe } from './lib.mjs';
 
 const read = path => JSON.parse(readFileSync(path, 'utf8'));
 export const escape = value => String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-export async function build({ draft = false } = {}) {
+export async function build({ draft = false, resultsOverride } = {}) {
   const storyboard = read('data/storyboard.json');
   if (!draft && !existsSync('audio/manifest.json')) throw new Error('Run npm run tts first: audio/manifest.json is required.');
   const manifest = existsSync('audio/manifest.json') ? read('audio/manifest.json') : { scenes: storyboard.scenes.map(s => ({...s, duration:s.budget - .6})) };
-  const results = existsSync('data/results.json') ? read('data/results.json') : {pending:true, configurations:[], hardware:'',disclosure:''};
+  const results = resultsOverride ?? (existsSync('data/results.json') ? read('data/results.json') : {pending:true, configurations:[], hardware:'',disclosure:''});
   if (results.pending !== true && results.pending !== false) throw new Error('Results must explicitly specify pending.');
   const cases = read('data/clinical-examples.json');
   const captures = read('captures/manifest.json');
@@ -59,7 +59,7 @@ export async function build({ draft = false } = {}) {
     timeline.push({id,start:offset,duration,audioDuration:audio.duration,budget:s.budget});
     let html=box(id,sections[index],108,64,1000,44,'eyebrow');
     html+=box(id,'SINTÉTICO · NO ES UN PACIENTE REAL',1260,62,552,50,'chip');
-    html+=box(id,titles[index],108,index===0||index===8?200:140,index===0?900:1704,index===0||index===8?195:index===1?165:140,`title ${index===0||index===8?'hero':''} ${index===1?'question-title':''}`);
+    if(index!==6 || results.pending) html+=box(id,titles[index],108,index===0||index===8?200:140,index===0?900:1704,index===0||index===8?195:index===1?165:140,`title ${index===0||index===8?'hero':''} ${index===1?'question-title':''}`);
     if(index===0) {
       html+=box(id,'De una foto de una nota a un registro revisado. Todo local.',116,423,850,210,'subtitle');
       html+=panel(1100,265,712,440,'tint')+box(id,'Android → Windows PC',1140,420,632,100,'subtitle ink');
@@ -117,21 +117,50 @@ export async function build({ draft = false } = {}) {
         if(results.suiteLabel) html+=binding(id,'suiteLabel',116,552,1650,60,'body');
         html+=box(id,'Cobertura · Afirmaciones no respaldadas · Validez JSON',116,651,1650,58,'body muted');
         html+=box(id,'TTFT nativo · Tokens/s · Tiempo de carga',116,735,1650,60,'body muted');
+        if(results.hardware) html+=binding(id,'hardware',116,836,1680,80,'small mono muted');
       } else {
         if(!results.source?.length || results.configurations?.length!==4) throw new Error('Completed results require evidence sources and four configurations.');
-        html+=binding(id,'suiteLabel',116,245,1680,40,'small');
-        const keys=[['Strict gold recall','strictGoldRecall'],['Forbidden-term hits','forbiddenHits'],['First-pass JSON validity','firstPassValidity'],['Native TTFT · ms','nativeTtftMs'],['Throughput · tokens/s','tokensPerSecond'],['Load · ms','loadMs']];
+        if(!Number.isFinite(results.strictGoldRecallTarget) || results.strictGoldRecallTarget<0 || results.strictGoldRecallTarget>1) throw new Error('Completed results require the declared strictGoldRecallTarget.');
+        const bestIndex=results.configurations.reduce((best,c,i)=>c.strictGoldRecall>results.configurations[best].strictGoldRecall?i:best,0);
+        const meetsTarget=results.configurations.some(c=>c.strictGoldRecall>=results.strictGoldRecallTarget);
+        const bestTied=results.configurations.filter(c=>c.strictGoldRecall===results.configurations[bestIndex].strictGoldRecall).length>1;
+        timeline[timeline.length-1].resultsSwitch=offset+duration*.52;
+        html+='<div id="results-accuracy">';
+        html+=box(id,meetsTarget?'El objetivo se alcanza en la evaluación':'Ninguna configuración alcanza el objetivo',108,140,1704,80,'title results-title','data-results-headline="true"');
+        html+=binding(id,'suiteLabel',116,234,1680,42,'small');
+        html+=box(id,bestTied?'Mayor cobertura estricta · empate':'Mayor cobertura estricta',116,284,1250,40,'small');
+        html+=box(id,'Objetivo ≥',1450,284,185,40,'small');
+        html+=binding(id,'strictGoldRecallTarget',1645,284,150,40,'metric-value');
+        html+=binding(id,`configurations.${bestIndex}.label`,116,326,1680,42,'small');
+        const accuracy=[['Cobertura\nestricta','strictGoldRecall',734,236],['Sólo\ntérminos','termOnlyRecall',1000,236],['Términos\nprohibidos','forbiddenHits',1266,236],['JSON válido\nal primer intento','firstPassValidity',1532,252]];
+        html+=box(id,'Configuración',136,392,550,64,'small');
+        accuracy.forEach(([label,key,x,w])=>{html+=box(id,label,x,386,w,72,'small');});
         results.configurations.forEach((c,i)=>{
-          const x=108+i*432;html+=panel(x,290,410,516,'tint');
-          html+=binding(id,`configurations.${i}.label`,x+20,313,370,74,'small ink');
-          keys.forEach(([label,key],j)=>{html+=box(id,label,x+20,400+j*64,370,28,'metric-label ink');html+=binding(id,`configurations.${i}.${key}`,x+20,428+j*64,370,34,'metric-value ink');});
+          const y=474+i*104;
+          html+=panel(108,y,1704,94,'tint');
+          html+=binding(id,`configurations.${i}.label`,136,y+12,550,72,'small ink');
+          accuracy.forEach(([label,key,x,w])=>{html+=binding(id,`configurations.${i}.${key}`,x,y+29,w,40,`metric-value ink ${key==='forbiddenHits'||key==='firstPassValidity'?'compact-metric':''}`);});
         });
+        html+=box(id,'Proporciones de cobertura y validez · términos prohibidos: conteo de coincidencias',116,890,1680,34,'metric-label muted');
+        html+='</div><div id="results-performance">';
+        html+=box(id,'Rendimiento nativo por configuración',108,140,1704,80,'title results-title');
+        html+=box(id,'Promedios por caso · carga medida alrededor de loadModel',116,234,1680,42,'small');
+        const performance=[['TTFT nativo\nms','nativeTtftMs',720,192],['Generación\ntokens/s','tokensPerSecond',940,192],['Carga\nms','loadMs',1160,160],['Entrada\ntokens','promptTokens',1350,190],['Salida\ntokens','generatedTokens',1570,210]];
+        html+=box(id,'Configuración',136,294,550,66,'small');
+        performance.forEach(([label,key,x,w])=>{html+=box(id,label,x,284,w,72,'small');});
+        results.configurations.forEach((c,i)=>{
+          const y=366+i*92;
+          html+=panel(108,y,1704,84,'tint');
+          html+=binding(id,`configurations.${i}.label`,136,y+7,550,72,'small ink');
+          performance.forEach(([label,key,x,w])=>{html+=binding(id,`configurations.${i}.${key}`,x,y+25,w,40,'metric-value ink');});
+        });
+        if(results.hardware) html+=binding(id,'hardware',116,746,1680,62,'results-hardware mono muted');
+        if(results.disclosure) html+=binding(id,'disclosure',116,809,1680,115,'results-disclosure muted');
+        html+='</div>';
       }
-      if(results.hardware) html+=binding(id,'hardware',116,836,1680,50,'small mono muted');
-      if(results.disclosure) html+=binding(id,'disclosure',116,886,1680,46,'small muted');
     } else if(index===7) {
-      const items=[['Suite pequeña y sintética','Sin validación clínica.'],['MedPsy · SDK 0.18.2','Razonamiento y esquema estricto: incompatibles en la prueba documentada.'],['Evidencia física y aceptación humana','Pendientes según el estado del repositorio.']];
-      items.forEach(([title,desc],i)=>{html+=panel(108,310+i*183,1704,159,i===2?'tint':'')+box(id,title,140,334+i*183,1620,58,'subtitle')+box(id,desc,140,402+i*183,1610,56,'body muted');});
+      const items=[['Suite pequeña y sintética','Sin validación clínica.'],[results.pending?'Comparación de modelos pendiente':'MedPsy · sin ventaja demostrada en esta suite',results.pending?'Los resultados medidos aún no están disponibles.':'El modelo genérico logra la mayor cobertura estricta entre las configuraciones evaluadas.'],['SDK 0.18.2 · razonamiento y esquema estricto','Combinación no viable en la prueba documentada.'],['Evidencia física y aceptación humana','Pendientes según el estado del repositorio.']];
+      items.forEach(([title,desc],i)=>{html+=panel(108,292+i*155,1704,142,i===3?'tint':'')+box(id,title,140,307+i*155,1620,54,'limits-title')+box(id,desc,140,365+i*155,1610,58,'limits-body muted');});
     } else {
       html+=box(id,'Local. Verificable.\nRevisado por humanos.',116,430,1590,210,'title');
       html+=box(id,'Luis-Alain/hackpty · QVAC-Psy',116,729,1600,62,'body mono');
@@ -155,13 +184,14 @@ export async function build({ draft = false } = {}) {
   });
   const gsap=`window.__timelines=window.__timelines||{};const tl=gsap.timeline({paused:true});\n`+timeline.map((s,i)=>{
     let code=`tl.set('#${s.id}',{display:'block'},${s.start});tl.set('#${s.id}',{display:'none'},${s.start+s.duration});\n`;
-    code+=`tl.fromTo('#${s.id} > .title',{opacity:0,y:15},{opacity:1,y:0,duration:.6},${s.start});\n`;
+    if(!s.resultsSwitch)code+=`tl.fromTo('#${s.id} > .title',{opacity:0,y:15},{opacity:1,y:0,duration:.6},${s.start});\n`;
     for(const c of s.captions) code+=`tl.set('#${c.id}',{visibility:'hidden'},0);tl.set('#${c.id}',{visibility:'visible'},${c.start});tl.set('#${c.id}',{visibility:'hidden'},${c.start+c.duration});\n`;
     if(i===1)code+=`tl.fromTo('#notes-left',{x:-22},{x:0,duration:.8},${s.start});tl.fromTo('#notes-right',{x:22},{x:0,duration:.8},${s.start});\n`;
     if(i===2)code+=`tl.fromTo('#receipt-step',{opacity:0},{opacity:1,duration:.6},${s.start+s.duration*.7});\n`;
     if(i===4)code+=`tl.set('#example-unknown',{visibility:'hidden'},0);tl.set('#example-conflict',{visibility:'hidden'},${s.start+s.duration*.52});tl.set('#example-unknown',{visibility:'visible'},${s.start+s.duration*.52});\n`;
     if(i===4)for(let j=0;j<6;j++)code+=`tl.fromTo('#finding-kind-${j}',{opacity:0},{opacity:1,duration:.5},${s.start+.6+j*.45});\n`;
     if(i===5)for(let j=1;j<4;j++)code+=`tl.fromTo('#approval-${j}',{opacity:.25},{opacity:1,duration:.5},${s.start+s.duration*j*.2});\n`;
+    if(s.resultsSwitch)code+=`tl.set('#results-performance',{visibility:'hidden'},0);tl.set('#results-accuracy',{visibility:'hidden'},${s.resultsSwitch});tl.set('#results-performance',{visibility:'visible'},${s.resultsSwitch});\n`;
     return code;
   }).join('')+`tl.to({}, {duration:.001},${offset-.001});window.__timelines['psyrec']=tl;window.PSYREC_TIMELINE=${JSON.stringify(timeline)};`;
   const fontFaces=readFileSync('assets/fonts.css','utf8').replaceAll('url(fonts/','url(assets/fonts/');

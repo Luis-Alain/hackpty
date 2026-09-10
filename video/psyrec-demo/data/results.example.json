@@ -24,5 +24,6 @@
   "hardware": "<measured hardware / SDK / quantizations>",
   "disclosure": "<source-specific shared GPU process disclosure and aggregation method>",
   "suiteLabel": "<verified suite and configuration counts>",
+  "strictGoldRecallTarget": null,
   "pending": true
 }
