@@ -6,7 +6,7 @@ import { completar, sinThink } from '../provider/bigModel.js';
 import { normalizarModalidad, sinAcentos } from '../validation/referenceLists.js';
 import type { CampoEstado, CamposExtraidos, ExtraccionResultado } from '../types/record.js';
 
-const CAMPOS_ORDEN = [
+export const CAMPOS_ORDEN = [
   'cliente',
   'ciudad',
   'pais',
@@ -17,11 +17,11 @@ const CAMPOS_ORDEN = [
   'antiguedad',
 ] as const;
 
-type CampoNombre = (typeof CAMPOS_ORDEN)[number];
+export type CampoNombre = (typeof CAMPOS_ORDEN)[number];
 
-const CAMPOS_NUMERICOS: ReadonlySet<CampoNombre> = new Set(['cantidad', 'antiguedad']);
+export const CAMPOS_NUMERICOS: ReadonlySet<CampoNombre> = new Set(['cantidad', 'antiguedad']);
 
-const HEDGE_REGEX =
+export const HEDGE_REGEX =
   /\b(creo que|tal ?vez|parece|parec[ií]a|pienso que|quiz[aá]s|posiblemente|no estoy seguro|diria|diría|aproximadamente|m[aá]s o menos|creo)\b/i;
 
 const SYSTEM_PROMPT = `Eres un asistente que extrae datos estructurados de observaciones de campo sobre equipos médicos en hospitales.
@@ -129,7 +129,7 @@ function asignarStatus(
   return { valor, status: enOracionDuda ? 'Reported' : 'Confirmed' };
 }
 
-function calcularEstadoGlobal(campos: CamposExtraidos): CampoEstado {
+export function calcularEstadoGlobal(campos: CamposExtraidos): CampoEstado {
   const CRITICOS: CampoNombre[] = ['cliente', 'pais', 'modalidad'];
   const criticosOk = CRITICOS.every((c) => campos[c].status !== 'Unknown');
   if (!criticosOk) return 'Unknown';
@@ -141,6 +141,20 @@ function calcularEstadoGlobal(campos: CamposExtraidos): CampoEstado {
   if (desconocidos === 0 && confirmados >= 6) return 'Confirmed';
   if (desconocidos <= 2) return 'Reported';
   return 'Estimated';
+}
+
+// Recalcula completeness + estadoGlobal a partir de un set de campos ya existente
+// (ej: después de aplicar respuestas de seguimiento), sin volver a llamar al LLM.
+export function derivarResultado(campos: CamposExtraidos): ExtraccionResultado {
+  const totalCampos = CAMPOS_ORDEN.length;
+  const conocidos = CAMPOS_ORDEN.filter((c) => campos[c].status !== 'Unknown').length;
+  const completeness = Math.round((conocidos / totalCampos) * 100) / 100;
+
+  return {
+    campos,
+    completeness,
+    estadoGlobal: calcularEstadoGlobal(campos),
+  };
 }
 
 export async function extraerEstructura(
@@ -170,13 +184,5 @@ export async function extraerEstructura(
     campos[nombre] = asignarStatus(nombre, bruto[nombre], observacion, oracionesDuda) as any;
   }
 
-  const totalCampos = CAMPOS_ORDEN.length;
-  const conocidos = CAMPOS_ORDEN.filter((c) => campos[c].status !== 'Unknown').length;
-  const completeness = Math.round((conocidos / totalCampos) * 100) / 100;
-
-  return {
-    campos,
-    completeness,
-    estadoGlobal: calcularEstadoGlobal(campos),
-  };
+  return derivarResultado(campos);
 }

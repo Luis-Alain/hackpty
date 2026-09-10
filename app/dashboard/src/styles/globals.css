@@ -11,26 +11,36 @@
   --color-cocir-sin-dato: #C9C4BC;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/*
+ * Este reset debe vivir dentro de @layer base: las reglas CSS sin capa
+ * siempre ganan sobre las reglas en capas (cascade layers), sin importar
+ * especificidad ni orden. Como las utilidades de Tailwind (p-*, m-*, etc.)
+ * viven en @layer utilities, un reset "*{ padding:0 }" fuera de toda capa
+ * anulaba silenciosamente TODAS las utilidades de padding/margin de Tailwind
+ * en todo el dashboard.
+ */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-}
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
 
-body {
-  background-color: var(--color-fondo);
-  color: var(--color-tinta);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.6;
-}
+  body {
+    background-color: var(--color-fondo);
+    color: var(--color-tinta);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+  }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
+  #root {
+    width: 100%;
+    min-height: 100vh;
+  }
 }

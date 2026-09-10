@@ -13,16 +13,26 @@ export async function cargar(opts: {
   hardware: string;
   device?: 'gpu' | 'cpu';
   ctx?: number;
+  // 'llm' (default): completion, usa modelConfig snake_case (gpu_layers, ctx_size).
+  // 'embedding': modelConfig con claves distintas (camelCase), sin ctx_size.
+  tipo?: 'llm' | 'embedding';
 }): Promise<LoadedModel> {
   const t0 = performance.now();
   try {
+    const modelConfig =
+      opts.tipo === 'embedding'
+        ? {
+            device: opts.device ?? 'gpu',
+            gpuLayers: opts.device === 'cpu' ? 0 : 99,
+          }
+        : {
+            device: opts.device ?? 'gpu',
+            gpu_layers: opts.device === 'cpu' ? 0 : 99,
+            ctx_size: opts.ctx ?? 4096,
+          };
     const modelId = await loadModel({
       modelSrc: opts.modelSrc,
-      modelConfig: {
-        device: opts.device ?? 'gpu',
-        gpu_layers: opts.device === 'cpu' ? 0 : 99,
-        ctx_size: opts.ctx ?? 4096,
-      },
+      modelConfig,
     });
     registrar({
       stage: 'load',

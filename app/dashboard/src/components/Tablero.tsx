@@ -46,7 +46,7 @@ export function Tablero({ abortSignal }: { abortSignal?: AbortSignal }) {
       <h2 className="text-xl font-bold mb-4">Registros</h2>
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-[--color-tinta]">
+          <tr className="border-b border-(--color-tinta)">
             <th className="text-left p-2">Cliente</th>
             <th className="text-left p-2">País</th>
             <th className="text-left p-2">Modalidad</th>
@@ -56,7 +56,7 @@ export function Tablero({ abortSignal }: { abortSignal?: AbortSignal }) {
         </thead>
         <tbody>
           {registros.map((r) => (
-            <tr key={r.id} className="border-b border-[--color-superficie]">
+            <tr key={r.id} className="border-b border-(--color-superficie)">
               <td className="p-2">{r.cliente}</td>
               <td className="p-2">{r.pais}</td>
               <td className="p-2">{r.modalidad}</td>

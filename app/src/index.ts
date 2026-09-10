@@ -4,6 +4,7 @@ import { healthRouter } from './routes/health.js';
 import { syncRouter } from './routes/sync.js';
 import { dashboardRouter } from './routes/dashboard.js';
 import { queryRouter } from './routes/query.js';
+import { visitaRouter } from './routes/visita.js';
 import { initQVACProvider } from './provider/qvacProvider.js';
 import { initSchema } from './db/sqlite.js';
 
@@ -31,6 +32,7 @@ app.route('/', healthRouter);
 app.route('/', syncRouter);
 app.route('/', dashboardRouter);
 app.route('/', queryRouter);
+app.route('/', visitaRouter);
 
 app.get('/', (c) =>
   c.json({ service: 'vigía-server', version: '0.1.0' })

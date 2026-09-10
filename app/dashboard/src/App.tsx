@@ -1,9 +1,10 @@
 import { useRef, useEffect, useState } from 'react';
 import { Tablero } from './components/Tablero';
 import { Consulta } from './components/Consulta';
+import { Visita } from './components/Visita';
 
 export default function App() {
-  const [vista, setVista] = useState<'tablero' | 'consulta'>('tablero');
+  const [vista, setVista] = useState<'visita' | 'tablero' | 'consulta'>('visita');
   const abortControllerRef = useRef(new AbortController());
 
   useEffect(() => {
@@ -16,11 +17,17 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[--color-fondo] text-[--color-tinta]">
-      <header className="border-b border-[--color-tinta] p-4">
+    <div className="min-h-screen bg-(--color-fondo) text-(--color-tinta)">
+      <header className="border-b border-(--color-tinta) p-4">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Vigía</h1>
           <div className="flex gap-4">
+            <button
+              onClick={() => setVista('visita')}
+              className={vista === 'visita' ? 'font-bold' : 'opacity-60'}
+            >
+              Visita
+            </button>
             <button
               onClick={() => setVista('tablero')}
               className={vista === 'tablero' ? 'font-bold' : 'opacity-60'}
@@ -37,6 +44,7 @@ export default function App() {
         </div>
       </header>
       <main className="p-6">
+        {vista === 'visita' && <Visita />}
         {vista === 'tablero' && <Tablero abortSignal={abortControllerRef.current.signal} />}
         {vista === 'consulta' && <Consulta abortSignal={abortControllerRef.current.signal} />}
       </main>

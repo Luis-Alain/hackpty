@@ -1,25 +1,12 @@
 import { Hono } from 'hono';
-import { cargar, completar, descargar } from '../provider/bigModel.js';
+import { completar } from '../provider/bigModel.js';
+import { obtenerModeloLLM } from '../provider/llmCache.js';
+import { obtenerModeloEmbedding } from '../provider/embedCache.js';
 import { embedTexto } from '../rag/embeddings.js';
 import { Retriever } from '../rag/retrieval.js';
 import * as repo from '../db/repository.js';
-import { LLAMA_3_2_1B_INST_Q4_0 } from '@qvac/sdk';
 
 export const queryRouter = new Hono();
-
-let modeloCache: any = null;
-
-async function obtenerModelo() {
-  if (modeloCache) return modeloCache;
-  modeloCache = await cargar({
-    modelSrc: LLAMA_3_2_1B_INST_Q4_0,
-    etiqueta: 'Llama-3.2-1B-Instruct-Q4_0',
-    hardware: 'laptop',
-    device: 'gpu',
-    ctx: 2048,
-  });
-  return modeloCache;
-}
 
 queryRouter.post('/api/query', async (c) => {
   try {
@@ -50,8 +37,9 @@ queryRouter.post('/api/query', async (c) => {
     }));
     const retriever = new Retriever(registrosConBuffer);
 
-    const modelo = await obtenerModelo();
-    const preguntaEmbedding = await embedTexto(modelo.modelId, pregunta);
+    const modeloEmbed = await obtenerModeloEmbedding();
+    const preguntaEmbedding = await embedTexto(modeloEmbed.modelId, pregunta);
+    const modelo = await obtenerModeloLLM();
 
     const topK = 5;
     const candidatos = retriever.buscar(preguntaEmbedding, topK);
@@ -110,7 +98,7 @@ queryRouter.post('/api/query', async (c) => {
 
 queryRouter.get('/api/query/health', async (c) => {
   try {
-    await obtenerModelo();
+    await obtenerModeloLLM();
     return c.json({ status: 'ready', modelo: 'Llama-3.2-1B cargado' });
   } catch (e) {
     return c.json({ status: 'error', error: String(e) }, { status: 503 });

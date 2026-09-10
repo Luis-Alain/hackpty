@@ -49,14 +49,14 @@ export function Consulta({ abortSignal }: { abortSignal?: AbortSignal }) {
           value={pregunta}
           onChange={(e) => setPregunta(e.target.value)}
           placeholder="Pregunta sobre los registros..."
-          className="w-full p-2 border border-[--color-tinta] rounded"
+          className="w-full p-2 border border-(--color-tinta) rounded"
           rows={4}
           disabled={loading}
         />
         <button
           onClick={manejarEnvio}
           disabled={loading || !pregunta.trim()}
-          className="px-4 py-2 bg-[--color-acento] text-white rounded disabled:opacity-50"
+          className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
         >
           {loading ? 'Enviando...' : 'Enviar'}
         </button>
@@ -66,12 +66,12 @@ export function Consulta({ abortSignal }: { abortSignal?: AbortSignal }) {
 
       {respuesta && (
         <div className="space-y-2">
-          <div className="p-3 bg-[--color-superficie] rounded">
+          <div className="p-3 bg-(--color-superficie) rounded">
             <p className="font-serif italic">{respuesta.texto}</p>
           </div>
           {respuesta.fuentes.length > 0 && (
             <div className="text-sm">
-              <p className="font-mono text-[--color-tinta]">
+              <p className="font-mono text-(--color-tinta)">
                 Fuentes: {respuesta.fuentes.map((f) => `Reg. ${f.id}`).join(', ')}
               </p>
             </div>
