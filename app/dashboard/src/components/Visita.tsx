@@ -38,6 +38,36 @@ const crearWavDesdeFloat32 = (
   return new Blob([buffer], { type: "audio/wav" });
 };
 
+// Whisper trabaja nativamente a 16kHz. El micrófono del navegador entrega
+// audio a la tasa nativa del hardware (típicamente 44100 o 48000 Hz), no
+// 16000. El WAV que mandábamos antes llevaba el header correcto (con la
+// tasa real, ej. 48000) pero el pipeline de QVAC (en particular con VAD
+// activado) no lo manejaba bien: con audio real de micrófono a 48kHz el
+// modelo devolvía transcripciones vacías o texto sin ningún parecido a lo
+// dicho, mientras que el mismo contenido a 16kHz transcribía correctamente.
+// Remuestreamos a 16kHz nosotros mismos antes de codificar el WAV para no
+// depender de que el servidor lo haga bien.
+const remuestrearA16kHz = (
+  muestras: Float32Array,
+  sampleRateOriginal: number,
+): { muestras: Float32Array; sampleRate: number } => {
+  const SAMPLE_RATE_DESTINO = 16000;
+  if (sampleRateOriginal === SAMPLE_RATE_DESTINO) {
+    return { muestras, sampleRate: SAMPLE_RATE_DESTINO };
+  }
+  const ratio = sampleRateOriginal / SAMPLE_RATE_DESTINO;
+  const longitudDestino = Math.floor(muestras.length / ratio);
+  const resultado = new Float32Array(longitudDestino);
+  for (let i = 0; i < longitudDestino; i++) {
+    const posOriginal = i * ratio;
+    const idx0 = Math.floor(posOriginal);
+    const idx1 = Math.min(idx0 + 1, muestras.length - 1);
+    const frac = posOriginal - idx0;
+    resultado[i] = muestras[idx0] * (1 - frac) + muestras[idx1] * frac;
+  }
+  return { muestras: resultado, sampleRate: SAMPLE_RATE_DESTINO };
+};
+
 interface GrabadorPCM {
   audioCtx: AudioContext;
   source: MediaStreamAudioSourceNode;
@@ -282,7 +312,9 @@ export function Visita() {
       return;
     }
 
-    const wavBlob = crearWavDesdeFloat32(combinado, sampleRate);
+    const { muestras: muestras16k, sampleRate: sampleRate16k } =
+      remuestrearA16kHz(combinado, sampleRate);
+    const wavBlob = crearWavDesdeFloat32(muestras16k, sampleRate16k);
     await subirAudio(wavBlob);
   };
 
