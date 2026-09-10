@@ -21,7 +21,9 @@
     "check:mobile": "npm --prefix apps/mobile run check",
     "eval:transcription": "npm run build && node dist/diagnostics/qvac-spike/transcription-ablation.js",
     "score:transcription": "npm run build && node dist/diagnostics/qvac-spike/transcription-score.js",
-    "check:query-ui": "npm run build && node dist/apps/desktop/query-ui-check.js"
+    "check:query-ui": "npm run build && node dist/apps/desktop/query-ui-check.js",
+    "print:suite": "npm run build && node dist/diagnostics/qvac-spike/ocr-fixtures/print/suite/generate-suite-pages.js",
+    "check:suite-pages": "npm run build && node --test dist/tests/suite-print-pages.test.js"
   },
   "main": "dist/apps/desktop/main.js",
   "dependencies": {

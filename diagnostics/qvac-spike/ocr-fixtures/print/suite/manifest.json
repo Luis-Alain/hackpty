@@ -1,0 +1,461 @@
+{
+  "schemaVersion": 1,
+  "syntheticOnly": true,
+  "purpose": "Printable pages for photographing/entering frozen chart-review suite cases in the real camera workflow. Demonstration and human-benefit evidence only, never held-out accuracy (see README.md).",
+  "generatedFrom": {
+    "diagnostics\\qvac-spike\\chart-review\\suite\\draft-v1.json": "2d4c67a9ea326cb69e510ae4f3378fcdcfc31088c96c8698accb869aa6d37a84",
+    "diagnostics\\qvac-spike\\chart-review\\suite\\dev-v1.json": "e6a2b4d27d3b98dd89234ac90a5a858f3f87b879d21f2a832d25d5df48f2899a"
+  },
+  "recommendedCameraPicks": [
+    "CR-09",
+    "CR-13",
+    "CR-14",
+    "CR-15",
+    "CR-06",
+    "CR-04",
+    "CR-05",
+    "CR-02"
+  ],
+  "files": [
+    {
+      "file": "CR-01-current.html",
+      "sha256": "7cf4b52196ff812c98bd6dc0012cbe5ed261c6f29df99af756380ec0b27f8311",
+      "caseId": "CR-01",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 327
+    },
+    {
+      "file": "CR-01-h1.html",
+      "sha256": "074a8d0f3991dda97ca1afd30627493e0cd61957c8621a21b481f53f6d1e27c1",
+      "caseId": "CR-01",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-01-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 240
+    },
+    {
+      "file": "CR-02-current.html",
+      "sha256": "2c14f6f3f26efe3e21b29ea06fa685f41e11fabd8933dd939f75d39011ac40c2",
+      "caseId": "CR-02",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 185
+    },
+    {
+      "file": "CR-02-h1.html",
+      "sha256": "842a4a09255b830081c75c19cc67e8b4e6e9e07febbfae0a3cc0b7ed034a215a",
+      "caseId": "CR-02",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-02-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 166
+    },
+    {
+      "file": "CR-03-current.html",
+      "sha256": "6a746c56ed7974cae9b9301ccc01c5a24af4260fb18986474f1761bbdb81a007",
+      "caseId": "CR-03",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 199
+    },
+    {
+      "file": "CR-03-h1.html",
+      "sha256": "aac2074189cc8a923f651c1aafd34950407dad1fb8eb89d4c6240d687e2f5dfd",
+      "caseId": "CR-03",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-03-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 243
+    },
+    {
+      "file": "CR-04-current.html",
+      "sha256": "74296e1b1a655a36c0a3cf734b1b606919759b9d6bc7311371fb30becb6efc48",
+      "caseId": "CR-04",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 280
+    },
+    {
+      "file": "CR-04-h1.html",
+      "sha256": "67cd591a21c2b0b49bde2b94923430740cf9fb52ecf69553d6fe14853766fa96",
+      "caseId": "CR-04",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-04-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 259
+    },
+    {
+      "file": "CR-05-current.html",
+      "sha256": "6df8d6f5bc5116b7cedea8f01e3897f177caf074040408fd00d44974daa2b7a6",
+      "caseId": "CR-05",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 259
+    },
+    {
+      "file": "CR-05-h1.html",
+      "sha256": "bb3ec83571a978bab6370e45ebc977ea4ea9d0f7acaf591517e511d1d80ec6ba",
+      "caseId": "CR-05",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-05-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 238
+    },
+    {
+      "file": "CR-06-current.html",
+      "sha256": "dce9c973062fedb6ebb2d6bac3699e1b66ac92edcda54fdca1e132bbef35db07",
+      "caseId": "CR-06",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 267
+    },
+    {
+      "file": "CR-06-h1.html",
+      "sha256": "0ea40ad2215ddbcb919d533469922c4d641338cc27cb20b4f11f54f908bf87fd",
+      "caseId": "CR-06",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-06-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 311
+    },
+    {
+      "file": "CR-07-current.html",
+      "sha256": "2aafb01f5785e50562be874e60fb2b28eb1267bc87889139eba0a607c0a35ee5",
+      "caseId": "CR-07",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 265
+    },
+    {
+      "file": "CR-07-h1.html",
+      "sha256": "b50db062d36d5645c86b57b07832982e82c552640dde225e32201f48fc15969d",
+      "caseId": "CR-07",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-07-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 183
+    },
+    {
+      "file": "CR-08-current.html",
+      "sha256": "1d19ed02aba1ec4c87de5f4d2e6eb90c9f137a862e2506b69ad87e490180761c",
+      "caseId": "CR-08",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 271
+    },
+    {
+      "file": "CR-08-h1.html",
+      "sha256": "3242e856dd2c8f7ebe1e4e1273c6f74c31d635d235077edb2f8c972de06180a1",
+      "caseId": "CR-08",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-08-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 261
+    },
+    {
+      "file": "CR-09-current.html",
+      "sha256": "95c67307e9ee5b41638fb4f3ff5466de5d64548c36406bf9029c3ed6d9217479",
+      "caseId": "CR-09",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 217
+    },
+    {
+      "file": "CR-09-h1.html",
+      "sha256": "8e1fe30c2653d06020e91ce37698efdf638299af439c8aa48ffd5156b4d928f8",
+      "caseId": "CR-09",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-09-H1",
+      "sourceDate": "2026-03-04",
+      "characters": 158
+    },
+    {
+      "file": "CR-09-h2.html",
+      "sha256": "15e135af537fdaef5ab1dfb4de8bd27cd9d06ff335dc07e09c98628d42598bb8",
+      "caseId": "CR-09",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-09-H2",
+      "sourceDate": "2026-06-12",
+      "characters": 146
+    },
+    {
+      "file": "CR-10-current.html",
+      "sha256": "6f14e867367ba97df8550d2e254624fba527b6f8c89e64aeb3777fb8988cb8ad",
+      "caseId": "CR-10",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 158
+    },
+    {
+      "file": "CR-10-h1.html",
+      "sha256": "e04437b2ca6eec7d58a2541037950e4b86a6faa16a8ce2af1fcb9f73b7562113",
+      "caseId": "CR-10",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-10-H1",
+      "sourceDate": "2026-01-15",
+      "characters": 159
+    },
+    {
+      "file": "CR-10-h2.html",
+      "sha256": "527229523dcca342de9b4771e286bc262bcf2371eb2ee14cb31ae555fc5c5db7",
+      "caseId": "CR-10",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-10-H2",
+      "sourceDate": "2026-06-12",
+      "characters": 177
+    },
+    {
+      "file": "CR-11-current.html",
+      "sha256": "cc2ad8a651bc3f515a7bc4e762ac9cdbeb7a1aa390dd7353b26de6c988028533",
+      "caseId": "CR-11",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 184
+    },
+    {
+      "file": "CR-11-h1.html",
+      "sha256": "7aa4218d69c2362265d2d904b1b0ad9c7542e40cd16d79b34ca4dbd8b5fa9209",
+      "caseId": "CR-11",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-11-H1",
+      "sourceDate": "2026-01-15",
+      "characters": 235
+    },
+    {
+      "file": "CR-12-current.html",
+      "sha256": "d752c7bef733c491b54432e0263cb7ff2a44b4ce752f00c71138a231d446b349",
+      "caseId": "CR-12",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 185
+    },
+    {
+      "file": "CR-12-h1.html",
+      "sha256": "9bf572d4af0398455cb9130509b2c3f547eb817159d37acd9aed78a12591cba4",
+      "caseId": "CR-12",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-12-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 163
+    },
+    {
+      "file": "CR-13-current.html",
+      "sha256": "5059485defdb24e01ad46aeb63babab498c55e8ebf844456729228ef441ca86e",
+      "caseId": "CR-13",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 222
+    },
+    {
+      "file": "CR-13-h1.html",
+      "sha256": "064f1ee64c3dd341c553b9f8bc59dab9192dfb5e96204e7a81613e4373832743",
+      "caseId": "CR-13",
+      "kind": "wrong-patient",
+      "split": "held-out",
+      "recordId": "REC-CR-13-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 207
+    },
+    {
+      "file": "CR-14-current.html",
+      "sha256": "cc25dbc82d6cb80585f840c369dc91e91e0c0f26c9de8fa6bc41238b1d2ed9cc",
+      "caseId": "CR-14",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 167
+    },
+    {
+      "file": "CR-14-h1.html",
+      "sha256": "7ba5e240ac66cd7c1db07043e413f0ba08bcc810aa282202d25ad4366cb85597",
+      "caseId": "CR-14",
+      "kind": "superseded",
+      "split": "held-out",
+      "recordId": "REC-CR-14-H0",
+      "sourceDate": "2026-06-12",
+      "characters": 167
+    },
+    {
+      "file": "CR-14-h2.html",
+      "sha256": "f2f38f63839bd325b0a0a74d0c187fa04a11b51e273012015729b9b86b8cb98f",
+      "caseId": "CR-14",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-14-H1",
+      "sourceDate": "2026-06-15",
+      "characters": 265
+    },
+    {
+      "file": "CR-15-current.html",
+      "sha256": "f14c068253656c93a3a8d50d920dbcde0e17c025c8b9ee3f54ee45df2d527bd7",
+      "caseId": "CR-15",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 459
+    },
+    {
+      "file": "CR-15-h1.html",
+      "sha256": "87fd215020983ee342f6f9992201e4e58b5a6967eea4c0f6c9473867a601d45e",
+      "caseId": "CR-15",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-15-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 241
+    },
+    {
+      "file": "CR-16-current.html",
+      "sha256": "003c1698214c4404afdd72c5d01d7a4bbe1fca2b5b1524c0b5c4c583e441c4a0",
+      "caseId": "CR-16",
+      "kind": "current",
+      "split": "held-out",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 246
+    },
+    {
+      "file": "CR-16-h1.html",
+      "sha256": "bf3eae8d80d40de96838e4444bb6109e607f8f04ae4937dbd1a1899fffd0e68e",
+      "caseId": "CR-16",
+      "kind": "historical",
+      "split": "held-out",
+      "recordId": "REC-CR-16-H1",
+      "sourceDate": "2026-06-12",
+      "characters": 8726
+    },
+    {
+      "file": "DEV-01-current.html",
+      "sha256": "e31d1f1ef71963fff14d093a55a88c7f631cb711fa342da6e5292e84def8c47b",
+      "caseId": "DEV-01",
+      "kind": "current",
+      "split": "dev",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 209
+    },
+    {
+      "file": "DEV-01-h1.html",
+      "sha256": "47c213deda8f25f04d978bfecdecdff7b666bf26c8e3905fa613f6b33bdaacf1",
+      "caseId": "DEV-01",
+      "kind": "historical",
+      "split": "dev",
+      "recordId": "REC-DEV-01-H1",
+      "sourceDate": "2026-08-05",
+      "characters": 204
+    },
+    {
+      "file": "DEV-02-current.html",
+      "sha256": "306800463e4e816c5d7455c43519929a593525e7a04bcdadee58bae85167ec05",
+      "caseId": "DEV-02",
+      "kind": "current",
+      "split": "dev",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 198
+    },
+    {
+      "file": "DEV-02-h1.html",
+      "sha256": "9f375a0655ea3883483d965b4bd62f5ee4a9bcb89d99d69063199f52f9eb510b",
+      "caseId": "DEV-02",
+      "kind": "historical",
+      "split": "dev",
+      "recordId": "REC-DEV-02-H1",
+      "sourceDate": "2026-08-05",
+      "characters": 163
+    },
+    {
+      "file": "DEV-03-current.html",
+      "sha256": "00247aedaf0efabc34af8ded30b0817dab2b7e040b5ffb76cf4820c36bb28bb3",
+      "caseId": "DEV-03",
+      "kind": "current",
+      "split": "dev",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 235
+    },
+    {
+      "file": "DEV-03-h1.html",
+      "sha256": "83195bab2d4ec208fefed676f0237a2a3207c359c123aba8a34a117aa5d4ec3a",
+      "caseId": "DEV-03",
+      "kind": "historical",
+      "split": "dev",
+      "recordId": "REC-DEV-03-H1",
+      "sourceDate": "2026-08-05",
+      "characters": 244
+    },
+    {
+      "file": "DEV-04-current.html",
+      "sha256": "d66012253bf3312e71b0763c577b6a988e4994acd3dba260263bc19da893821c",
+      "caseId": "DEV-04",
+      "kind": "current",
+      "split": "dev",
+      "recordId": null,
+      "sourceDate": "2026-09-09",
+      "characters": 223
+    },
+    {
+      "file": "DEV-04-h1.html",
+      "sha256": "695befd7701a11534cba40f2dcf805214eb755a655388a39243b7d08484edf84",
+      "caseId": "DEV-04",
+      "kind": "historical",
+      "split": "dev",
+      "recordId": "REC-DEV-04-H1",
+      "sourceDate": "2026-08-05",
+      "characters": 140
+    },
+    {
+      "file": "INDEX.html",
+      "sha256": "f8a3f1d024f735c085ef26da2e5ee7c9fb78bd926c913ca3e505b214546cedec",
+      "caseId": null,
+      "kind": "index",
+      "split": null,
+      "recordId": null,
+      "sourceDate": null,
+      "characters": null
+    }
+  ]
+}
