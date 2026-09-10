@@ -23,7 +23,7 @@ Vigía es un asistente de captura e inteligencia de base instalada para equipos 
 
 ```
 hackpty/
-├── server/                      # Backend + Frontend (laptop)
+├── app/                         # Backend + Frontend (laptop)
 │   ├── src/
 │   │   ├── index.ts             # Hono entry point
 │   │   ├── provider/            # QVAC provider + LLM
@@ -169,16 +169,16 @@ Body: {pregunta: "¿Cuántos equipos en Brasil?"}
 
 ```bash
 # Build
-cd server && npm run build && cd dashboard && npm run build && cd ../..
+cd app && npm run build && cd dashboard && npm run build && cd ../..
 
 # Seed test data (optional)
-cd server && npm run seed && cd ..
+cd app && npm run seed && cd ..
 
 # Terminal 1: Backend
-cd server && npm start
+cd app && npm start
 
 # Terminal 2: Frontend (dev)
-cd server/dashboard && npm run dev
+cd app/dashboard && npm run dev
 
 # Open http://localhost:5173 (dev) or http://localhost:8787/dashboard (prod)
 ```
@@ -329,7 +329,7 @@ bash test-e2e.sh    # Auto health + query test
 ## 11. Contact & Support
 
 - **Project Lead**: Vigía team
-- **Main Docs**: `SETUP.md` (quick start), `server/README.md` (backend), `server/dashboard/README.md` (frontend)
+- **Main Docs**: `SETUP.md` (quick start), `app/README.md` (backend), `app/dashboard/README.md` (frontend)
 - **Code Issues**: Check logs in `evidencia/rendimiento.jsonl`
 - **License**: MIT (see LICENSE)
 

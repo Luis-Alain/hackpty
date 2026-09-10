@@ -4,7 +4,7 @@ PWA React + Vite + Tailwind v4 para visualizar y consultar la base de datos de e
 
 ## Resumen
 
-Interfaz web que se conecta al backend (`/server`) para:
+Interfaz web que se conecta al backend (`/app`) para:
 
 - **Tablero**: Visualizar lista de registros, agregados por país/modalidad/estado
 - **Consulta**: Hacer preguntas en lenguaje natural sobre los equipos (RAG)
@@ -26,7 +26,7 @@ Corre en navegador (localhost:5173 en dev, localhost:8787/dashboard en prod).
 ## Instalación
 
 ```bash
-cd server/dashboard
+cd app/dashboard
 npm install
 npm run build
 ```
@@ -48,7 +48,7 @@ npm run dev
 npm run build
 # Genera dist/ (servido por backend en /dashboard)
 
-npm start  # (desde /server)
+npm start  # (desde /app)
 # Luego accede http://localhost:8787/dashboard
 ```
 

@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const SCHEMA_VERSION = 1;
 export const RUN_ID = `${new Date().toISOString().slice(0, 10)}-${randomBytes(3).toString('hex')}`;
 
-// Ruta relativa desde server/src/ → ../../evidencia/rendimiento.jsonl
+// Ruta relativa desde app/src/ → ../../evidencia/rendimiento.jsonl
 export const RUTA = resolve(__dirname, '../../evidencia/rendimiento.jsonl');
 
 interface PerformanceRow {

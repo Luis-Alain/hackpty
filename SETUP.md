@@ -6,7 +6,7 @@ Guía paso a paso para correr el proyecto completo (backend + frontend).
 
 ```bash
 # Backend
-cd server
+cd app
 npm install
 
 # Dashboard
@@ -19,10 +19,10 @@ cd ../..
 
 ```bash
 # Backend: TypeScript → JavaScript
-cd server && npm run build && cd ..
+cd app && npm run build && cd ..
 
 # Dashboard: React + Vite
-cd server/dashboard && npm run build && cd ../..
+cd app/dashboard && npm run build && cd ../..
 ```
 
 ## 3. Seed Data (Opcional)
@@ -30,7 +30,7 @@ cd server/dashboard && npm run build && cd ../..
 Si quieres datos de prueba:
 
 ```bash
-cd server
+cd app
 npm run seed
 # Crea 5 registros con embeddings reales (~2-3 min, necesita GPU/modelo)
 cd ..
@@ -39,7 +39,7 @@ cd ..
 ## 4. Ejecutar Backend
 
 ```bash
-cd server
+cd app
 npm start
 # Escucha en http://localhost:8787
 # Espera mensajes:
@@ -53,7 +53,7 @@ npm start
 En otra terminal:
 
 ```bash
-cd server/dashboard
+cd app/dashboard
 npm run dev
 # Escucha en http://localhost:5173
 # Proxy: /api → http://localhost:8787
@@ -110,7 +110,7 @@ curl http://localhost:8787/api/dashboard/agregado?por=pais
 ## 8. E2E Test (Opcional)
 
 ```bash
-cd server
+cd app
 bash test-e2e.sh
 # Builds, starts server, queries health, cleanup
 # ✅ E2E test passed
@@ -120,7 +120,7 @@ bash test-e2e.sh
 
 ```
 hackpty/
-├── server/                     # Backend (Hono + SQLite + RAG)
+├── app/                       # Backend (Hono + SQLite + RAG)
 │   ├── src/
 │   │   ├── index.ts           # Entry point
 │   │   ├── provider/          # QVAC provider + LLM
@@ -194,7 +194,7 @@ PORT=5174 npm run dev  # Especificar puerto
 # Sin GPU: los queries funcionan pero seed tarda
 
 # Debug:
-cd server
+cd app
 npm run seed 2>&1 | head -50
 ```
 
@@ -202,10 +202,10 @@ npm run seed 2>&1 | head -50
 
 ```bash
 # Backend
-cd server && npx tsc --noEmit
+cd app && npx tsc --noEmit
 
 # Dashboard
-cd server/dashboard && npx tsc --noEmit
+cd app/dashboard && npx tsc --noEmit
 ```
 
 ## Performance Expectations

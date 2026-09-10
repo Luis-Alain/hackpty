@@ -30,7 +30,7 @@ Corre en un proceso Node + Hono en la laptop.
 ## Instalación
 
 ```bash
-cd server
+cd app
 npm install
 npm run build
 ```
@@ -111,7 +111,7 @@ Body: {pregunta: "¿Cuántos equipos hay en Brasil?"}
 ## Estructura de Carpetas
 
 ```
-server/
+app/
 ├── src/
 │   ├── index.ts                # Entry point (Hono boot)
 │   ├── provider/
@@ -185,7 +185,7 @@ QVAC_LOG_LEVEL=error   # Verbosidad de QVAC SDK (error|warn|info|debug)
 
 ## Métricas de Rendimiento
 
-Logs se guardan en `evidencia/rendimiento.jsonl` (relativo a `server/src`):
+Logs se guardan en `evidencia/rendimiento.jsonl` (relativo a `app/src`):
 
 ```json
 {

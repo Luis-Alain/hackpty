@@ -1,6 +1,0 @@
-{"schema_version":1,"run_id":"2026-09-10-c957be","timestamp_utc":"2026-09-10T03:37:37.676Z","host":"Luiss-MacBook-Pro.local","stage":"load","model":"Llama-3.2-1B-Instruct-Q4_0","status":"ok","load_ms":16974}
-{"schema_version":1,"run_id":"2026-09-10-342dc8","timestamp_utc":"2026-09-10T03:41:44.778Z","host":"Luiss-MacBook-Pro.local","stage":"provider_startup","status":"ok","provider_public_key":"82d03dea0825","startup_ms":8141}
-{"schema_version":1,"run_id":"2026-09-10-629426","timestamp_utc":"2026-09-10T03:42:19.276Z","host":"Luiss-MacBook-Pro.local","stage":"provider_startup","status":"ok","provider_public_key":"4bd924cd0e6f","startup_ms":7302}
-{"schema_version":1,"run_id":"2026-09-10-67257d","timestamp_utc":"2026-09-10T03:47:47.239Z","host":"Luiss-MacBook-Pro.local","stage":"provider_startup","status":"ok","provider_public_key":"c48808b06d4c","startup_ms":7797}
-{"schema_version":1,"run_id":"2026-09-10-f79c5a","timestamp_utc":"2026-09-10T03:48:49.355Z","host":"Luiss-MacBook-Pro.local","stage":"provider_startup","status":"ok","provider_public_key":"f6b016e59a46","startup_ms":7442}
-{"schema_version":1,"run_id":"2026-09-10-b93134","timestamp_utc":"2026-09-10T03:58:52.282Z","host":"Luiss-MacBook-Pro.local","stage":"provider_startup","status":"ok","provider_public_key":"825f67543aaf","startup_ms":7022}

@@ -3,8 +3,8 @@ node_modules/
 package-lock.json
 
 # Build artifacts
-server/dist/
-server/dashboard/dist/
+app/dist/
+app/dashboard/dist/
 *.log
 
 # Environment
@@ -14,9 +14,10 @@ server/dashboard/dist/
 
 # Runtime data
 evidencia/rendimiento.jsonl
-server/data/*.sqlite
-server/data/*.sqlite-shm
-server/data/*.sqlite-wal
+app/evidencia/rendimiento.jsonl
+app/data/*.sqlite
+app/data/*.sqlite-shm
+app/data/*.sqlite-wal
 
 # Models & credentials
 *.gguf
