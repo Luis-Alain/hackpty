@@ -30,7 +30,7 @@ export async function verifyAsset(asset: ModelAsset, directory: string): Promise
 }
 export async function verifyModels(projectRoot: string, directory: string, operation: Operation) {
   const data = await manifest(projectRoot);
-  const selected = data.models.filter(model => model.role === (operation === 'query' ? 'draft' : operation) || (operation === 'extract' && model.role === 'projector'));
+  const selected = data.models.filter(model => model.role === (operation === 'query' ? 'draft' : operation === 'review' ? 'review' : operation) || (operation === 'extract' && model.role === 'projector'));
   if (selected.length !== (operation === 'extract' ? 2 : 1)) throw new Error('Model manifest does not define the exact required model set.');
   const assets: VerifiedAsset[] = [];
   for (const asset of selected) assets.push(await verifyAsset(asset, directory));

@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- Isolated chart review UI check fixture (test doubles only). Identical to index.html except the
+     renderer module loads from the cell-local build; used only with --chart-review-ui-check. -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src data: 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>PsyRec · Local clinical documentation</title><link rel="stylesheet" href="style.css"></head>
 <body>
 <header><div class="brand">PsyRec<span>QVAC PSY</span></div><div class="header-note">Source first. Clinician approved.</div><span class="chip">LOCAL WORKSPACE</span><button id="lock" class="quiet" hidden>Lock vault</button></header>
@@ -18,4 +20,4 @@
 </section></main>
 <dialog id="consequences"><div class="eyebrow">SOURCE CORRECTION</div><h2>Review what will change</h2><p id="consequenceText"></p><p>Original approved revisions remain available in audit history. A new draft requires a new approval.</p><div class="actions"><button id="cancelCorrection" class="secondary">Keep current source</button><button id="confirmCorrection">Save correction</button></div></dialog>
 <dialog id="pairDialog"><div class="eyebrow">PRIVATE PHONE CAPTURE</div><h2>Pair this encounter</h2><p>Use the PsyRec native Android app to scan this invitation. Keep both devices on the same private Wi-Fi.</p><label for="lanAddress">PC address</label><select id="lanAddress"></select><button id="createInvite">Create two-minute invitation</button><img id="pairQr" alt="One-use pairing QR code" hidden><p id="pairStatus"></p><button id="closePair" class="secondary">Close</button></dialog>
-<script type="module" src="../../../dist/apps/desktop/renderer.js"></script></body></html>
+<script type="module" src="../../../.local/cells/C/dist/apps/desktop/renderer.js"></script></body></html>

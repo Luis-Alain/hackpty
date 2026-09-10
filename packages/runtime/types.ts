@@ -1,7 +1,7 @@
-export type Operation = 'extract' | 'draft' | 'query';
+export type Operation = 'extract' | 'draft' | 'query' | 'review';
 export interface QuerySource { sourceId: string; text: string }
 export interface ModelAsset {
-  id: string; role: 'extract' | 'projector' | 'draft'; constant: string;
+  id: string; role: 'extract' | 'projector' | 'draft' | 'review'; constant: string;
   filename: string; url: string; expectedBytes: number; sha256: string;
   modelType: 'llamacpp-completion';
 }
@@ -39,10 +39,13 @@ export interface RunMetrics {
   request: {
     history: PromptMessage[]; generationParams: Record<string, number>; responseFormat?: Record<string, unknown>;
     kvCache: false; stream: true; promptTemplateVersion: string;
-    sourceId?: string; context: unknown[];
+    sourceId?: string; context: unknown[]; captureThinking?: true;
     attachment?: { sha256: string; bytes: number; mime: string };
   };
-  output: { sha256: string; characters: number; stopReason?: string; contentDeltaCount: number; completionDoneObserved:true; finalPromiseResolved:true; terminationMethod:string };
+  output: { sha256: string; characters: number; stopReason?: string; contentDeltaCount: number; completionDoneObserved:true; finalPromiseResolved:true; terminationMethod:string;
+    /** Reasoning is retained only as counts/lengths; thinking text itself is never clinical evidence. */
+    thinking?: { captured: true; textLength: number; deltaCount: number };
+  };
   native: NativeStats;
   timings: {
     modelLoadWall: Measurement; nativeModelInitialization: Measurement;
@@ -68,4 +71,5 @@ export interface JobRequest {
   runId: string; operation: Operation; projectRoot: string; modelDirectory: string;
   tempDirectory: string; imageBase64?: string; mime?: string; text?: string;
   sourceId?: string; context: unknown[]; querySources?: QuerySource[]; extractionPromptProfile?: 'psyrec-extract-lines-v3';
+  reviewPacket?: import('../contracts/chart-review.js').ChartReviewPacket;
 }

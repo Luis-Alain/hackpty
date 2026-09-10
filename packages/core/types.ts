@@ -1,4 +1,5 @@
 import type { TransportIdentity, CaptureReceipt, PhoneLifecycleEvidence } from '../contracts/index.js';
+import type { ChartReviewPacket } from '../contracts/chart-review.js';
 import type { RunMetrics, RuntimeFailure } from '../runtime/types.js';
 
 // Test evidence is explicitly distinguishable and never passes the runtime export gate.
@@ -14,10 +15,17 @@ export interface ApprovedRecord { id: string; patientId: string; encounterId: st
 export interface Device { id: string; name: string; tokenHash: string; createdAt: string; revoked: boolean; encounterId: string }
 export type Receipt = CaptureReceipt;
 export type RunRecord = { encounterId: string; sourceRevision: number; operation: 'extract' | 'draft' } & ({ status?: 'succeeded'; metrics: Evidence; outputText?: string } | { status: 'failed'; evidence: RuntimeFailure; metrics?: never });
-export interface VaultState { version: 1; patients: Patient[]; encounters: Encounter[]; records: ApprovedRecord[]; devices: Device[]; transfers: Receipt[]; runs: RunRecord[]; queryRuns?: QueryRunRecord[]; goldTranscriptions?: HumanGoldTranscription[]; phoneEvidence?: { receivedAt: string; evidence: PhoneLifecycleEvidence }[]; transportIdentity?: TransportIdentity; physicalObservations?: { at: string; event: string; details: Record<string, unknown> }[] }
+export interface ChartReviewRunRecord {
+  id: string; patientId: string; encounterId: string; createdAt: string;
+  packet?: ChartReviewPacket; raw?: string; metrics?: Evidence;
+  status: 'answered' | 'rejected' | 'failed'; rejection?: string; failure?: RuntimeFailure;
+  invalidatedAt?: string | null; invalidationReason?: string;
+}
+export interface VaultState { version: 1; patients: Patient[]; encounters: Encounter[]; records: ApprovedRecord[]; devices: Device[]; transfers: Receipt[]; runs: RunRecord[]; queryRuns?: QueryRunRecord[]; chartReviews?: ChartReviewRunRecord[]; goldTranscriptions?: HumanGoldTranscription[]; phoneEvidence?: { receivedAt: string; evidence: PhoneLifecycleEvidence }[]; transportIdentity?: TransportIdentity; physicalObservations?: { at: string; event: string; details: Record<string, unknown> }[] }
 export interface InferencePort {
   extractImage(input: { bytes: Buffer; mime: string }): Promise<{ text: string; metrics: Evidence }>;
   answerApprovedNotes?(input: { question: string; sources: { sourceId: string; text: string }[] }): Promise<{ text: string; metrics: Evidence }>;
+  reviewChart?(input: { packet: ChartReviewPacket }): Promise<{ text: string; metrics: Evidence }>;
   draftFromSource(input: { text: string; sourceId: string; context: Excerpt[] }): Promise<{ text: string; metrics: Evidence }>;
 }
 

@@ -2,11 +2,13 @@ import { isDeepStrictEqual } from 'node:util';
 import { queryHistory } from '../runtime/prompts.js';
 import { scoreTranscription, SCORING_METHODS } from '../runtime/transcription-scoring.js';
 import { selectApprovedQueryExcerpts, revalidateApprovedQuerySources, validateApprovedQueryOutput } from './approved-query.js';
+import { buildChartReviewPacket, revalidateChartReviewEvidence, validateChartReviewOutput, ChartReviewBudgetError } from './chart-review.js';
 import { assertCompleteMetrics } from '../runtime/metrics.js';
 import type { TransportIdentity, PhoneLifecycleEvidence } from '../contracts/index.js';
+import type { ChartReviewResult } from '../contracts/chart-review.js';
 import { stablePhoneEvidence, validateStoredPhoneEvidence } from './phone-evidence.js';
 import type { Vault } from './vault.js';
-import type { VaultState, InferencePort, Encounter, Context, Evidence, ApprovedQueryAnswer, QueryRunRecord, HumanGoldTranscription } from './types.js';
+import type { VaultState, InferencePort, Encounter, Context, Evidence, ApprovedQueryAnswer, QueryRunRecord, ChartReviewRunRecord, HumanGoldTranscription } from './types.js';
 import type { RuntimeFailure } from '../runtime/types.js';
 import { randomUUID, createHash, timingSafeEqual, randomBytes } from 'node:crypto';
 
@@ -133,6 +135,13 @@ export class PsyRecService {
       discardDraft: Boolean(e.draft), historyImpact: 'Old approvals remain in the audit history and are excluded from future retrieval.' };
   }
   supersede(state: VaultState, encounterId: string) { for (const r of state.records) if (r.encounterId === encounterId && !r.supersededAt) r.supersededAt = now(); }
+  private invalidateStaleChartReviews(state: VaultState, patientId: string) {
+    for (const review of state.chartReviews ?? []) {
+      if (review.patientId !== patientId || review.status !== 'answered' || review.invalidatedAt || !review.packet) continue;
+      try { revalidateChartReviewEvidence(state, review.packet); }
+      catch { review.invalidatedAt = now(); review.invalidationReason = 'The reviewed source or an approved historical record changed; this chart review is bound to an earlier revision.'; }
+    }
+  }
   async reviewSource(encounterId: string, text: string, expectedRevision?: number) {
     text = requiredText(text, 'Source text');
     return this.change(s => {
@@ -142,6 +151,7 @@ export class PsyRecService {
       if (changed) { this.supersede(s, encounterId); e.source.revision++; e.draft = null; }
       if (!e.source.revision) e.source.revision = 1;
       e.source.text = text; e.source.reviewed = true; e.status = !changed && e.status === 'approved' ? 'approved' : e.draft ? 'draft-review' : 'source-reviewed';
+      if (changed) this.invalidateStaleChartReviews(s, e.patientId);
       return e.source;
     });
   }
@@ -205,6 +215,60 @@ export class PsyRecService {
     const record = this.approvedNotes(patientId).find(r => r.id === citation.recordId && r.sourceRevision === citation.sourceRevision);
     if (!record || record.text.slice(citation.start, citation.end) !== citation.quote) throw new Error('This citation is no longer current.');
     return { recordId: record.id, encounterId: record.encounterId, sourceRevision: record.sourceRevision, quote: citation.quote };
+  }
+
+  /** Read-only, unapproved assistance: chart reviews never enter approved history. */
+  async reviewChart(patientId: string, encounterId: string): Promise<ChartReviewResult> {
+    if (!this.runtime.reviewChart) throw new Error('The local chart review runtime is unavailable.');
+    const generation = this.generation, id = randomUUID(), createdAt = now();
+    let packet;
+    try { packet = buildChartReviewPacket(structuredClone(this.state()), patientId, encounterId, createdAt); }
+    catch (error) {
+      // A budget refusal is a recorded chart review outcome (status rejected), never a silent truncation.
+      if (error instanceof ChartReviewBudgetError && this.vault.state) {
+        await this.change(s => { (s.chartReviews ??= []).push({ id, patientId, encounterId, createdAt, status: 'rejected', rejection: (error as Error).message }); });
+      }
+      throw error;
+    }
+    let result: { text: string; metrics: Evidence };
+    try { result = await this.runtime.reviewChart({ packet }); }
+    catch (error) {
+      if (generation === this.generation && this.vault.state) {
+        const failure = (error as { evidence?: RuntimeFailure })?.evidence;
+        await this.change(s => { (s.chartReviews ??= []).push({ id, patientId, encounterId, createdAt, packet, status: 'failed', ...(failure?.status === 'failed' ? { failure } : {}), rejection: 'Local chart review inference failed; no result was accepted.' }); });
+      }
+      throw new Error('Local chart review inference failed. No result was accepted; available evidence remains encrypted.');
+    }
+    if (generation !== this.generation || !this.vault.state) throw new Error('Vault session changed; chart review output was discarded.');
+    const outcome = await this.change(s => {
+      const run: ChartReviewRunRecord = { id, patientId, encounterId, createdAt, packet, status: 'rejected', raw: result.text, metrics: result.metrics };
+      let review: ChartReviewResult | undefined;
+      try {
+        if (!('testDouble' in result.metrics)) {
+          assertCompleteMetrics(result.metrics);
+          if (result.metrics.operation !== 'review' || result.metrics.output.sha256 !== digest(result.text)) throw new Error('Chart review output and native evidence do not match.');
+        }
+        revalidateChartReviewEvidence(s, packet);
+        const output = validateChartReviewOutput(result.text, packet);
+        run.status = 'answered';
+        review = { reviewId: id, patientId, currentEncounterId: encounterId, output, raw: result.text,
+          modelIdentity: 'testDouble' in result.metrics ? 'test double (no model)' : `${result.metrics.model} (SDK ${result.metrics.sdkVersion})`,
+          coverage: packet.coverage, evidence: [packet.current, ...packet.historical], metrics: result.metrics,
+          validation: { schemaValid: true, evidenceIdsAuthorized: true, revalidatedAt: now() } };
+      } catch (error) { run.rejection = (error as Error).message; }
+      (s.chartReviews ??= []).push(run);
+      return { review, rejection: run.rejection };
+    });
+    if (!outcome.review) throw new Error(outcome.rejection);
+    return outcome.review;
+  }
+
+  resolveChartReviewEvidence(patientId: string, reviewId: string, evidenceId: string) {
+    const run = this.state().chartReviews?.find(r => r.id === reviewId && r.patientId === patientId && r.status === 'answered' && !r.invalidatedAt);
+    const evidence = run ? [run.packet.current, ...run.packet.historical].find(e => e.evidenceId === evidenceId) : undefined;
+    if (!run || !evidence) throw new Error('Chart review evidence is unavailable for this patient.');
+    revalidateChartReviewEvidence(this.state(), run.packet);
+    return { evidenceId: evidence.evidenceId, kind: evidence.kind, recordId: evidence.recordId, encounterId: evidence.encounterId, sourceRevision: evidence.sourceRevision, sourceDate: evidence.sourceDate, text: evidence.text };
   }
 
   async recordHumanGoldTranscription(encounterId: string, text: string, confirmedSynthetic: boolean, trustedInput: boolean) {
@@ -284,7 +348,9 @@ export class PsyRecService {
       const r = { id: randomUUID(), patientId: e.patientId, encounterId, sourceRevision, sourceText: e.source.text,
         text, draftId, modelDraftText: e.draft.text, clinicianEdited: text !== e.draft.text, approvedAt: now(), supersededAt: null, context: e.draft.context.excerpts,
         extractionMetrics: e.source.metrics, draftingMetrics: e.draft.metrics };
-      s.records.push(r); e.status = 'approved'; e.draft = null; return r;
+      s.records.push(r); e.status = 'approved'; e.draft = null;
+      this.invalidateStaleChartReviews(s, e.patientId);
+      return r;
     });
   }
   startPairing(encounterId, endpoint, certificateFingerprint) {

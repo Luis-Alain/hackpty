@@ -1,4 +1,5 @@
 import type { ApprovedQueryAnswer } from '../../packages/core/types.js';
+import type { ChartReviewResult } from '../../packages/contracts/chart-review.js';
 import type { PsyRecService } from '../../packages/core/service.js';
 export {};
 declare global { interface Window { psyrec: { call(method: string, ...args: any[]): Promise<any>; onLock(callback: () => void): void; } } }
@@ -7,6 +8,7 @@ const call = (method, ...args) => window.psyrec.call(method, ...args);
 let state: ReturnType<PsyRecService['snapshot']> | null, patientId = '', encounterId = '', busy = false, createVault = false, lastCapture = '';
 let physicalObserving = false;
 let lastQuery: ApprovedQueryAnswer | null = null;
+let lastChartReview: ChartReviewResult | null = null;
 const goldEdits = new Map<string, { text: string; confirmed: boolean }>();
 let pendingSource = '', pendingEncounter = '', pendingRevision = 0, sessionGeneration = 0;
 const edits = new Map<string, { revision: number; draftId: string; source: string; draft: string }>();
@@ -22,6 +24,64 @@ function clearQuery(preserveQuestion = false) {
   lastQuery = null;
   if (!preserveQuestion) $<HTMLTextAreaElement>('queryQuestion').value = '';
   $('queryAnswer').replaceChildren(); $('queryCoverage').replaceChildren(); $('queryMetrics').replaceChildren(); $('queryEvidence').hidden = true;
+}
+function clearChartReview() {
+  lastChartReview = null;
+  $('chartReviewCoverage').replaceChildren(); $('chartReviewFindings').replaceChildren(); $('chartReviewClarifications').replaceChildren();
+  $('chartReviewPassage').replaceChildren(); $('chartReviewPassage').hidden = true;
+  $('chartReviewMetrics').replaceChildren(); $('chartReviewEvidence').hidden = true;
+}
+const chartReviewStale = (result: ChartReviewResult) => {
+  if (!state || result.patientId !== patientId || result.currentEncounterId !== encounterId) return true;
+  const encounter = current();
+  const currentEvidence = result.evidence.find(item => item.kind === 'current');
+  if (!encounter || !currentEvidence || encounter.source.revision !== currentEvidence.sourceRevision || encounter.source.text.slice(currentEvidence.start, currentEvidence.end) !== currentEvidence.text) return true;
+  return result.evidence.some(item => item.kind === 'historical' && !state.records.some(r => r.id === item.recordId && r.patientId === patientId && !r.supersededAt && r.sourceRevision === item.sourceRevision && r.text.slice(item.start, item.end) === item.text));
+};
+const CHART_REVIEW_KINDS: [string, string][] = [['new', 'New'], ['changed', 'Changed'], ['unchanged', 'Unchanged'], ['resolved', 'Resolved'], ['conflict', 'Conflict'], ['unknown', 'Unknown / not documented']];
+function showChartReview(result: ChartReviewResult) {
+  lastChartReview = result;
+  const coverage = result.coverage;
+  $('chartReviewCoverage').textContent = 'Application-bound approved history · ' + coverage.historicalRecordsSupplied + ' of ' + coverage.historicalRecordsAvailable + ' current approved record(s) supplied'
+    + (coverage.dateRange.from ? ' · documented history ' + coverage.dateRange.from + ' → ' + coverage.dateRange.to : ' · no approved history supplied')
+    + ' · ' + coverage.charactersSupplied + ' characters sent to the local model.'
+    + (coverage.historicalRecordsAvailable === 0 ? ' No approved history exists for this patient; findings describe the current source only.' : '');
+  if (coverage.omitted.length) {
+    const list = document.createElement('ul');
+    for (const note of coverage.omitted) { const item = document.createElement('li'); item.textContent = 'Omitted: ' + note; list.append(item); }
+    $('chartReviewCoverage').append(list);
+  }
+  const chip = (evidenceId: string) => {
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary small'; button.textContent = evidenceId;
+    button.onclick = () => void action(async () => {
+      const generation = sessionGeneration, selected = patientId;
+      const passage = await call('resolveChartReviewEvidence', selected, result.reviewId, evidenceId);
+      if (generation !== sessionGeneration || selected !== patientId || lastChartReview?.reviewId !== result.reviewId) return;
+      const box = $('chartReviewPassage'); box.replaceChildren();
+      const meta = document.createElement('small');
+      meta.textContent = (passage.kind === 'current' ? 'Current reviewed source' : 'Approved record ' + (passage.recordId ?? '').slice(0, 8)) + ' · documented ' + passage.sourceDate + ' · source revision ' + passage.sourceRevision;
+      const quote = document.createElement('blockquote'); quote.textContent = passage.text || '(No excerpt supplied; see coverage omissions.)';
+      box.append(meta, quote); box.hidden = false;
+    });
+    return button;
+  };
+  const findings = $('chartReviewFindings'); findings.replaceChildren();
+  if (!result.output.findings.length) findings.textContent = 'The local model reported no findings within the supplied evidence.';
+  for (const [kind, label] of CHART_REVIEW_KINDS) {
+    const group = result.output.findings.filter(f => f.kind === kind);
+    if (!group.length) continue;
+    const section = document.createElement('section'), title = document.createElement('h3');
+    title.textContent = label + ' (' + group.length + ')'; section.append(title);
+    for (const finding of group) { const row = document.createElement('p'); row.textContent = finding.statement + ' '; row.append(...finding.evidenceIds.map(chip)); section.append(row); }
+    findings.append(section);
+  }
+  const clarifications = $('chartReviewClarifications'); clarifications.replaceChildren();
+  if (result.output.clarifications.length) {
+    const title = document.createElement('h3'); title.textContent = 'Still needs clarification (' + result.output.clarifications.length + ')'; clarifications.append(title);
+    for (const clarification of result.output.clarifications) { const row = document.createElement('p'); row.textContent = clarification.question + ' — Reason: ' + clarification.reason + ' '; row.append(...clarification.evidenceIds.map(chip)); clarifications.append(row); }
+  }
+  $('chartReviewMetrics').textContent = 'Model: ' + result.modelIdentity + '\nValidated and revalidated: ' + result.validation.revalidatedAt + '\n' + JSON.stringify(result.metrics, null, 2);
+  $('chartReviewEvidence').hidden = false;
 }
 function renderGoldStatus() {
   const reference = state?.goldTranscriptions?.filter(gold => gold.encounterId === encounterId).at(-1);
@@ -70,6 +130,7 @@ function refreshButtons() {
   const e = current();
   $<HTMLTextAreaElement>('queryQuestion').disabled = busy || !patientId;
   $<HTMLButtonElement>('askApprovedNotes').disabled = busy || !patientId || !state?.queryEnabled;
+  $<HTMLButtonElement>('askChartReview').disabled = busy || !e?.source.reviewed;
   $<HTMLTextAreaElement>('goldText').disabled = busy || !e?.capture;
   $<HTMLInputElement>('goldSynthetic').disabled = busy || !e?.capture;
   $<HTMLButtonElement>('saveGold').disabled = busy || !e?.capture || !$<HTMLTextAreaElement>('goldText').value.trim() || !$<HTMLInputElement>('goldSynthetic').checked;
@@ -137,6 +198,8 @@ async function refresh() {
     const data = await call('captureData', e.id); if (generation !== sessionGeneration) return; $<HTMLImageElement>('sourceImage').src = data ?? ''; $('sourceImage').hidden = !data; $('noImage').hidden = Boolean(data); lastCapture = e.capture?.id ?? '';
   }
   if (lastQuery && lastQuery.citations.some(citation => !state.records.some(record => record.id === citation.recordId && record.patientId === patientId && !record.supersededAt && record.sourceRevision === citation.sourceRevision && record.text.slice(citation.start, citation.end) === citation.quote))) { clearQuery(true); $('queryCoverage').textContent = 'An approved source changed. Ask again against the current notes.'; }
+  $('chartReview').hidden = !e?.source.reviewed;
+  if (lastChartReview && chartReviewStale(lastChartReview)) { clearChartReview(); $('chartReviewCoverage').textContent = 'The source or an approved record changed. Request a new chart review against the current chart.'; }
   await renderHistory(); refreshButtons();
 }
 async function renderHistory() {
@@ -163,6 +226,14 @@ $('queryForm').onsubmit = event => {
     showQuery(answer);
   }, 'Searching this patient’s approved notes locally…');
 };
+$('askChartReview').onclick = () => void action(async () => {
+  const generation = sessionGeneration, selected = patientId, selectedEncounter = encounterId;
+  clearChartReview();
+  const result = await call('reviewChart', selected, selectedEncounter) as ChartReviewResult;
+  if (generation !== sessionGeneration || selected !== patientId || encounterId !== selectedEncounter || result.patientId !== selected) return;
+  showChartReview(result);
+}, 'MedPsy is reviewing the chart locally…');
+
 $('goldText').oninput = () => { $<HTMLInputElement>('goldSynthetic').checked = false; rememberEdits(); refreshButtons(); };
 $('goldSynthetic').onchange = () => { rememberEdits(); refreshButtons(); };
 $('saveGold').onclick = event => void action(async () => {
@@ -176,7 +247,7 @@ $('saveGold').onclick = event => void action(async () => {
 $('unlockForm').onsubmit = event => { event.preventDefault(); void action(async () => { await call('unlock', $<HTMLInputElement>('passphrase').value, createVault); $<HTMLInputElement>('passphrase').value = ''; $('locked').hidden = true; $('workspace').hidden = false; $('lock').hidden = false; await refresh(); notice('Vault unlocked.'); }); };
 $('lock').onclick = () => void call('lock');
 window.psyrec.onLock(() => {
-  sessionGeneration++; clearQuery(); state = null; edits.clear(); goldEdits.clear(); patientId = encounterId = lastCapture = pendingSource = pendingEncounter = ''; pendingRevision = 0;
+  sessionGeneration++; clearQuery(); clearChartReview(); state = null; edits.clear(); goldEdits.clear(); patientId = encounterId = lastCapture = pendingSource = pendingEncounter = ''; pendingRevision = 0;
   $('attestPrintedSource').hidden = true; $('editor').dataset.encounterId = '';
   $('workspace').hidden = true; $('locked').hidden = false; $('lock').hidden = true; $('history').hidden = true;
   for (const id of ['sourceText', 'draftText', 'alias', 'passphrase', 'goldText']) $<HTMLInputElement>(id).value = '';
@@ -186,8 +257,8 @@ window.psyrec.onLock(() => {
   $<HTMLDialogElement>('pairDialog').close(); $<HTMLDialogElement>('consequences').close();
   void status(); notice('Vault locked.');
 });
-$('patientForm').onsubmit = event => { event.preventDefault(); void action(async () => { rememberEdits(); clearQuery(); const p = await call('addPatient', $<HTMLInputElement>('alias').value); patientId = p.id; $<HTMLInputElement>('alias').value = ''; await refresh(); }); };
-$('patient').onchange = () => void action(async () => { rememberEdits(); clearQuery(); patientId = $<HTMLSelectElement>('patient').value; encounterId = ''; await refresh(); });
+$('patientForm').onsubmit = event => { event.preventDefault(); void action(async () => { rememberEdits(); clearQuery(); clearChartReview(); const p = await call('addPatient', $<HTMLInputElement>('alias').value); patientId = p.id; $<HTMLInputElement>('alias').value = ''; await refresh(); }); };
+$('patient').onchange = () => void action(async () => { rememberEdits(); clearQuery(); clearChartReview(); patientId = $<HTMLSelectElement>('patient').value; encounterId = ''; await refresh(); });
 $('newEncounter').onclick = () => void action(async () => { rememberEdits(); const e = await call('addEncounter', patientId); rememberEdits(); encounterId = e.id; await refresh(); });
 $('importImage').onclick = () => void action(async () => { await call('import', encounterId); await refresh(); });
 $('extract').onclick = () => void action(async () => { await call('extract', encounterId); await refresh(); notice('Extraction complete. Check every line against the image.'); }, 'VisionPsy is loading and reading the image locally…');

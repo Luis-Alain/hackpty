@@ -10,10 +10,13 @@ import QRCode from 'qrcode';
 import { validateRequest, isTrustedUiUrl } from './ipc.js';
 import { PhysicalObserver } from './physical-observer.js';
 
-// Keep the isolated UI check off the inference GPU as well as out of QVAC.
-if (process.argv.includes('--query-ui-check')) app.disableHardwareAcceleration();
+// Keep the isolated UI checks off the inference GPU as well as out of QVAC.
+if (process.argv.includes('--query-ui-check') || process.argv.includes('--chart-review-ui-check')) app.disableHardwareAcceleration();
 const projectRoot = fileURLToPath(new URL('../../../', import.meta.url));
-const uiPath = join(projectRoot, 'apps/desktop/ui/index.html');
+// The chart review UI check runs this file from a cell-local build; PSYREC_UI_CHECK_ROOT names the real repository root and is honored only in that mode.
+const chartReviewUiCheck = process.argv.includes('--chart-review-ui-check');
+const checkRoot = chartReviewUiCheck && process.env.PSYREC_UI_CHECK_ROOT ? resolve(process.env.PSYREC_UI_CHECK_ROOT) : projectRoot;
+const uiPath = chartReviewUiCheck ? join(checkRoot, 'apps/desktop/ui/chart-review-check.html') : join(projectRoot, 'apps/desktop/ui/index.html');
 const uiUrl = pathToFileURL(uiPath).href;
 let window: BrowserWindow;
 let service: PsyRecService;
@@ -52,9 +55,14 @@ function touch() { clearTimeout(idleTimer); idleTimer = setTimeout(() => void lo
 async function startDesktop() {
 await app.whenReady();
 if (process.argv.includes('--query-ui-check')) {
-  if (process.argv.some(arg => ['--prepare-fold', '--workflow-evidence', '--workflow-reload-evidence', '--smoke'].includes(arg))) throw new Error('The isolated query check cannot be combined with other desktop modes.');
+  if (process.argv.some(arg => ['--prepare-fold', '--workflow-evidence', '--workflow-reload-evidence', '--smoke', '--chart-review-ui-check'].includes(arg))) throw new Error('The isolated query check cannot be combined with other desktop modes.');
   await mkdir(join(projectRoot, '.local'), { recursive: true });
   privateDirectory = await mkdtemp(join(projectRoot, '.local', 'query-ui-check-'));
+}
+if (chartReviewUiCheck) {
+  if (process.argv.some(arg => ['--prepare-fold', '--workflow-evidence', '--workflow-reload-evidence', '--smoke', '--query-ui-check'].includes(arg))) throw new Error('The isolated chart review check cannot be combined with other desktop modes.');
+  await mkdir(join(checkRoot, '.local', 'cells', 'C', 'ui-check'), { recursive: true });
+  privateDirectory = await mkdtemp(join(checkRoot, '.local', 'cells', 'C', 'ui-check', 'run-'));
 }
 await mkdir(privateDirectory, { recursive: true, mode: 0o700 });
 if (process.argv.includes('--prepare-fold')) {
@@ -68,6 +76,11 @@ if (process.argv.includes('--query-ui-check')) {
   if (!/^query-ui-check-[a-zA-Z0-9-]+$/.test(testRelative) || await new Vault(join(privateDirectory, 'psyrec.vault')).exists()) throw new Error('Query UI checks require a fresh dedicated test directory.');
   const { createQueryUiRuntime } = await import('./query-ui-check.js');
   runtime = createQueryUiRuntime();
+} else if (chartReviewUiCheck) {
+  const testRelative = relative(join(checkRoot, '.local', 'cells', 'C', 'ui-check'), privateDirectory);
+  if (!/^run-[a-zA-Z0-9-]+$/.test(testRelative) || await new Vault(join(privateDirectory, 'psyrec.vault')).exists()) throw new Error('Chart review UI checks require a fresh dedicated test directory.');
+  const { createChartReviewUiRuntime } = await import('./chart-review-ui-check.js');
+  runtime = createChartReviewUiRuntime();
 } else try {
   const module = await import(pathToFileURL(join(projectRoot, 'dist/packages/runtime/index.js')).href);
   runtime = new module.QvacRuntime({ projectRoot });
@@ -76,7 +89,7 @@ if (process.argv.includes('--query-ui-check')) {
 }
 service = new PsyRecService(new Vault(join(privateDirectory, 'psyrec.vault')), runtime);
 receiver = new CaptureServer(service, privateDirectory);
-window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--query-ui-check') && !process.argv.includes('--smoke') && !process.argv.includes('--workflow-evidence'), webPreferences: { offscreen: process.argv.includes('--query-ui-check'), backgroundThrottling: false, preload: join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
+window = new BrowserWindow({ width: 1400, height: 940, minWidth: 1050, minHeight: 700, title: 'PsyRec · QVAC Psy', backgroundColor: '#f3f5f5', show: !process.argv.includes('--query-ui-check') && !chartReviewUiCheck && !process.argv.includes('--smoke') && !process.argv.includes('--workflow-evidence'), webPreferences: { offscreen: process.argv.includes('--query-ui-check') || chartReviewUiCheck, backgroundThrottling: false, preload: chartReviewUiCheck ? join(checkRoot, '.local/cells/C/dist/apps/desktop/preload.cjs') : join(projectRoot, 'dist/apps/desktop/preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false, devTools: !app.isPackaged } });
 window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
 window.webContents.on('will-navigate', (event, url) => { if (!sameUiDocument(url)) event.preventDefault(); });
 session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
@@ -117,6 +130,8 @@ async function dispatch(method: string, args: any[]) {
     case 'approvedNotes': return service.approvedNotes(args[0], args[1]);
     case 'queryApprovedNotes': return service.queryApprovedNotes(args[0], args[1]);
     case 'resolveQueryCitation': return service.resolveQueryCitation(args[0], args[1], args[2]);
+    case 'reviewChart': return service.reviewChart(args[0], args[1]);
+    case 'resolveChartReviewEvidence': return service.resolveChartReviewEvidence(args[0], args[1], args[2]);
     case 'recordHumanGoldTranscription': return service.recordHumanGoldTranscription(args[0], args[1], args[2], args[3]);
     case 'revokeDevice': return service.revokeDevice(args[0]);
     case 'pair': {
@@ -174,6 +189,11 @@ if (process.argv.includes('--prepare-fold')) {
 if (process.argv.includes('--query-ui-check')) {
   const { runQueryUiCheck } = await import('./query-ui-check.js');
   const summary = await runQueryUiCheck(window, service, projectRoot, privateDirectory); console.log(JSON.stringify({ ...summary, privateTestDirectory: privateDirectory }));
+  await lock(); app.quit();
+}
+if (chartReviewUiCheck) {
+  const { runChartReviewUiCheck } = await import('./chart-review-ui-check.js');
+  const summary = await runChartReviewUiCheck(window, service, checkRoot, privateDirectory); console.log(JSON.stringify({ ...summary, privateTestDirectory: privateDirectory }));
   await lock(); app.quit();
 }
 if (process.argv.includes('--workflow-reload-evidence')) {
