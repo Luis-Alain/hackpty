@@ -1,10 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { scoreTranscription } from '../packages/runtime/transcription-scoring.js';
 import { loadOcrManifest, fixtureReference, scoreOutput, scoreOcrEvidence, sha256, type OcrFixture } from '../diagnostics/qvac-spike/ocr-score.js';
 import { OCR_BITMAP_FIXTURES, renderOcrBitmap, referenceText } from '../diagnostics/qvac-spike/ocr-fixtures/generate-bitmaps.js';
+import { runtimeTmpEntries, newRuntimeTmpEntries, assertRunLeavesNoNewRuntimeTmp } from '../diagnostics/qvac-spike/ocr-evaluation.js';
 
 const root = process.cwd();
 const fixtureDir = (...parts: string[]) => path.join(root, 'diagnostics/qvac-spike/ocr-fixtures', ...parts);
@@ -99,4 +101,28 @@ test('evidence binding rejects non-synthetic, mismatched and incomplete doubles'
   const wrongOutput = structuredClone(good); wrongOutput.result.metrics.output.sha256 = sha256('other text');
   assert.throws(() => scoreOcrEvidence(fixture, imageBytes, wrongOutput), /retained raw text/);
   assert.throws(() => scoreOcrEvidence(fixture, imageBytes, good), /Mandatory runtime evidence/); // binding ok, metrics incomplete
+});
+
+test('runtime-tmp assertion is scoped to entries created by this run (temporary directory double)', async t => {
+  const sandbox = await mkdtemp(path.join(tmpdir(), 'ocr-tmp-scope-'));
+  t.after(() => rm(sandbox, { recursive: true, force: true }));
+  const tmp = path.join(sandbox, '.local/runtime-tmp');
+  await mkdir(path.join(tmp, 'foreign-desktop-worker-a'), { recursive: true });
+  await mkdir(path.join(tmp, 'foreign-desktop-worker-b'), { recursive: true });
+
+  const before = await runtimeTmpEntries(sandbox);
+  assert.deepEqual(before.sort(), ['foreign-desktop-worker-a', 'foreign-desktop-worker-b']);
+  // Pre-existing foreign entries alone must not fail the run, and are listed by name only.
+  assertRunLeavesNoNewRuntimeTmp(before, await runtimeTmpEntries(sandbox));
+
+  // An entry created by this run and left behind must fail with a clear message.
+  await mkdir(path.join(tmp, 'this-run-leftover'));
+  const after = await runtimeTmpEntries(sandbox);
+  assert.deepEqual(newRuntimeTmpEntries(before, after), ['this-run-leftover']);
+  assert.throws(() => assertRunLeavesNoNewRuntimeTmp(before, after), /left new \.local\/runtime-tmp entries: this-run-leftover/);
+
+  // A missing .local/runtime-tmp directory reads as empty, not as an error.
+  const empty = await mkdtemp(path.join(tmpdir(), 'ocr-tmp-empty-'));
+  t.after(() => rm(empty, { recursive: true, force: true }));
+  assert.deepEqual(await runtimeTmpEntries(empty), []);
 });

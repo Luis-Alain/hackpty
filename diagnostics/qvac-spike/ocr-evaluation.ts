@@ -20,6 +20,25 @@ import { sha256, loadOcrManifest, fixtureReference, mimeForFixture } from './ocr
  *          artifacts/evidence/ocr-<run-id>-<fixtureId>-failure.json (on failure)
  *          artifacts/evidence/ocr-<run-id>-summary.json
  */
+/**
+ * Scoped runtime-tmp cleanliness: the desktop application's own runtime workers
+ * may leave foreign directories in .local/runtime-tmp that are not the runner's
+ * and must never be deleted. This run asserts only that no entries created by
+ * THIS run remain afterwards; pre-existing foreign entries are listed by name.
+ */
+export async function runtimeTmpEntries(root: string): Promise<string[]> {
+  return await readdir(path.join(root, '.local/runtime-tmp')).catch(() => [] as string[]);
+}
+
+export function newRuntimeTmpEntries(before: string[], after: string[]): string[] {
+  return after.filter(name => !before.includes(name));
+}
+
+export function assertRunLeavesNoNewRuntimeTmp(before: string[], after: string[]): void {
+  const created = newRuntimeTmpEntries(before, after);
+  assert.deepEqual(created, [], `This run left new .local/runtime-tmp entries: ${created.join(', ')}`);
+}
+
 export async function runOcrEvaluation(runId: string, root = process.cwd()) {
   if (!/^[a-zA-Z0-9-]+$/.test(runId)) throw new Error('Use a plain run id: [a-zA-Z0-9-]+.');
   const evidenceDir = path.join(root, 'artifacts/evidence');
@@ -38,6 +57,7 @@ export async function runOcrEvaluation(runId: string, root = process.cwd()) {
     runnable.push({ fixture, reference, bytes });
   }
   if (!runnable.length) throw new Error('No manifest fixture is ready with a scoring reference.');
+  const preExistingRuntimeTmpEntries = await runtimeTmpEntries(root);
   const outcomes: Record<string, unknown>[] = [];
   const { result: leaseOutcomes, lease } = await withGpuLease(async signal => {
     const runtime = new QvacRuntime({ projectRoot: root });
@@ -62,9 +82,9 @@ export async function runOcrEvaluation(runId: string, root = process.cwd()) {
     } finally { await runtime.close(); }
     return outcomes;
   });
-  const temporaryFilesRemaining = await readdir(path.join(root, '.local/runtime-tmp')).catch(() => []);
-  assert.deepEqual(temporaryFilesRemaining, []);
-  const summary = { schemaVersion: 1, synthetic: true, checkedAt: new Date().toISOString(), runId, scope: 'OCR extraction runs over registered synthetic fixtures with complete native metrics. Scoring is a separate offline step (ocr-score.ts). Not physical workflow acceptance.', fixtures: runnable.map(r => ({ fixtureId: r.fixture.id, medium: r.fixture.medium, split: r.fixture.split, imageSha256: sha256(r.bytes) })), outcomes: leaseOutcomes, lease, temporaryFilesRemaining };
+  const afterTmpEntries = await runtimeTmpEntries(root);
+  assertRunLeavesNoNewRuntimeTmp(preExistingRuntimeTmpEntries, afterTmpEntries);
+  const summary = { schemaVersion: 1, synthetic: true, checkedAt: new Date().toISOString(), runId, scope: 'OCR extraction runs over registered synthetic fixtures with complete native metrics. Scoring is a separate offline step (ocr-score.ts). Not physical workflow acceptance.', fixtures: runnable.map(r => ({ fixtureId: r.fixture.id, medium: r.fixture.medium, split: r.fixture.split, imageSha256: sha256(r.bytes) })), outcomes: leaseOutcomes, lease, preExistingRuntimeTmpEntries, newRuntimeTmpEntriesRemaining: newRuntimeTmpEntries(preExistingRuntimeTmpEntries, afterTmpEntries) };
   const summaryFile = path.join(evidenceDir, `ocr-${runId}-summary.json`);
   await writeFile(summaryFile, JSON.stringify(summary, null, 2), { flag: 'wx' });
   console.log(JSON.stringify({ summary: path.relative(root, summaryFile), outcomes: leaseOutcomes }));
