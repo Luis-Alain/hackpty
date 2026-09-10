@@ -18,3 +18,9 @@
 /artifacts/evidence/medpsy-*.json -text
 /artifacts/evidence/medpsy-verify-*/** -text
 /artifacts/evidence/ocr-*.json -text
+# Frozen suite, records and generated print pages are hash-bound (REVIEW-LOG section 4, print manifests): preserve exact bytes on every checkout.
+/diagnostics/qvac-spike/chart-review/suite/*.json -text
+/diagnostics/qvac-spike/chart-review/fixtures/records/*.txt -text
+/diagnostics/qvac-spike/fixtures/print-synthetic-chart-*.html -text
+/diagnostics/qvac-spike/ocr-fixtures/manifest.json -text
+/diagnostics/qvac-spike/ocr-fixtures/print/** -text
