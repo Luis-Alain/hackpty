@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type CampoEstado = 'Confirmed' | 'Reported' | 'Estimated' | 'Unknown';
 
@@ -123,9 +123,92 @@ export function Visita() {
 
   const [duplicadoCandidato, setDuplicadoCandidato] = useState<DuplicadoCandidato | null>(null);
 
+  const [grabando, setGrabando] = useState(false);
+  const [transcribiendo, setTranscribiendo] = useState(false);
+  const [procesandoFoto, setProcesandoFoto] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const fotoInputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     iniciarVisita();
   }, []);
+
+  const agregarAObservacion = (texto: string) => {
+    if (!texto.trim()) return;
+    setObservacion((prev) => (prev.trim() ? `${prev.trim()}\n${texto.trim()}` : texto.trim()));
+  };
+
+  const manejarGrabar = async () => {
+    if (grabando) {
+      mediaRecorderRef.current?.stop();
+      setGrabando(false);
+      return;
+    }
+
+    setError(null);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+      const recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+      recorder.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        await subirAudio(blob);
+      };
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setGrabando(true);
+    } catch (e) {
+      setError('No se pudo acceder al micrófono: ' + String(e));
+    }
+  };
+
+  const subirAudio = async (blob: Blob) => {
+    if (!visitaId) return;
+    setTranscribiendo(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append('audio', blob, 'observacion.webm');
+      const res = await fetch(`${API}/api/visita/${visitaId}/captura/audio`, {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+      agregarAObservacion(data.transcripcion);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setTranscribiendo(false);
+    }
+  };
+
+  const manejarSeleccionarFoto = async (file: File | undefined) => {
+    if (!file || !visitaId) return;
+    setProcesandoFoto(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append('foto', file);
+      const res = await fetch(`${API}/api/visita/${visitaId}/captura/foto`, {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+      agregarAObservacion(data.texto_extraido);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setProcesandoFoto(false);
+      if (fotoInputRef.current) fotoInputRef.current.value = '';
+    }
+  };
 
   const iniciarVisita = () => {
     fetch(`${API}/api/visita/nueva`, { method: 'POST' })
@@ -336,6 +419,37 @@ export function Visita() {
             rows={6}
             disabled={extrayendo}
           />
+
+          <div className="flex gap-2 items-center flex-wrap">
+            <button
+              onClick={manejarGrabar}
+              disabled={transcribiendo || !visitaId}
+              className={`px-3 py-2 rounded border text-sm disabled:opacity-50 ${
+                grabando ? 'bg-red-600 text-white border-red-600' : 'border-(--color-tinta)'
+              }`}
+            >
+              {grabando ? '⏹ Detener grabación' : '🎤 Grabar voz'}
+            </button>
+            {transcribiendo && <span className="text-sm opacity-70">Transcribiendo audio...</span>}
+
+            <button
+              onClick={() => fotoInputRef.current?.click()}
+              disabled={procesandoFoto || !visitaId}
+              className="px-3 py-2 rounded border border-(--color-tinta) text-sm disabled:opacity-50"
+            >
+              📷 Tomar foto de placa
+            </button>
+            {procesandoFoto && <span className="text-sm opacity-70">Leyendo placa...</span>}
+            <input
+              ref={fotoInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              capture="environment"
+              className="hidden"
+              onChange={(e) => manejarSeleccionarFoto(e.target.files?.[0])}
+            />
+          </div>
+
           <button
             onClick={manejarExtraer}
             disabled={extrayendo || !observacion.trim() || !visitaId}

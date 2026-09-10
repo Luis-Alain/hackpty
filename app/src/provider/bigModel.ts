@@ -1,4 +1,4 @@
-import { loadModel, completion, unloadModel } from '@qvac/sdk';
+import { loadModel, completion, unloadModel, transcribe, ocr, ModelType } from '@qvac/sdk';
 import { registrar } from '../metrics/performanceLog.js';
 
 export interface LoadedModel {
@@ -15,25 +15,33 @@ export async function cargar(opts: {
   ctx?: number;
   // 'llm' (default): completion, usa modelConfig snake_case (gpu_layers, ctx_size).
   // 'embedding': modelConfig con claves distintas (camelCase), sin ctx_size.
-  tipo?: 'llm' | 'embedding';
+  // 'stt'/'vision': modelType explícito, sin modelConfig (defaults del SDK).
+  tipo?: 'llm' | 'embedding' | 'stt' | 'vision';
 }): Promise<LoadedModel> {
   const t0 = performance.now();
   try {
-    const modelConfig =
-      opts.tipo === 'embedding'
-        ? {
-            device: opts.device ?? 'gpu',
-            gpuLayers: opts.device === 'cpu' ? 0 : 99,
-          }
-        : {
-            device: opts.device ?? 'gpu',
-            gpu_layers: opts.device === 'cpu' ? 0 : 99,
-            ctx_size: opts.ctx ?? 4096,
-          };
+    let modelConfig: Record<string, unknown> | undefined;
+    let modelType: string | undefined;
+
+    if (opts.tipo === 'embedding') {
+      modelConfig = { device: opts.device ?? 'gpu', gpuLayers: opts.device === 'cpu' ? 0 : 99 };
+    } else if (opts.tipo === 'stt') {
+      modelType = ModelType.whispercppTranscription;
+    } else if (opts.tipo === 'vision') {
+      modelType = ModelType.ggmlOcr;
+    } else {
+      modelConfig = {
+        device: opts.device ?? 'gpu',
+        gpu_layers: opts.device === 'cpu' ? 0 : 99,
+        ctx_size: opts.ctx ?? 4096,
+      };
+    }
+
     const modelId = await loadModel({
       modelSrc: opts.modelSrc,
-      modelConfig,
-    });
+      ...(modelType ? { modelType } : {}),
+      ...(modelConfig ? { modelConfig } : {}),
+    } as any);
     registrar({
       stage: 'load',
       model: opts.etiqueta,
@@ -62,9 +70,6 @@ export async function completar(modelo: LoadedModel, opts: {
 }): Promise<{ texto: string; ms: number }> {
   const t0 = performance.now();
   const timeout = opts.timeout ?? 60000;
-  const timeoutHandle = setTimeout(() => {
-    throw new Error('Completion timeout after ' + timeout + 'ms');
-  }, timeout);
 
   try {
     const generationParams: any = {};
@@ -72,19 +77,26 @@ export async function completar(modelo: LoadedModel, opts: {
     if (opts.temperature != null) generationParams.temp = opts.temperature;
     if (opts.seed != null) generationParams.seed = opts.seed;
 
-    let texto = '';
-    const run = completion({
-      modelId: modelo.modelId,
-      stream: true,
-      history: opts.history,
-      ...(Object.keys(generationParams).length > 0 ? { generationParams } : {}),
-    });
-
-    for await (const ev of run.events) {
-      if (ev.type === 'contentDelta' && ev.text) {
-        texto += ev.text;
+    const consumir = (async () => {
+      let acumulado = '';
+      const run = completion({
+        modelId: modelo.modelId,
+        stream: true,
+        history: opts.history,
+        ...(Object.keys(generationParams).length > 0 ? { generationParams } : {}),
+      });
+      for await (const ev of run.events) {
+        if (ev.type === 'contentDelta' && ev.text) {
+          acumulado += ev.text;
+        }
       }
-    }
+      return acumulado;
+    })();
+
+    // NOTA: setTimeout(() => { throw ... }) NO rechaza ninguna promesa (queda como
+    // excepción no capturada); el timeout anterior nunca se disparaba de verdad.
+    // withTimeout() sí rechaza correctamente esta promesa tras `timeout` ms.
+    const texto = await withTimeout(consumir, timeout, 'Completion');
 
     const ms = Math.round(performance.now() - t0);
     registrar({
@@ -104,9 +116,71 @@ export async function completar(modelo: LoadedModel, opts: {
       end_to_end_ms: Math.round(performance.now() - t0),
     });
     throw e;
-  } finally {
-    clearTimeout(timeoutHandle);
   }
+}
+
+export async function transcribirAudio(
+  modelo: LoadedModel,
+  audioChunk: Buffer,
+  opts: { timeout?: number } = {}
+): Promise<{ texto: string; ms: number }> {
+  const t0 = performance.now();
+  const timeout = opts.timeout ?? 30000;
+  try {
+    const texto = await withTimeout(
+      transcribe({ modelId: modelo.modelId, audioChunk }),
+      timeout,
+      'Transcripción'
+    );
+    const ms = Math.round(performance.now() - t0);
+    registrar({ stage: 'transcribe', model: modelo.etiqueta, status: 'ok', end_to_end_ms: ms });
+    return { texto: texto.trim(), ms };
+  } catch (e) {
+    registrar({
+      stage: 'transcribe',
+      model: modelo.etiqueta,
+      status: 'error',
+      error: String(e),
+      end_to_end_ms: Math.round(performance.now() - t0),
+    });
+    throw e;
+  }
+}
+
+export async function extraerTextoImagen(
+  modelo: LoadedModel,
+  image: Buffer,
+  opts: { timeout?: number } = {}
+): Promise<{ texto: string; ms: number }> {
+  const t0 = performance.now();
+  const timeout = opts.timeout ?? 30000;
+  try {
+    const { blocks } = ocr({ modelId: modelo.modelId, image });
+    const resultado = await withTimeout(blocks, timeout, 'OCR');
+    const texto = resultado.map((b) => b.text).join('\n').trim();
+    const ms = Math.round(performance.now() - t0);
+    registrar({ stage: 'ocr', model: modelo.etiqueta, status: 'ok', end_to_end_ms: ms, blocks: resultado.length });
+    return { texto, ms };
+  } catch (e) {
+    registrar({
+      stage: 'ocr',
+      model: modelo.etiqueta,
+      status: 'error',
+      error: String(e),
+      end_to_end_ms: Math.round(performance.now() - t0),
+    });
+    throw e;
+  }
+}
+
+function withTimeout<T>(promise: Promise<T>, ms: number, etiqueta: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const handle = setTimeout(() => reject(new Error(`${etiqueta} timeout after ${ms}ms`)), ms);
+    promise.then(
+      (v) => { clearTimeout(handle); resolve(v); },
+      (e) => { clearTimeout(handle); reject(e); }
+    );
+  });
 }
 
 export async function descargar(modelo: LoadedModel): Promise<void> {

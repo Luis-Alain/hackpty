@@ -1,6 +1,9 @@
 import { Hono } from 'hono';
 import { obtenerModeloLLM } from '../provider/llmCache.js';
 import { obtenerModeloEmbedding } from '../provider/embedCache.js';
+import { obtenerModeloSTT } from '../provider/sttCache.js';
+import { obtenerModeloVision } from '../provider/visionCache.js';
+import { transcribirAudio, extraerTextoImagen } from '../provider/bigModel.js';
 import { extraerEstructura, derivarResultado, CAMPOS_ORDEN, type CampoNombre } from '../rag/extraction.js';
 import { generarPreguntas, parsearRespuesta } from '../rag/followup.js';
 import { embedTexto, resumenDe } from '../rag/embeddings.js';
@@ -30,6 +33,124 @@ visitaRouter.post('/api/visita/nueva', (c) => {
     return c.json({ visita_id: visitaId, estado: 'en_progreso' }, 201);
   } catch (e) {
     return c.json({ error: String(e) }, 500);
+  }
+});
+
+const MAX_AUDIO_BYTES = 15 * 1024 * 1024; // 15MB
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10MB
+
+visitaRouter.post('/api/visita/:id/captura/audio', async (c) => {
+  const t0 = performance.now();
+  try {
+    const visitaId = Number(c.req.param('id'));
+    if (!Number.isInteger(visitaId)) {
+      return c.json({ error: 'id de visita inválido' }, 400);
+    }
+    if (!visitaRepo.obtenerVisita(visitaId)) {
+      return c.json({ error: 'Visita no encontrada' }, 404);
+    }
+
+    const body = await c.req.parseBody();
+    const audio = body['audio'];
+    if (!(audio instanceof File)) {
+      return c.json({ error: 'Falta el archivo de audio (campo "audio")' }, 400);
+    }
+    if (audio.size === 0) {
+      return c.json({ error: 'Audio vacío' }, 400);
+    }
+    if (audio.size > MAX_AUDIO_BYTES) {
+      return c.json({ error: 'Audio muy grande (max 15MB)' }, 400);
+    }
+
+    let modelo;
+    try {
+      modelo = await obtenerModeloSTT();
+    } catch (e) {
+      return c.json(
+        { error: 'Modelo de transcripción no disponible en este momento. Escribe la observación manualmente.' },
+        503
+      );
+    }
+
+    const buffer = Buffer.from(await audio.arrayBuffer());
+    const { texto } = await transcribirAudio(modelo, buffer);
+
+    registrar({
+      stage: 'visita_captura_audio',
+      status: 'ok',
+      visita_id: visitaId,
+      bytes: audio.size,
+      end_to_end_ms: Math.round(performance.now() - t0),
+    });
+
+    return c.json({ transcripcion: texto });
+  } catch (e) {
+    registrar({
+      stage: 'visita_captura_audio',
+      status: 'error',
+      error: String(e),
+      end_to_end_ms: Math.round(performance.now() - t0),
+    });
+    return c.json({ error: 'No se pudo transcribir el audio. Escribe la observación manualmente.' }, 500);
+  }
+});
+
+visitaRouter.post('/api/visita/:id/captura/foto', async (c) => {
+  const t0 = performance.now();
+  try {
+    const visitaId = Number(c.req.param('id'));
+    if (!Number.isInteger(visitaId)) {
+      return c.json({ error: 'id de visita inválido' }, 400);
+    }
+    if (!visitaRepo.obtenerVisita(visitaId)) {
+      return c.json({ error: 'Visita no encontrada' }, 404);
+    }
+
+    const body = await c.req.parseBody();
+    const foto = body['foto'];
+    if (!(foto instanceof File)) {
+      return c.json({ error: 'Falta el archivo de imagen (campo "foto")' }, 400);
+    }
+    if (foto.size === 0) {
+      return c.json({ error: 'Imagen vacía' }, 400);
+    }
+    if (foto.size > MAX_IMAGE_BYTES) {
+      return c.json({ error: 'Imagen muy grande (max 10MB)' }, 400);
+    }
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(foto.type)) {
+      return c.json({ error: 'Formato de imagen no soportado (usa JPEG, PNG o WebP)' }, 400);
+    }
+
+    let modelo;
+    try {
+      modelo = await obtenerModeloVision();
+    } catch (e) {
+      return c.json(
+        { error: 'Modelo de visión no disponible en este momento. Describe la placa manualmente.' },
+        503
+      );
+    }
+
+    const buffer = Buffer.from(await foto.arrayBuffer());
+    const { texto } = await extraerTextoImagen(modelo, buffer);
+
+    registrar({
+      stage: 'visita_captura_foto',
+      status: 'ok',
+      visita_id: visitaId,
+      bytes: foto.size,
+      end_to_end_ms: Math.round(performance.now() - t0),
+    });
+
+    return c.json({ texto_extraido: texto });
+  } catch (e) {
+    registrar({
+      stage: 'visita_captura_foto',
+      status: 'error',
+      error: String(e),
+      end_to_end_ms: Math.round(performance.now() - t0),
+    });
+    return c.json({ error: 'No se pudo procesar la imagen. Describe la placa manualmente.' }, 500);
   }
 });
 
