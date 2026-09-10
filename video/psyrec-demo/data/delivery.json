@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-09-10T02:26:18.089Z",
+  "files": [
+    {
+      "file": "out/psyrec-demo-cut1.mp4",
+      "bytes": 10015010,
+      "sha256": "5cd1cef324e04cdf3e9930f45d8f5d820a5f2acd689050ee0e5ca406a6f1fdad"
+    },
+    {
+      "file": "review/contact-sheet.png",
+      "bytes": 1159908,
+      "sha256": "96db4899585369057ba83e85375cc0e17f796255448fe1fecd432afec32aacd3"
+    },
+    {
+      "file": "index.html",
+      "bytes": 39952,
+      "sha256": "e54d2d77fb16495662e6d4d9bcc828502a66721f8daacebae11a74a784d5bdc8"
+    },
+    {
+      "file": "scenes.css",
+      "bytes": 2351,
+      "sha256": "58661fe60882b0950650eaa16971146c4055c909a552dcb5bb5fa4a7c9f711eb"
+    },
+    {
+      "file": "audio/manifest.json",
+      "bytes": 10016,
+      "sha256": "bb5b7fed75e724353bf10071ebe14d450a3a1c463d06ccf468c214f6548ee464"
+    },
+    {
+      "file": "data/results.json",
+      "bytes": 338,
+      "sha256": "f3b58b557ba41d3abaafecee719b6932015da181bd72185b8346f5e554ff31d9"
+    }
+  ],
+  "duration": 177.7,
+  "frameRate": 30,
+  "width": 1920,
+  "height": 1080,
+  "pendingResults": true
+}

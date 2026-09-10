@@ -1,0 +1,236 @@
+{
+  "generatedAt": "2026-09-10T01:57:04.311Z",
+  "provider": "ElevenLabs",
+  "model": "eleven_multilingual_v2",
+  "voice": {
+    "id": "Bh4tkGuEEIADxUACafG5",
+    "name": "Lucy - Warm Latin Spanish Female",
+    "labels": {
+      "language": "es",
+      "age": "middle_aged",
+      "descriptive": "calm",
+      "gender": "female",
+      "accent": "latin american",
+      "use_case": "narrative_story"
+    },
+    "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+  },
+  "settings": {
+    "stability": 0.7,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 0.85
+  },
+  "paddingSeconds": 0.6,
+  "timingMethod": "ffprobe format.duration seconds; scene = ceil((duration + 0.6) * 30) / 30",
+  "scenes": [
+    {
+      "id": "S1",
+      "text": "PsyRec convierte la foto de una nota clínica impresa en un registro revisado por el profesional. Todo ocurre en el equipo local: la captura en Android, la lectura y la comparación en un PC con Windows. Este ejemplo es completamente sintético.",
+      "file": "audio/s1.mp3",
+      "duration": 19.783401,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "cb96c3128219da33577c1f6bab3efb0cc80a26040d098e292d617b41cb520ca0",
+      "sha256": "fb8484e308974c50407b6740e1f27b4c9b4828fd8bd5da28c5213547535a44ee",
+      "budget": 20,
+      "sceneDuration": 20.4
+    },
+    {
+      "id": "S2",
+      "text": "La pregunta que guía la revisión es simple: qué cambió desde la visita anterior y qué falta aclarar. VisionPsy lee la nota; MedPsy compara los hechos documentados; la aplicación controla qué evidencia ve el modelo.",
+      "file": "audio/s2.mp3",
+      "duration": 18.668844,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "8b4a154f54c5b384b9a56afbed56afd1ba599ddbc89feef97c8c800435dc8a53",
+      "sha256": "419a415dc5d4bbcbbdf4d18b29b9061a429592d9bdfd164461640ba2908ca467",
+      "budget": 25,
+      "sceneDuration": 19.3
+    },
+    {
+      "id": "S3",
+      "text": "El teléfono fotografía la nota impresa y la guarda cifrada en su cola. Se empareja con el encuentro leyendo el QR del PC, verifica el certificado del PC y envía la foto. La captura pendiente sólo se borra cuando llega el recibo de guardado.",
+      "file": "audio/s3.mp3",
+      "duration": 20.897959,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "3ac4dba7037e2f2ba24227558b692b45e16d041a246e42bf3f9111f5c5657bf5",
+      "sha256": "18de2ac196c78826ee1742bfcdf01c9c04b9da4fc76daf06bacd140c79effc62",
+      "budget": 30,
+      "sceneDuration": 21.5
+    },
+    {
+      "id": "S4",
+      "text": "VisionPsy extrae el texto. El profesional compara cada línea con la imagen y corrige la fuente; una línea ilegible queda marcada como incierta. La referencia humana permite medir la tasa de error por palabra y por carácter.",
+      "file": "audio/s4.mp3",
+      "duration": 18.343764,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "b2cb299fa3f29aa509789efcd05936869027ff2d8ce3305045eb9b33e014a18b",
+      "sha256": "d549870de50e833d691ed238971c25e6f959266165db96ce57c5a31ce475f9d3",
+      "budget": 35,
+      "sceneDuration": 18.966666666666665
+    },
+    {
+      "id": "S5",
+      "text": "MedPsy compara la nota revisada con los registros aprobados del mismo paciente. Cada hallazgo cita la evidencia que lo respalda y su fecha. Un conflicto entre dos registros se muestra como conflicto; una dosis no documentada se declara desconocida, nunca se inventa. Nada de esto entra en el registro hasta que el profesional aprueba un documento.",
+      "file": "audio/s5.mp3",
+      "duration": 27.724626,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "466e0ade2022ec23bfb75e2c4e20dfa2c2f068b1d96e585f0fa7d9ef65c15794",
+      "sha256": "feac805af8c498f002de451a2c8707c6e22cb671af809806bb4bdcaa32d32cb4",
+      "budget": 50,
+      "sceneDuration": 28.333333333333332
+    },
+    {
+      "id": "S6",
+      "text": "El borrador se limita a la fuente revisada. El profesional lee el texto exacto y lo aprueba. El registro se guarda cifrado; al bloquear y volver a abrir, el texto aprobado se conserva y el historial muestra sólo al paciente seleccionado.",
+      "file": "audio/s6.mp3",
+      "duration": 19.040363,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "1fbc8eebd44fc52ae2400209f3e6868bdd51510877095ce9a542bce1aa349c05",
+      "sha256": "ce9b5f2f02c70fdbfafa77d6a54f373da8c7672f2d1353e917071678b61f237f",
+      "budget": 30,
+      "sceneDuration": 19.666666666666668
+    },
+    {
+      "id": "S7",
+      "text": "Medimos sobre una suite sintética congelada, confirmada por un revisor humano antes de ejecutar los modelos: cobertura de hechos, afirmaciones no respaldadas, validez del JSON y rendimiento nativo. Los números en pantalla salen de los registros de evidencia del repositorio.",
+      "file": "audio/s7.mp3",
+      "duration": 22.430476,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "3556feafa956fff2e8343591ca2673d0c53f5b1347f98f7bb3ef45bd3974fb10",
+      "sha256": "81f6d2249471f162a13dde0fff6fadfa0a6f416885ca23250dead1c73072b661",
+      "budget": 50,
+      "sceneDuration": 23.033333333333335
+    },
+    {
+      "id": "S8",
+      "text": "Los límites son parte del resultado: la suite es pequeña y sintética, no hay validación clínica, y en esta versión del SDK el modo de razonamiento no puede combinarse con la salida estructurada. Cada afirmación del video está ligada a un archivo de evidencia.",
+      "file": "audio/s8.mp3",
+      "duration": 20.851519,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "be1acdcc584d54b90eaaae1a43338157d3824cea91363d978d8d7656c0d2f5a9",
+      "sha256": "87e114eec6ca135e1b602425c08f91258bcbb431a5b352b6058270bc1403a40c",
+      "budget": 30,
+      "sceneDuration": 21.466666666666665
+    },
+    {
+      "id": "S9",
+      "text": "PsyRec: local, verificable y revisado por humanos.",
+      "file": "audio/s9.mp3",
+      "duration": 4.411791,
+      "voice": {
+        "id": "Bh4tkGuEEIADxUACafG5",
+        "name": "Lucy - Warm Latin Spanish Female",
+        "labels": {
+          "language": "es",
+          "age": "middle_aged",
+          "descriptive": "calm",
+          "gender": "female",
+          "accent": "latin american",
+          "use_case": "narrative_story"
+        },
+        "selection": "Account voice list; Latin American Spanish with neutral/calm narration preference."
+      },
+      "signature": "054d9f2db51b875ba5e145ec36e6c1aa95a9d85b9eff94314a4726d5e6dc35e0",
+      "sha256": "4a129361711b3ae108ab8d9f44598b3e8937464d2719303e5aec6b66414a16a4",
+      "budget": 15,
+      "sceneDuration": 5.033333333333333
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-09-10T01:48:00Z",
+  "provider": "Higgsfield (MCP), model kling3_0_turbo, 1080p, 6 s, 16:9",
+  "synthetic": true,
+  "noPeople": true,
+  "clips": [
+    {
+      "file": "broll-02-encrypted-transfer.mp4",
+      "scene": "S3",
+      "jobId": "7c4ee82c-8ae9-4217-ac90-2efa021280d0",
+      "prompt": "Minimal abstract motion graphics on a dark ink background: a small folded paper note on the left dissolves into fine glowing teal particles that flow along a thin luminous line toward a laptop silhouette on the right and reassemble as a sealed envelope, elegant, slow, no text, no people, no logos, silent",
+      "bytes": 3652656,
+      "sha256": "4e453bb4d9221f7aceccab31b977dd5e4c2c1e208837fd4bf64eaaa13b58a1c6",
+      "status": "accepted"
+    },
+    {
+      "file": "broll-04-desk-blank.mp4",
+      "scene": "S1",
+      "jobId": "04e60708-4ac6-4fff-b8b2-9a940eb19dad",
+      "status": "accepted",
+      "prompt": "Top-down cinematic shot of a single blank cream sheet of paper with only faint printed ruled lines and no writing at all, lying on a plain light wooden desk, a smartphone held steady above it in camera mode framing the sheet, hand partly visible at the edge, soft window daylight, shallow depth of field, very slow push-in, no faces, no letters, no words, muted teal and cream palette, calm documentary realism, silent",
+      "bytes": 6086630,
+      "sha256": "38b4ae21e9af33b06a0de390220f201055c9e8a3d765eba1f43b50892515f4e4"
+    },
+    {
+      "file": "broll-05-laptop-blank.mp4",
+      "scene": "S7",
+      "jobId": "67f91309-9d2f-4a82-9f74-c1826ddae239",
+      "status": "accepted",
+      "prompt": "Close-up of a modern laptop on a tidy clinic desk at dusk, its screen showing only a soft blurred teal and white interface with abstract blocks and no letters, a blank cream sheet of paper beside it with no writing, slow lateral dolly, cinematic shallow focus, quiet focused atmosphere, no people, no words, no logos, silent",
+      "bytes": 5298611,
+      "sha256": "35dc1f6252cb7c1c85d150334cc4d0912b2279a459d65da640a6f0d44dbff105"
+    }
+  ],
+  "reviewedAt": "2026-09-10T01:56:00Z",
+  "tasteGate": "Claude Fable 5.1 coordinator reviewed a mid-clip frame of each generation; clips showing generated pseudo-text were rejected and re-rolled with blank pages.",
+  "rejected": [
+    {
+      "file": "broll-01-desk-note.mp4",
+      "scene": "S1",
+      "jobId": "62ff5e99-028d-4b11-8125-073dc64ac90b",
+      "prompt": "Top-down cinematic shot of a single printed page lying on a plain light wooden desk, a smartphone held steady above it framing the page for a photograph, soft daylight from a window, shallow depth of field, very slow push-in, no people, no hands visible, no readable text on the page, muted teal and cream palette, calm documentary realism, silent",
+      "bytes": 6180702,
+      "sha256": "cb923b6d1f9203b4e40b7852d47f06f80c4bdc79ef968b1210eac6d08aceeb32",
+      "status": "rejected",
+      "reason": "generated pseudo-text on paper/screen (coordinator taste gate); file moved to .local/broll-rejected, not shipped"
+    },
+    {
+      "file": "broll-03-laptop-dusk.mp4",
+      "scene": "S7",
+      "jobId": "341fcd72-9e34-495e-bd80-edb94b587396",
+      "prompt": "Close-up of a modern laptop on a tidy clinic desk at dusk, screen glowing soft teal, a printed page beside it, slow lateral dolly, cinematic shallow focus, quiet focused atmosphere, no people, no readable text, no logos, silent",
+      "bytes": 5686162,
+      "sha256": "0c03bf07a24335fa28784fc6c05cb6db54dd7fd680d3c9cc28fb57605cf27c12",
+      "status": "rejected",
+      "reason": "generated pseudo-text on paper/screen (coordinator taste gate); file moved to .local/broll-rejected, not shipped"
+    }
+  ]
+}

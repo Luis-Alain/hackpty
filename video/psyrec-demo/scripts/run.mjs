@@ -1,0 +1,15 @@
+import { spawn } from 'node:child_process';
+import { mkdirSync, createWriteStream } from 'node:fs';
+import { root, localEnv, cli, report } from './lib.mjs';
+import { build } from './build.mjs';
+const mode = process.argv[2];
+await build();
+if (mode === 'render') await import('./check.mjs');
+mkdirSync('out', { recursive: true });
+const args = mode === 'dev' ? ['preview', '.', '--foreground'] : mode === 'render' ? ['render', '.', '-o', 'out/psyrec-demo-cut1.mp4', '--fps', '30', '--resolution', 'landscape', '--quality', 'standard', '--workers', '4', '--no-browser-gpu', '--no-best-effort', '--strict'] : [mode, ...process.argv.slice(3)];
+report(`Command: \`node ${cli.replace(root, '')} ${args.join(' ')}\` (local cache/profile/temp environment; telemetry disabled).`);
+const log = createWriteStream(`out/${mode}.log`);
+const child = spawn(process.execPath, [cli, ...args], { cwd: root, env: localEnv(), windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+for (const stream of [child.stdout, child.stderr]) stream.on('data', data => { process.stdout.write(data); log.write(data); });
+child.on('error', e => { report(`Command startup failed: ${e.message}`); process.exitCode = 1; });
+child.on('exit', code => { log.end(); report(`Command ${mode} exit code: ${code}; log: \`out/${mode}.log\`.`); process.exitCode = code ?? 1; });

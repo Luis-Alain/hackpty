@@ -1,0 +1,191 @@
+[
+    {
+        "id":  "CR-05",
+        "split":  "held-out",
+        "category":  "missing-dose",
+        "categories":  [
+                           "missing-dose",
+                           "unclear-marker",
+                           "medication-status"
+                       ],
+        "title":  "Illegible dose marked [unclear] and a dose never documented",
+        "patient":  {
+                        "patientId":  "SYN-CHART-A",
+                        "alias":  "SYNTHETIC CHART A"
+                    },
+        "current":  {
+                        "encounterId":  "ENC-CR-05-CUR",
+                        "sourceDate":  "2026-09-09",
+                        "text":  "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nMedication: amlodipine [unclear] mg once daily; the dose in the scanned source is not legible.\nMedication: cetirizine at night, dose not documented."
+                    },
+        "historical":  [
+                           {
+                               "recordId":  "REC-CR-05-H1",
+                               "encounterId":  "ENC-CR-05-H1",
+                               "sourceDate":  "2026-06-12",
+                               "text":  "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nMedication: amlodipine 5 mg once daily, prescribed and reported as taken.\nMedication: cetirizine at night, dose not documented.",
+                               "superseded":  false,
+                               "patientId":  "SYN-CHART-A"
+                           }
+                       ],
+        "goldFindings":  [
+                             {
+                                 "id":  "F1",
+                                 "kind":  "unknown",
+                                 "statement":  "The current amlodipine dose is unclear in the source, which carries an [unclear] marker; the last documented dose was 5 mg once daily on 2026-06-12.",
+                                 "requiredTerms":  [
+                                                       "amlodipine",
+                                                       "unclear",
+                                                       "5 mg"
+                                                   ],
+                                 "permittedEvidenceIds":  [
+                                                              "C1",
+                                                              "H1"
+                                                          ]
+                             },
+                             {
+                                 "id":  "F2",
+                                 "kind":  "unchanged",
+                                 "statement":  "The cetirizine dose is not documented at either visit.",
+                                 "requiredTerms":  [
+                                                       "cetirizine",
+                                                       "dose",
+                                                       "not documented"
+                                                   ],
+                                 "permittedEvidenceIds":  [
+                                                              "C1",
+                                                              "H1"
+                                                          ]
+                             }
+                         ],
+        "expectedClarifications":  [
+                                       {
+                                           "id":  "Q1",
+                                           "topic":  "illegible current amlodipine dose",
+                                           "requiredTerms":  [
+                                                                 "amlodipine",
+                                                                 "dose"
+                                                             ],
+                                           "exampleQuestion":  "What is the current amlodipine dose? The source dose is marked [unclear] and cannot be read."
+                                       },
+                                       {
+                                           "id":  "Q2",
+                                           "topic":  "undocumented cetirizine dose",
+                                           "requiredTerms":  [
+                                                                 "cetirizine",
+                                                                 "dose"
+                                                             ],
+                                           "exampleQuestion":  "What cetirizine dose is the patient taking? No dose is documented in either record."
+                                       }
+                                   ],
+        "prohibited":  [
+                           {
+                               "id":  "P1",
+                               "description":  "Resolving an unreadable or absent dose by guessing.",
+                               "forbiddenTerms":  [
+                                                      "amlodipine 10 mg",
+                                                      "cetirizine 10 mg",
+                                                      "dose was increased to",
+                                                      "dose is unchanged at 5 mg"
+                                                  ]
+                           }
+                       ],
+        "abstentionExpected":  false,
+        "question":  null,
+        "notes":  "The [unclear] marker must survive into the output as uncertainty. Carrying the historical 5 mg forward as the current dose is the failure mode P1 catches."
+    },
+    {
+        "id":  "CR-09",
+        "split":  "held-out",
+        "category":  "contradiction",
+        "categories":  [
+                           "contradiction",
+                           "dates",
+                           "explicit-facts"
+                       ],
+        "title":  "Two historical records contradict each other on drug allergy",
+        "patient":  {
+                        "patientId":  "SYN-CHART-A",
+                        "alias":  "SYNTHETIC CHART A"
+                    },
+        "current":  {
+                        "encounterId":  "ENC-CR-09-CUR",
+                        "sourceDate":  "2026-09-09",
+                        "text":  "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nAllergies: the patient is unsure and asks that the chart be checked.\nBlood pressure in clinic 132/84 mmHg."
+                    },
+        "historical":  [
+                           {
+                               "recordId":  "REC-CR-09-H1",
+                               "encounterId":  "ENC-CR-09-H1",
+                               "sourceDate":  "2026-03-04",
+                               "text":  "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-03-04\nAllergies: penicillin, rash documented in 2019.",
+                               "superseded":  false,
+                               "patientId":  "SYN-CHART-A"
+                           },
+                           {
+                               "recordId":  "REC-CR-09-H2",
+                               "encounterId":  "ENC-CR-09-H2",
+                               "sourceDate":  "2026-06-12",
+                               "text":  "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nAllergies: no known drug allergies.",
+                               "superseded":  false,
+                               "patientId":  "SYN-CHART-A"
+                           }
+                       ],
+        "goldFindings":  [
+                             {
+                                 "id":  "F1",
+                                 "kind":  "conflict",
+                                 "statement":  "The records disagree about drug allergy: the 2026-03-04 record documents penicillin with a rash in 2019, while the 2026-06-12 record documents no known drug allergies.",
+                                 "requiredTerms":  [
+                                                       "penicillin",
+                                                       "no known drug allergies",
+                                                       "2026-03-04",
+                                                       "2026-06-12"
+                                                   ],
+                                 "permittedEvidenceIds":  [
+                                                              "H1",
+                                                              "H2"
+                                                          ]
+                             },
+                             {
+                                 "id":  "F2",
+                                 "kind":  "unknown",
+                                 "statement":  "The current record does not resolve the allergy question; the patient is unsure and asks that the chart be checked.",
+                                 "requiredTerms":  [
+                                                       "unsure",
+                                                       "allerg"
+                                                   ],
+                                 "permittedEvidenceIds":  [
+                                                              "C1"
+                                                          ]
+                             }
+                         ],
+        "expectedClarifications":  [
+                                       {
+                                           "id":  "Q1",
+                                           "topic":  "which allergy entry is current",
+                                           "requiredTerms":  [
+                                                                 "penicillin",
+                                                                 "allerg"
+                                                             ],
+                                           "exampleQuestion":  "Which allergy entry is current: the 2026-03-04 penicillin rash or the 2026-06-12 entry of no known drug allergies?"
+                                       }
+                                   ],
+        "prohibited":  [
+                           {
+                               "id":  "P1",
+                               "description":  "Silently picking one side or denying the conflict.",
+                               "forbiddenTerms":  [
+                                                      "allergy history is consistent",
+                                                      "allergies are consistent",
+                                                      "penicillin allergy was ruled out",
+                                                      "the allergy was removed",
+                                                      "there is no conflict"
+                                                  ]
+                           }
+                       ],
+        "abstentionExpected":  false,
+        "question":  null,
+        "notes":  "Newer does not automatically win: no amendment or reconciliation is documented, so the correct output is a flagged conflict plus a clarification, not a resolution."
+    }
+]

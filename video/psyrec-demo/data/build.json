@@ -1,0 +1,1448 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 177.7,
+  "draft": false,
+  "scenes": [
+    {
+      "id": "S1",
+      "start": 0,
+      "duration": 20.4,
+      "audioDuration": 19.783401,
+      "budget": 20,
+      "captions": [
+        {
+          "id": "caption-S1-0",
+          "start": 0,
+          "duration": 7.913360400000001,
+          "text": "PsyRec convierte la foto de una nota clínica impresa en un registro revisado por el profesional."
+        },
+        {
+          "id": "caption-S1-1",
+          "start": 7.913360400000001,
+          "duration": 8.5728071,
+          "text": "Todo ocurre en el equipo local: la captura en Android, la lectura y la comparación en un PC con Windows."
+        },
+        {
+          "id": "caption-S1-2",
+          "start": 16.4861675,
+          "duration": 3.2972335,
+          "text": "Este ejemplo es completamente sintético."
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "start": 20.4,
+      "duration": 19.3,
+      "audioDuration": 18.668844,
+      "budget": 25,
+      "captions": [
+        {
+          "id": "caption-S2-0",
+          "start": 20.4,
+          "duration": 8.764715492957746,
+          "text": "La pregunta que guía la revisión es simple: qué cambió desde la visita anterior y qué falta aclarar."
+        },
+        {
+          "id": "caption-S2-1",
+          "start": 29.164715492957747,
+          "duration": 9.904128507042254,
+          "text": "VisionPsy lee la nota; MedPsy compara los hechos documentados; la aplicación controla qué evidencia ve el modelo."
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "start": 39.7,
+      "duration": 21.5,
+      "audioDuration": 20.897959,
+      "budget": 30,
+      "captions": [
+        {
+          "id": "caption-S3-0",
+          "start": 39.7,
+          "duration": 6.146458529411765,
+          "text": "El teléfono fotografía la nota impresa y la guarda cifrada en su cola."
+        },
+        {
+          "id": "caption-S3-1",
+          "start": 45.84645852941177,
+          "duration": 8.60504194117647,
+          "text": "Se empareja con el encuentro leyendo el QR del PC, verifica el certificado del PC y envía la foto."
+        },
+        {
+          "id": "caption-S3-2",
+          "start": 54.45150047058824,
+          "duration": 6.146458529411765,
+          "text": "La captura pendiente sólo se borra cuando llega el recibo de guardado."
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "start": 61.2,
+      "duration": 18.966666666666665,
+      "audioDuration": 18.343764,
+      "budget": 35,
+      "captions": [
+        {
+          "id": "caption-S4-0",
+          "start": 61.2,
+          "duration": 2.1580898823529413,
+          "text": "VisionPsy extrae el texto."
+        },
+        {
+          "id": "caption-S4-1",
+          "start": 63.35808988235294,
+          "duration": 9.62840101357466,
+          "text": "El profesional compara cada línea con la imagen y corrige la fuente; una línea ilegible queda marcada como incierta."
+        },
+        {
+          "id": "caption-S4-2",
+          "start": 72.9864908959276,
+          "duration": 6.557273104072398,
+          "text": "La referencia humana permite medir la tasa de error por palabra y por carácter."
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "start": 80.16666666666667,
+      "duration": 28.333333333333332,
+      "audioDuration": 27.724626,
+      "budget": 50,
+      "captions": [
+        {
+          "id": "caption-S5-0",
+          "start": 80.16666666666667,
+          "duration": 6.366992598837209,
+          "text": "MedPsy compara la nota revisada con los registros aprobados del mismo paciente."
+        },
+        {
+          "id": "caption-S5-1",
+          "start": 86.53365926550389,
+          "duration": 4.755095738372093,
+          "text": "Cada hallazgo cita la evidencia que lo respalda y su fecha."
+        },
+        {
+          "id": "caption-S5-2",
+          "start": 91.28875500387598,
+          "duration": 10.154950220930234,
+          "text": "Un conflicto entre dos registros se muestra como conflicto; una dosis no documentada se declara desconocida, nunca se inventa."
+        },
+        {
+          "id": "caption-S5-3",
+          "start": 101.44370522480621,
+          "duration": 6.447587441860465,
+          "text": "Nada de esto entra en el registro hasta que el profesional aprueba un documento."
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "start": 108.5,
+      "duration": 19.666666666666668,
+      "audioDuration": 19.040363,
+      "budget": 30,
+      "captions": [
+        {
+          "id": "caption-S6-0",
+          "start": 108.5,
+          "duration": 3.483981314893617,
+          "text": "El borrador se limita a la fuente revisada."
+        },
+        {
+          "id": "caption-S6-1",
+          "start": 111.98398131489361,
+          "duration": 3.8890954212765956,
+          "text": "El profesional lee el texto exacto y lo aprueba."
+        },
+        {
+          "id": "caption-S6-2",
+          "start": 115.8730767361702,
+          "duration": 11.667286263829787,
+          "text": "El registro se guarda cifrado; al bloquear y volver a abrir, el texto aprobado se conserva y el historial muestra sólo al paciente seleccionado."
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "start": 128.16666666666666,
+      "duration": 23.033333333333335,
+      "audioDuration": 22.430476,
+      "budget": 50,
+      "captions": [
+        {
+          "id": "caption-S7-0",
+          "start": 128.16666666666666,
+          "duration": 16.1860944029304,
+          "text": "Medimos sobre una suite sintética congelada, confirmada por un revisor humano antes de ejecutar los modelos: cobertura de hechos, afirmaciones no respaldadas, validez del JSON y rendimiento nativo."
+        },
+        {
+          "id": "caption-S7-1",
+          "start": 144.35276106959705,
+          "duration": 6.244381597069597,
+          "text": "Los números en pantalla salen de los registros de evidencia del repositorio."
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "start": 151.2,
+      "duration": 21.466666666666665,
+      "audioDuration": 20.851519,
+      "budget": 30,
+      "captions": [
+        {
+          "id": "caption-S8-0",
+          "start": 151.2,
+          "duration": 15.679049170542635,
+          "text": "Los límites son parte del resultado: la suite es pequeña y sintética, no hay validación clínica, y en esta versión del SDK el modo de razonamiento no puede combinarse con la salida estructurada."
+        },
+        {
+          "id": "caption-S8-1",
+          "start": 166.87904917054263,
+          "duration": 5.1724698294573646,
+          "text": "Cada afirmación del video está ligada a un archivo de evidencia."
+        }
+      ]
+    },
+    {
+      "id": "S9",
+      "start": 172.66666666666666,
+      "duration": 5.033333333333333,
+      "audioDuration": 4.411791,
+      "budget": 15,
+      "captions": [
+        {
+          "id": "caption-S9-0",
+          "start": 172.66666666666666,
+          "duration": 4.411791,
+          "text": "PsyRec: local, verificable y revisado por humanos."
+        }
+      ]
+    }
+  ],
+  "boxes": [
+    {
+      "id": "box-1",
+      "scene": "S1",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "Nota → registro"
+    },
+    {
+      "id": "box-2",
+      "scene": "S1",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-3",
+      "scene": "S1",
+      "x": 108,
+      "y": 200,
+      "w": 900,
+      "h": 195,
+      "text": "PsyRec"
+    },
+    {
+      "id": "box-4",
+      "scene": "S1",
+      "x": 116,
+      "y": 423,
+      "w": 850,
+      "h": 210,
+      "text": "De una foto de una nota a un registro revisado. Todo local."
+    },
+    {
+      "id": "box-5",
+      "scene": "S1",
+      "x": 1140,
+      "y": 420,
+      "w": 632,
+      "h": 100,
+      "text": "Android → Windows PC"
+    },
+    {
+      "id": "box-7",
+      "scene": "S1",
+      "x": 1120,
+      "y": 641,
+      "w": 672,
+      "h": 50,
+      "text": "AMBIENTE GENERADO · SINTÉTICO"
+    },
+    {
+      "id": "box-8",
+      "scene": "S1",
+      "x": 116,
+      "y": 773,
+      "w": 1520,
+      "h": 74,
+      "text": "Flujo implementado · demostración física pendiente"
+    },
+    {
+      "id": "box-9",
+      "scene": "S1",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "PsyRec convierte la foto de una nota clínica impresa en un registro revisado por el profesional."
+    },
+    {
+      "id": "box-10",
+      "scene": "S1",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Todo ocurre en el equipo local: la captura en Android, la lectura y la comparación en un PC con Windows."
+    },
+    {
+      "id": "box-11",
+      "scene": "S1",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Este ejemplo es completamente sintético."
+    },
+    {
+      "id": "box-12",
+      "scene": "S2",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "La pregunta clínica"
+    },
+    {
+      "id": "box-13",
+      "scene": "S2",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-14",
+      "scene": "S2",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 165,
+      "text": "¿Qué cambió desde la visita anterior y qué falta aclarar?"
+    },
+    {
+      "id": "box-15",
+      "scene": "S2",
+      "x": 144,
+      "y": 363,
+      "w": 700,
+      "h": 45,
+      "text": "2026-06-12"
+    },
+    {
+      "id": "box-16",
+      "scene": "S2",
+      "x": 144,
+      "y": 436,
+      "w": 700,
+      "h": 55,
+      "text": "Previous approved note"
+    },
+    {
+      "id": "box-17",
+      "scene": "S2",
+      "x": 144,
+      "y": 548,
+      "w": 682,
+      "h": 155,
+      "text": "Medication: amlodipine 5 mg once daily, prescribed and reported as taken."
+    },
+    {
+      "id": "box-18",
+      "scene": "S2",
+      "x": 1066,
+      "y": 363,
+      "w": 700,
+      "h": 45,
+      "text": "2026-09-09"
+    },
+    {
+      "id": "box-19",
+      "scene": "S2",
+      "x": 1066,
+      "y": 436,
+      "w": 700,
+      "h": 55,
+      "text": "Current reviewed source"
+    },
+    {
+      "id": "box-20",
+      "scene": "S2",
+      "x": 1066,
+      "y": 548,
+      "w": 682,
+      "h": 155,
+      "text": "Medication: amlodipine [unclear] mg once daily; the dose in the scanned source is not legible."
+    },
+    {
+      "id": "box-21",
+      "scene": "S2",
+      "x": 922,
+      "y": 505,
+      "w": 82,
+      "h": 100,
+      "text": "→"
+    },
+    {
+      "id": "box-22",
+      "scene": "S2",
+      "x": 1066,
+      "y": 739,
+      "w": 700,
+      "h": 55,
+      "text": "Unknown · requires clarification"
+    },
+    {
+      "id": "box-23",
+      "scene": "S2",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "La pregunta que guía la revisión es simple: qué cambió desde la visita anterior y qué falta aclarar."
+    },
+    {
+      "id": "box-24",
+      "scene": "S2",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "VisionPsy lee la nota; MedPsy compara los hechos documentados; la aplicación controla qué evidencia ve el modelo."
+    },
+    {
+      "id": "box-25",
+      "scene": "S3",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "Captura y transferencia"
+    },
+    {
+      "id": "box-26",
+      "scene": "S3",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-27",
+      "scene": "S3",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 140,
+      "text": "De la captura al recibo"
+    },
+    {
+      "id": "box-28",
+      "scene": "S3",
+      "x": 152,
+      "y": 332,
+      "w": 254,
+      "h": 40,
+      "text": "Android · 9:16"
+    },
+    {
+      "id": "box-29",
+      "scene": "S3",
+      "x": 152,
+      "y": 528,
+      "w": 254,
+      "h": 110,
+      "text": "captura de pantalla pendiente"
+    },
+    {
+      "id": "box-30",
+      "scene": "S3",
+      "x": 152,
+      "y": 782,
+      "w": 254,
+      "h": 35,
+      "text": "SYNTHETIC"
+    },
+    {
+      "id": "box-31",
+      "scene": "S3",
+      "x": 505,
+      "y": 302,
+      "w": 1275,
+      "h": 64,
+      "text": "Captura cifrada · Emparejamiento por QR"
+    },
+    {
+      "id": "box-32",
+      "scene": "S3",
+      "x": 505,
+      "y": 382,
+      "w": 1275,
+      "h": 64,
+      "text": "TLS fijado · Recibo duradero"
+    },
+    {
+      "id": "box-33",
+      "scene": "S3",
+      "x": 525,
+      "y": 521,
+      "w": 357,
+      "h": 50,
+      "text": "Phone"
+    },
+    {
+      "id": "box-34",
+      "scene": "S3",
+      "x": 525,
+      "y": 585,
+      "w": 357,
+      "h": 40,
+      "text": "Capture"
+    },
+    {
+      "id": "box-35",
+      "scene": "S3",
+      "x": 906,
+      "y": 543,
+      "w": 37,
+      "h": 64,
+      "text": "→"
+    },
+    {
+      "id": "box-36",
+      "scene": "S3",
+      "x": 963,
+      "y": 521,
+      "w": 357,
+      "h": 50,
+      "text": "Encrypted queue"
+    },
+    {
+      "id": "box-37",
+      "scene": "S3",
+      "x": 963,
+      "y": 585,
+      "w": 357,
+      "h": 40,
+      "text": "Retain"
+    },
+    {
+      "id": "box-38",
+      "scene": "S3",
+      "x": 1344,
+      "y": 543,
+      "w": 37,
+      "h": 64,
+      "text": "→"
+    },
+    {
+      "id": "box-39",
+      "scene": "S3",
+      "x": 1401,
+      "y": 521,
+      "w": 357,
+      "h": 50,
+      "text": "Windows PC"
+    },
+    {
+      "id": "box-40",
+      "scene": "S3",
+      "x": 1401,
+      "y": 585,
+      "w": 357,
+      "h": 40,
+      "text": "Durable receipt"
+    },
+    {
+      "id": "box-41",
+      "scene": "S3",
+      "x": 505,
+      "y": 704,
+      "w": 1275,
+      "h": 70,
+      "text": "Matching receipt → remove queued photo"
+    },
+    {
+      "id": "box-42",
+      "scene": "S3",
+      "x": 505,
+      "y": 794,
+      "w": 1275,
+      "h": 60,
+      "text": "Diagrama del flujo · aceptación física pendiente"
+    },
+    {
+      "id": "box-43",
+      "scene": "S3",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "El teléfono fotografía la nota impresa y la guarda cifrada en su cola."
+    },
+    {
+      "id": "box-44",
+      "scene": "S3",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Se empareja con el encuentro leyendo el QR del PC, verifica el certificado del PC y envía la foto."
+    },
+    {
+      "id": "box-45",
+      "scene": "S3",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "La captura pendiente sólo se borra cuando llega el recibo de guardado."
+    },
+    {
+      "id": "box-46",
+      "scene": "S4",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "VisionPsy · fuente revisada"
+    },
+    {
+      "id": "box-47",
+      "scene": "S4",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-48",
+      "scene": "S4",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 140,
+      "text": "Leer. Comparar. Corregir."
+    },
+    {
+      "id": "box-49",
+      "scene": "S4",
+      "x": 108,
+      "y": 250,
+      "w": 1704,
+      "h": 44,
+      "text": "VisionPsy extrae · El profesional corrige · Referencia humana y WER/CER"
+    },
+    {
+      "id": "box-50",
+      "scene": "S4",
+      "x": 134,
+      "y": 335,
+      "w": 908,
+      "h": 40,
+      "text": "Desktop · 16:9"
+    },
+    {
+      "id": "box-51",
+      "scene": "S4",
+      "x": 134,
+      "y": 529,
+      "w": 908,
+      "h": 110,
+      "text": "captura de pantalla pendiente"
+    },
+    {
+      "id": "box-52",
+      "scene": "S4",
+      "x": 134,
+      "y": 781,
+      "w": 908,
+      "h": 35,
+      "text": "SYNTHETIC WORKFLOW"
+    },
+    {
+      "id": "box-53",
+      "scene": "S4",
+      "x": 1146,
+      "y": 335,
+      "w": 624,
+      "h": 60,
+      "text": "Human reference"
+    },
+    {
+      "id": "box-54",
+      "scene": "S4",
+      "x": 1146,
+      "y": 427,
+      "w": 624,
+      "h": 85,
+      "text": "Original extraction ↔ human reference"
+    },
+    {
+      "id": "box-55",
+      "scene": "S4",
+      "x": 1146,
+      "y": 556,
+      "w": 624,
+      "h": 60,
+      "text": "WER  —     CER  —"
+    },
+    {
+      "id": "box-56",
+      "scene": "S4",
+      "x": 1146,
+      "y": 641,
+      "w": 624,
+      "h": 60,
+      "text": "Valores pendientes de evidencia"
+    },
+    {
+      "id": "box-57",
+      "scene": "S4",
+      "x": 1146,
+      "y": 734,
+      "w": 624,
+      "h": 65,
+      "text": "[unclear] = requiere revisión"
+    },
+    {
+      "id": "box-58",
+      "scene": "S4",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "VisionPsy extrae el texto."
+    },
+    {
+      "id": "box-59",
+      "scene": "S4",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "El profesional compara cada línea con la imagen y corrige la fuente; una línea ilegible queda marcada como incierta."
+    },
+    {
+      "id": "box-60",
+      "scene": "S4",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "La referencia humana permite medir la tasa de error por palabra y por carácter."
+    },
+    {
+      "id": "box-61",
+      "scene": "S5",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "MedPsy · revisión del historial"
+    },
+    {
+      "id": "box-62",
+      "scene": "S5",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-63",
+      "scene": "S5",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 140,
+      "text": "Un historial, evidencia acotada."
+    },
+    {
+      "id": "box-64",
+      "scene": "S5",
+      "x": 134,
+      "y": 339,
+      "w": 428,
+      "h": 40,
+      "text": "Chart review · 16:9"
+    },
+    {
+      "id": "box-65",
+      "scene": "S5",
+      "x": 134,
+      "y": 398,
+      "w": 428,
+      "h": 110,
+      "text": "captura de pantalla pendiente"
+    },
+    {
+      "id": "box-66",
+      "scene": "S5",
+      "x": 134,
+      "y": 515,
+      "w": 428,
+      "h": 35,
+      "text": "SYNTHETIC WORKFLOW"
+    },
+    {
+      "id": "box-67",
+      "scene": "S5",
+      "x": 108,
+      "y": 620,
+      "w": 480,
+      "h": 170,
+      "text": "Sólo lectura\nSin aprobar\nCobertura declarada"
+    },
+    {
+      "id": "box-68",
+      "scene": "S5",
+      "x": 640,
+      "y": 296,
+      "w": 182,
+      "h": 48,
+      "text": "Cambiado"
+    },
+    {
+      "id": "box-69",
+      "scene": "S5",
+      "x": 834,
+      "y": 296,
+      "w": 182,
+      "h": 48,
+      "text": "Sin cambio"
+    },
+    {
+      "id": "box-70",
+      "scene": "S5",
+      "x": 1028,
+      "y": 296,
+      "w": 182,
+      "h": 48,
+      "text": "Nuevo"
+    },
+    {
+      "id": "box-71",
+      "scene": "S5",
+      "x": 1222,
+      "y": 296,
+      "w": 182,
+      "h": 48,
+      "text": "Resuelto"
+    },
+    {
+      "id": "box-72",
+      "scene": "S5",
+      "x": 1416,
+      "y": 296,
+      "w": 182,
+      "h": 48,
+      "text": "Conflicto"
+    },
+    {
+      "id": "box-73",
+      "scene": "S5",
+      "x": 1610,
+      "y": 296,
+      "w": 182,
+      "h": 48,
+      "text": "Desconocido"
+    },
+    {
+      "id": "box-74",
+      "scene": "S5",
+      "x": 640,
+      "y": 390,
+      "w": 1172,
+      "h": 40,
+      "text": "REFERENCIA HUMANA · EJEMPLOS DE LA SUITE"
+    },
+    {
+      "id": "box-75",
+      "scene": "S5",
+      "x": 674,
+      "y": 480,
+      "w": 1100,
+      "h": 56,
+      "text": "CR-09 · Conflicto de alergias"
+    },
+    {
+      "id": "box-76",
+      "scene": "S5",
+      "x": 674,
+      "y": 555,
+      "w": 320,
+      "h": 42,
+      "text": "H1 · 2026-03-04"
+    },
+    {
+      "id": "box-77",
+      "scene": "S5",
+      "x": 1010,
+      "y": 550,
+      "w": 754,
+      "h": 78,
+      "text": "Allergies: penicillin, rash documented in 2019."
+    },
+    {
+      "id": "box-78",
+      "scene": "S5",
+      "x": 674,
+      "y": 655,
+      "w": 320,
+      "h": 42,
+      "text": "H2 · 2026-06-12"
+    },
+    {
+      "id": "box-79",
+      "scene": "S5",
+      "x": 1010,
+      "y": 650,
+      "w": 754,
+      "h": 78,
+      "text": "Allergies: no known drug allergies."
+    },
+    {
+      "id": "box-80",
+      "scene": "S5",
+      "x": 674,
+      "y": 765,
+      "w": 1100,
+      "h": 67,
+      "text": "C1 · 2026-09-09 · La nota actual no resuelve el conflicto."
+    },
+    {
+      "id": "box-81",
+      "scene": "S5",
+      "x": 674,
+      "y": 480,
+      "w": 1100,
+      "h": 56,
+      "text": "CR-05 · Dosis actual desconocida"
+    },
+    {
+      "id": "box-82",
+      "scene": "S5",
+      "x": 674,
+      "y": 555,
+      "w": 320,
+      "h": 42,
+      "text": "H1 · 2026-06-12"
+    },
+    {
+      "id": "box-83",
+      "scene": "S5",
+      "x": 1010,
+      "y": 550,
+      "w": 754,
+      "h": 92,
+      "text": "Medication: amlodipine 5 mg once daily, prescribed and reported as taken."
+    },
+    {
+      "id": "box-84",
+      "scene": "S5",
+      "x": 674,
+      "y": 671,
+      "w": 320,
+      "h": 42,
+      "text": "C1 · 2026-09-09"
+    },
+    {
+      "id": "box-85",
+      "scene": "S5",
+      "x": 1010,
+      "y": 655,
+      "w": 754,
+      "h": 130,
+      "text": "Medication: amlodipine [unclear] mg once daily; the dose in the scanned source is not legible."
+    },
+    {
+      "id": "box-86",
+      "scene": "S5",
+      "x": 674,
+      "y": 793,
+      "w": 1100,
+      "h": 42,
+      "text": "La dosis histórica no establece la dosis actual."
+    },
+    {
+      "id": "box-87",
+      "scene": "S5",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "MedPsy compara la nota revisada con los registros aprobados del mismo paciente."
+    },
+    {
+      "id": "box-88",
+      "scene": "S5",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Cada hallazgo cita la evidencia que lo respalda y su fecha."
+    },
+    {
+      "id": "box-89",
+      "scene": "S5",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Un conflicto entre dos registros se muestra como conflicto; una dosis no documentada se declara desconocida, nunca se inventa."
+    },
+    {
+      "id": "box-90",
+      "scene": "S5",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Nada de esto entra en el registro hasta que el profesional aprueba un documento."
+    },
+    {
+      "id": "box-91",
+      "scene": "S6",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "Borrador, aprobación y cifrado"
+    },
+    {
+      "id": "box-92",
+      "scene": "S6",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-93",
+      "scene": "S6",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 140,
+      "text": "Aprobar el texto exacto."
+    },
+    {
+      "id": "box-94",
+      "scene": "S6",
+      "x": 108,
+      "y": 250,
+      "w": 1704,
+      "h": 44,
+      "text": "Borrador acotado · Aprobación exacta · Guardado cifrado · Historial por paciente"
+    },
+    {
+      "id": "box-95",
+      "scene": "S6",
+      "x": 134,
+      "y": 335,
+      "w": 908,
+      "h": 40,
+      "text": "Desktop · 16:9"
+    },
+    {
+      "id": "box-96",
+      "scene": "S6",
+      "x": 134,
+      "y": 529,
+      "w": 908,
+      "h": 110,
+      "text": "captura de pantalla pendiente"
+    },
+    {
+      "id": "box-97",
+      "scene": "S6",
+      "x": 134,
+      "y": 781,
+      "w": 908,
+      "h": 35,
+      "text": "SYNTHETIC WORKFLOW"
+    },
+    {
+      "id": "box-98",
+      "scene": "S6",
+      "x": 1140,
+      "y": 328,
+      "w": 642,
+      "h": 58,
+      "text": "Source-only draft"
+    },
+    {
+      "id": "box-99",
+      "scene": "S6",
+      "x": 1140,
+      "y": 460,
+      "w": 642,
+      "h": 58,
+      "text": "Review exact text"
+    },
+    {
+      "id": "box-100",
+      "scene": "S6",
+      "x": 1140,
+      "y": 592,
+      "w": 642,
+      "h": 58,
+      "text": "Approve & encrypt"
+    },
+    {
+      "id": "box-101",
+      "scene": "S6",
+      "x": 1140,
+      "y": 724,
+      "w": 642,
+      "h": 58,
+      "text": "Lock → reload"
+    },
+    {
+      "id": "box-102",
+      "scene": "S6",
+      "x": 108,
+      "y": 859,
+      "w": 1704,
+      "h": 45,
+      "text": "Historial por paciente · aceptación física y humana pendiente"
+    },
+    {
+      "id": "box-103",
+      "scene": "S6",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "El borrador se limita a la fuente revisada."
+    },
+    {
+      "id": "box-104",
+      "scene": "S6",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "El profesional lee el texto exacto y lo aprueba."
+    },
+    {
+      "id": "box-105",
+      "scene": "S6",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "El registro se guarda cifrado; al bloquear y volver a abrir, el texto aprobado se conserva y el historial muestra sólo al paciente seleccionado."
+    },
+    {
+      "id": "box-106",
+      "scene": "S7",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "Evaluación · pendiente"
+    },
+    {
+      "id": "box-107",
+      "scene": "S7",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-108",
+      "scene": "S7",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 140,
+      "text": "Resultados medidos"
+    },
+    {
+      "id": "box-109",
+      "scene": "S7",
+      "x": 108,
+      "y": 336,
+      "w": 1704,
+      "h": 165,
+      "text": "Resultados pendientes de la evaluación"
+    },
+    {
+      "id": "box-110",
+      "scene": "S7",
+      "x": 116,
+      "y": 552,
+      "w": 1650,
+      "h": 60,
+      "text": "Suite sintética congelada · 16 casos · 4 configuraciones planificadas"
+    },
+    {
+      "id": "box-111",
+      "scene": "S7",
+      "x": 116,
+      "y": 651,
+      "w": 1650,
+      "h": 58,
+      "text": "Cobertura · Afirmaciones no respaldadas · Validez JSON"
+    },
+    {
+      "id": "box-112",
+      "scene": "S7",
+      "x": 116,
+      "y": 735,
+      "w": 1650,
+      "h": 60,
+      "text": "TTFT nativo · Tokens/s · Tiempo de carga"
+    },
+    {
+      "id": "box-113",
+      "scene": "S7",
+      "x": 116,
+      "y": 836,
+      "w": 1680,
+      "h": 50,
+      "text": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · Q4_K_M imatrix / Q4_0"
+    },
+    {
+      "id": "box-114",
+      "scene": "S7",
+      "x": 116,
+      "y": 886,
+      "w": 1680,
+      "h": 46,
+      "text": "Divulgación de procesos GPU: pendiente del resumen final."
+    },
+    {
+      "id": "box-115",
+      "scene": "S7",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Medimos sobre una suite sintética congelada, confirmada por un revisor humano antes de ejecutar los modelos: cobertura de hechos, afirmaciones no respaldadas, validez del JSON y rendimiento nativo."
+    },
+    {
+      "id": "box-116",
+      "scene": "S7",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Los números en pantalla salen de los registros de evidencia del repositorio."
+    },
+    {
+      "id": "box-117",
+      "scene": "S8",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "Límites de la evidencia"
+    },
+    {
+      "id": "box-118",
+      "scene": "S8",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-119",
+      "scene": "S8",
+      "x": 108,
+      "y": 140,
+      "w": 1704,
+      "h": 140,
+      "text": "Lo que no afirmamos"
+    },
+    {
+      "id": "box-120",
+      "scene": "S8",
+      "x": 140,
+      "y": 334,
+      "w": 1620,
+      "h": 58,
+      "text": "Suite pequeña y sintética"
+    },
+    {
+      "id": "box-121",
+      "scene": "S8",
+      "x": 140,
+      "y": 402,
+      "w": 1610,
+      "h": 56,
+      "text": "Sin validación clínica."
+    },
+    {
+      "id": "box-122",
+      "scene": "S8",
+      "x": 140,
+      "y": 517,
+      "w": 1620,
+      "h": 58,
+      "text": "MedPsy · SDK 0.18.2"
+    },
+    {
+      "id": "box-123",
+      "scene": "S8",
+      "x": 140,
+      "y": 585,
+      "w": 1610,
+      "h": 56,
+      "text": "Razonamiento y esquema estricto: incompatibles en la prueba documentada."
+    },
+    {
+      "id": "box-124",
+      "scene": "S8",
+      "x": 140,
+      "y": 700,
+      "w": 1620,
+      "h": 58,
+      "text": "Evidencia física y aceptación humana"
+    },
+    {
+      "id": "box-125",
+      "scene": "S8",
+      "x": 140,
+      "y": 768,
+      "w": 1610,
+      "h": 56,
+      "text": "Pendientes según el estado del repositorio."
+    },
+    {
+      "id": "box-126",
+      "scene": "S8",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Los límites son parte del resultado: la suite es pequeña y sintética, no hay validación clínica, y en esta versión del SDK el modo de razonamiento no puede combinarse con la salida estructurada."
+    },
+    {
+      "id": "box-127",
+      "scene": "S8",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "Cada afirmación del video está ligada a un archivo de evidencia."
+    },
+    {
+      "id": "box-128",
+      "scene": "S9",
+      "x": 108,
+      "y": 64,
+      "w": 1000,
+      "h": 44,
+      "text": "Local. Verificable. Humano."
+    },
+    {
+      "id": "box-129",
+      "scene": "S9",
+      "x": 1260,
+      "y": 62,
+      "w": 552,
+      "h": 50,
+      "text": "SINTÉTICO · NO ES UN PACIENTE REAL"
+    },
+    {
+      "id": "box-130",
+      "scene": "S9",
+      "x": 108,
+      "y": 200,
+      "w": 1704,
+      "h": 195,
+      "text": "PsyRec"
+    },
+    {
+      "id": "box-131",
+      "scene": "S9",
+      "x": 116,
+      "y": 430,
+      "w": 1590,
+      "h": 210,
+      "text": "Local. Verificable.\nRevisado por humanos."
+    },
+    {
+      "id": "box-132",
+      "scene": "S9",
+      "x": 116,
+      "y": 729,
+      "w": 1600,
+      "h": 62,
+      "text": "Luis-Alain/hackpty · QVAC-Psy"
+    },
+    {
+      "id": "box-133",
+      "scene": "S9",
+      "x": 116,
+      "y": 815,
+      "w": 1600,
+      "h": 60,
+      "text": "MIT · @qvac/sdk 0.18.2"
+    },
+    {
+      "id": "box-134",
+      "scene": "S9",
+      "x": 108,
+      "y": 936,
+      "w": 1704,
+      "h": 90,
+      "text": "PsyRec: local, verificable y revisado por humanos."
+    }
+  ],
+  "resultsTrace": [
+    {
+      "path": "suiteLabel",
+      "text": "Suite sintética congelada · 16 casos · 4 configuraciones planificadas"
+    },
+    {
+      "path": "hardware",
+      "text": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · Q4_K_M imatrix / Q4_0"
+    },
+    {
+      "path": "disclosure",
+      "text": "Divulgación de procesos GPU: pendiente del resumen final."
+    }
+  ],
+  "assets": [
+    {
+      "file": "broll/broll-04-desk-blank.mp4",
+      "scene": "S1",
+      "duration": 6.041667
+    }
+  ]
+}

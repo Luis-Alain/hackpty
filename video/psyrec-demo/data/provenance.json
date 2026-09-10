@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-09-10T02:03:47.165Z",
+  "sources": [
+    {
+      "path": "video/psyrec-demo/BRIEF.md",
+      "sha256": "c47f8958a32db4a0c27757e7277a0042b42f07a2492a8f841fd5d03573a80d6a"
+    },
+    {
+      "path": "video/psyrec-demo/CODEX-TASK.md",
+      "sha256": "088ead52a89f220a667e3581f5280bcf9d1cfa5034b624f97ca7aa4ad031f31f"
+    },
+    {
+      "path": "docs/CHART-REVIEW.md",
+      "sha256": "ce9f5af8a7944714104987b42b07d44ad761c6b21f5dad75060906049a4bb2b1"
+    },
+    {
+      "path": "docs/ACCURACY.md",
+      "sha256": "0d4611db78997ba67a6e1a827399140e18d672e3021c3470daa282697d589a28"
+    },
+    {
+      "path": "docs/DEMO.md",
+      "sha256": "ddfbd4fa7913193bd299a91cc4a5e8e774f0ddcf6e43d216c7ccb50b6e450d12"
+    },
+    {
+      "path": "diagnostics/qvac-spike/chart-review/suite/draft-v1.json",
+      "sha256": "2d4c67a9ea326cb69e510ae4f3378fcdcfc31088c96c8698accb869aa6d37a84"
+    },
+    {
+      "path": "diagnostics/qvac-spike/MEDPSY-RUNTIME.md",
+      "sha256": "f5797a148c41cdd3121a48099871e552776a1bbf6545b2a2db21f0ed67682b5a"
+    }
+  ],
+  "clinicalExamples": "data/clinical-examples.json contains only synthetic CR-05 and CR-09; human gold examples, not generated model output.",
+  "runtimeDependency": "None of the repository reference paths are needed to build the video."
+}

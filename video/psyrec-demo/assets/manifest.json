@@ -1,0 +1,52 @@
+[
+  {
+    "file": "assets/gsap.min.js",
+    "source": "https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js",
+    "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+  },
+  {
+    "file": "assets/fonts/serif-0.ttf",
+    "source": "https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjihdqrhw.ttf",
+    "sha256": "8ca4d603b02214e2723f2bdf6c83632551942c9b06702e2bdbcf07f0d8714809"
+  },
+  {
+    "file": "assets/fonts/serif-1.ttf",
+    "source": "https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjisltrhw.ttf",
+    "sha256": "3f471d65b233b067f5d7bfebb9b598994dd513a41f9fb4d900c20ae9d30f242c"
+  },
+  {
+    "file": "assets/fonts/sans-0.ttf",
+    "source": "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSD6llzAA.ttf",
+    "sha256": "6dbe082463cf749cfa057d45c3048c90f4df031496498e5b5bdfd0b6babb9d16"
+  },
+  {
+    "file": "assets/fonts/sans-1.ttf",
+    "source": "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSDNF5zAA.ttf",
+    "sha256": "5311c66fd6d04ae45671236f7eae667b671c06c1dc7e88d52c206e5fadd0fb21"
+  },
+  {
+    "file": "assets/fonts/mono-0.ttf",
+    "source": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n5ig.ttf",
+    "sha256": "a7fdc993f9f0387caedba4e42521136fa97e4c0837ae6239bf0413ccf8af00c2"
+  },
+  {
+    "file": "assets/fonts/mono-1.ttf",
+    "source": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3vAO8lc.ttf",
+    "sha256": "754dfc9d50cf7aabfb6b108d2c2f7d20a3f1f2cc6f6c01640c6728091272cec0"
+  },
+  {
+    "file": "assets/fonts/sourceserif4-OFL.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/OFL.txt",
+    "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9"
+  },
+  {
+    "file": "assets/fonts/ibmplexsans-OFL.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexsans/OFL.txt",
+    "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+  },
+  {
+    "file": "assets/fonts/ibmplexmono-OFL.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/OFL.txt",
+    "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+  }
+]

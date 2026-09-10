@@ -1,0 +1,5 @@
+{
+  "synthetic": true,
+  "captures": [],
+  "instructions": "Add {scene, file, width, height, duration, synthetic: true}; files are relative to captures/. Desktop 16:9, phone 9:16. Supply cropped portrait capture if device aspect differs; no private data or pairing QR credentials."
+}

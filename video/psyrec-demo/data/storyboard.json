@@ -1,0 +1,50 @@
+{
+  "source": "BRIEF.md",
+  "scenes": [
+    {
+      "id": "S1",
+      "budget": 20,
+      "text": "PsyRec convierte la foto de una nota clínica impresa en un registro revisado por el profesional. Todo ocurre en el equipo local: la captura en Android, la lectura y la comparación en un PC con Windows. Este ejemplo es completamente sintético."
+    },
+    {
+      "id": "S2",
+      "budget": 25,
+      "text": "La pregunta que guía la revisión es simple: qué cambió desde la visita anterior y qué falta aclarar. VisionPsy lee la nota; MedPsy compara los hechos documentados; la aplicación controla qué evidencia ve el modelo."
+    },
+    {
+      "id": "S3",
+      "budget": 30,
+      "text": "El teléfono fotografía la nota impresa y la guarda cifrada en su cola. Se empareja con el encuentro leyendo el QR del PC, verifica el certificado del PC y envía la foto. La captura pendiente sólo se borra cuando llega el recibo de guardado."
+    },
+    {
+      "id": "S4",
+      "budget": 35,
+      "text": "VisionPsy extrae el texto. El profesional compara cada línea con la imagen y corrige la fuente; una línea ilegible queda marcada como incierta. La referencia humana permite medir la tasa de error por palabra y por carácter."
+    },
+    {
+      "id": "S5",
+      "budget": 50,
+      "text": "MedPsy compara la nota revisada con los registros aprobados del mismo paciente. Cada hallazgo cita la evidencia que lo respalda y su fecha. Un conflicto entre dos registros se muestra como conflicto; una dosis no documentada se declara desconocida, nunca se inventa. Nada de esto entra en el registro hasta que el profesional aprueba un documento."
+    },
+    {
+      "id": "S6",
+      "budget": 30,
+      "text": "El borrador se limita a la fuente revisada. El profesional lee el texto exacto y lo aprueba. El registro se guarda cifrado; al bloquear y volver a abrir, el texto aprobado se conserva y el historial muestra sólo al paciente seleccionado."
+    },
+    {
+      "id": "S7",
+      "budget": 50,
+      "text": "Medimos sobre una suite sintética congelada, confirmada por un revisor humano antes de ejecutar los modelos: cobertura de hechos, afirmaciones no respaldadas, validez del JSON y rendimiento nativo. Los números en pantalla salen de los registros de evidencia del repositorio."
+    },
+    {
+      "id": "S8",
+      "budget": 30,
+      "text": "Los límites son parte del resultado: la suite es pequeña y sintética, no hay validación clínica, y en esta versión del SDK el modo de razonamiento no puede combinarse con la salida estructurada. Cada afirmación del video está ligada a un archivo de evidencia."
+    },
+    {
+      "id": "S9",
+      "budget": 15,
+      "text": "PsyRec: local, verificable y revisado por humanos."
+    }
+  ]
+}

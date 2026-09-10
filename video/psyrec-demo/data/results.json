@@ -1,0 +1,9 @@
+{
+  "generatedAt": null,
+  "source": [],
+  "configurations": [],
+  "hardware": "RTX 4050 Laptop 6 GB · @qvac/sdk 0.18.2 · Q4_K_M imatrix / Q4_0",
+  "disclosure": "Divulgación de procesos GPU: pendiente del resumen final.",
+  "suiteLabel": "Suite sintética congelada · 16 casos · 4 configuraciones planificadas",
+  "pending": true
+}

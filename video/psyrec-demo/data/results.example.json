@@ -1,0 +1,28 @@
+{
+  "_comment": "SCHEMA EXAMPLE ONLY. Nulls are not measurements. Replace from reviewed evidence; never copy this file as completed results. Ratios must use one consistent documented scale across configurations. loadMs/nativeTtftMs are milliseconds; tokensPerSecond is native tokens/s. Keep pending true until all fields and disclosures are verified.",
+  "generatedAt": null,
+  "source": ["artifacts/evidence/chart-review-<run>-summary.json"],
+  "configurations": [
+    {
+      "label": "<configuration label>",
+      "model": "<actual model identifier>",
+      "quantization": "<actual quantization>",
+      "reasoning": false,
+      "schema": false,
+      "strictGoldRecall": null,
+      "termOnlyRecall": null,
+      "forbiddenHits": null,
+      "firstPassValidity": null,
+      "abstentionCorrect": null,
+      "loadMs": null,
+      "nativeTtftMs": null,
+      "tokensPerSecond": null,
+      "promptTokens": null,
+      "generatedTokens": null
+    }
+  ],
+  "hardware": "<measured hardware / SDK / quantizations>",
+  "disclosure": "<source-specific shared GPU process disclosure and aggregation method>",
+  "suiteLabel": "<verified suite and configuration counts>",
+  "pending": true
+}
