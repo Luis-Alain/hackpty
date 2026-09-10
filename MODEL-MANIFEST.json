@@ -46,6 +46,20 @@
       "reasoningBudget": 0,
       "license": "Apache-2.0",
       "modelCard": "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/blob/d7f544eead698dbd1f15126ef60b45a1e1933222/README.md"
+    },
+    {
+      "id": "medpsy-1.7b-q4-k-m-imat",
+      "role": "review",
+      "constant": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+      "filename": "medpsy-1.7b-q4_k_m-imat.gguf",
+      "url": "https://huggingface.co/qvac/MedPsy-1.7B-GGUF/resolve/fd4cecc90c2de8dce4b112795456a54be9c59363/medpsy-1.7b-q4_k_m-imat.gguf",
+      "expectedBytes": 1282439360,
+      "sha256": "41ee947d9cce72ec657577219fd1798fabeabf0d832217fe23c9d6d3d18d5880",
+      "modelType": "llamacpp-completion",
+      "reasoningBudget": 0,
+      "license": "Apache-2.0",
+      "modelCard": "https://huggingface.co/qvac/MedPsy-1.7B-GGUF/blob/fd4cecc90c2de8dce4b112795456a54be9c59363/README.md",
+      "note": "Chart review (review operation) with reasoning disabled and strict JSON schema; thinking plus schema grammar is unsupported on SDK 0.18.2 (see diagnostics/qvac-spike/MEDPSY-RUNTIME.md). Release adoption depends on the chart-review evaluation gates."
     }
   ]
 }
