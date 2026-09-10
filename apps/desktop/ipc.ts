@@ -18,7 +18,8 @@ export function validateRequest(method: unknown, args: unknown): asserts args is
     approve: [id, id, revision, text], approvedNotes: [id, flag], revokeDevice: [id],
     queryApprovedNotes: [id, value => text(value, 1000)], resolveQueryCitation: [id, id, revision], recordHumanGoldTranscription: [id, text, flag, flag],
     reviewChart: [id, id], resolveChartReviewEvidence: [id, id, value => text(value, 8)],
-    pair: [id, value => text(value, 64)], exportEvidence: [flag], exportPhysicalCandidate: [id, flag],
+    pairLan: [id, value => text(value, 64)], pairLanWithHistory: [id, value => text(value, 64)],
+    pair: [id, value => text(value, 64)], pairWithHistory: [id, value => text(value, 64)], exportEvidence: [flag], exportPhysicalCandidate: [id, flag],
   };
   if (typeof method !== 'string' || !Object.hasOwn(signatures, method) || !Array.isArray(args)) throw new Error('Invalid request.');
   const shape = signatures[method];

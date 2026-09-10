@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "kind": "mobile-history-installed-checkpoint",
+  "observedAt": "2026-09-10T02:41:36.841Z",
+  "sdkVersion": "0.18.2",
+  "requiredAncestor": "21f7f40736c201f8d3c14a36ced4cdb426639122",
+  "build": {
+    "package": "tech.adwen.psyrec.capture",
+    "apkBytes": 621892574,
+    "apkSha256": "a1454f4e226d7b628553c3f7668ab4abf55a3e01a4497c09af3c93d12da50603",
+    "signerSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+    "nativeAbi": "arm64-v8a",
+    "minSdk": 29,
+    "targetSdk": 36,
+    "gradleHeapMb": 4096,
+    "allowBackup": false,
+    "usesCleartextTraffic": false,
+    "noAudioOrStoragePermissions": true,
+    "modelBytes": 382156480,
+    "modelSha256": "33bcc57074ec7b6eada5a90651ee546ec0c2b271002c22baf9f1b2dd1e8f75cb"
+  },
+  "installation": {
+    "schemaVersion": 1,
+    "kind": "android-install-identity",
+    "observedAt": "2026-09-10T02:31:23.7625114Z",
+    "packageName": "tech.adwen.psyrec.capture",
+    "deviceManufacturer": "samsung",
+    "deviceModel": "SM-F966B",
+    "apkSha256": "a1454f4e226d7b628553c3f7668ab4abf55a3e01a4497c09af3c93d12da50603",
+    "beforeInstalledApkSha256": "4c9d47a2a26621da7c1d17eb63fe3922bd7d7b7544396693fa47e87326c34db2",
+    "installedApkSha256": "a1454f4e226d7b628553c3f7668ab4abf55a3e01a4497c09af3c93d12da50603",
+    "installedHashMatchesBuild": true,
+    "replacementInstallPerformed": true,
+    "matchingInstallSkipped": false,
+    "verificationOnly": false,
+    "method": "Read installed identity first; adb install -r for absent/different APK, then pm path, adb pull and host SHA-256 comparison; no uninstall or data clear",
+    "packageVersionObservations": [
+      "versionCode=1 minSdk=29 targetSdk=36",
+      "versionName=0.1.0",
+      "lastUpdateTime=2026-09-09 21:31:19",
+      "firstInstallTime=2026-09-09 13:15:05",
+      "firstInstallTime=2026-09-09 13:15:05"
+    ],
+    "physicalWorkflowAccepted": false
+  },
+  "checks": {
+    "expoCliPrebuild": true,
+    "mobileTypeScript": true,
+    "fullRootSuite": {
+      "passed": 162,
+      "failed": 0,
+      "skipped": 1,
+      "skip": "Explicit real GPU test"
+    },
+    "incremental": {
+      "consentPassed": 5,
+      "policyPassed": 7,
+      "mockedRuntimePassed": 6,
+      "syntheticUiGroupsPassed": 20
+    },
+    "nativeJvmPassed": 16,
+    "nativeAndroid": {
+      "passed": 37,
+      "failed": 0,
+      "instrumentationCode": -1,
+      "package": "expo.modules.psyrectransfer.test",
+      "logSha256": "0ce2404f4f01ade83ab8905099310e83be04fb737133709dedaac81873db0cac"
+    },
+    "productionUi": {
+      "coldLaunchSucceeded": true,
+      "processSurvivedMoreThanSixMinutes": true,
+      "knownLabelsObserved": [
+        "Patient history",
+        "Approved history",
+        "Ask history",
+        "Prepare phone model",
+        "Qwen3 0.6B Q4 · on this phone"
+      ],
+      "modelPrepared": true,
+      "productionQuestionSubmitted": false,
+      "inspection": "Known static labels and bounds only; patient content not retained; FLAG_SECURE preserved",
+      "unfoldedPhysicalVisualReview": false
+    },
+    "syntheticPhoneLookup": {
+      "passed": true,
+      "runs": 1,
+      "evidence": "mobile-history-synthetic-run-20260910.json",
+      "scope": "Separate fixed synthetic candidate; not production pairing or clinical acceptance"
+    }
+  },
+  "devicePreferenceRestoration": {
+    "originalStayOnWhilePluggedIn": "0",
+    "restored": true,
+    "verifiedValue": "0",
+    "restoredAt": "2026-09-10T02:37:57.0189603Z"
+  },
+  "realModelCompletions": 1,
+  "gpuJobsRun": 0,
+  "desktopRestarted": false,
+  "privateVaultAccessed": false,
+  "clinicalAcceptance": false,
+  "physicalHyperswarmAccepted": false,
+  "physicalHistorySyncAccepted": false,
+  "sourceSha256": {
+    "apps/mobile/App.tsx": "8ccbbd9ba47644b1fa1568fcbc5e27ff3dae112c38395165dc2386e92e5fb635",
+    "apps/mobile/src/history-screen.tsx": "eb0f9dd5dcbffea3cb23fe836ae01f31bf6c4f7ca864f22498938c85a59f728a",
+    "apps/mobile/src/history-runtime.ts": "8b33b4609c6f54121bf4291a069e0f172ac4816c4bf969ae3c637cfc0a8f8163",
+    "apps/mobile/src/history-runtime-policy.ts": "4301410500ab447c0d1ef34c54feee659e15b723d12760359e038f1503b18557",
+    "apps/mobile/src/history-client.ts": "d9274685336fd3f80f9f1c302e26322ad35252a4586182d3d69c7b249fa43c37",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/MobileModelStore.kt": "15c36b7097b6721665f01c48b3b9df746513599828cd7a98d2e91032eafa0e7d",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/PsyRecTransferModule.kt": "848198f91228a7801782fbd76590f79da7678fc15ac67ec2b6697d47c2fcfa8a",
+    "apps/mobile/checks/history-evidence.tsx": "4aeb5c03c9c2ba8dc498cab38f147d264a7a5567a8664ec900304559f108e547",
+    "apps/mobile/checks/history-evidence.init.gradle": "d70ee988d13e00b300ce037d7db4c5fe9a416b9dc166d9129f6216e18baa5679",
+    "apps/mobile/checks/androidTest/java/tech/adwen/psyrec/historycheck/HistoryEvidenceInstrumentation.kt": "ce6eeb0aa5c57c26005b10f26cf596283b063f5be898364f5da1820b59feb58c"
+  },
+  "remaining": [
+    "Production phone-to-PC Hyperswarm pairing and transfer",
+    "History sync/offline/revocation through production UI with explicit fresh consent",
+    "Physical unfolded visual review",
+    "Full printed-note, human-review and clinical workflow acceptance"
+  ]
+}

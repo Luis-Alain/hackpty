@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-const allowed = new Set(['status', 'unlock', 'lock', 'snapshot', 'addPatient', 'addEncounter', 'captureData', 'import', 'extract', 'previewSourceChange', 'reviewSource', 'generateDraft', 'approve', 'approvedNotes', 'revokeDevice', 'pair', 'exportEvidence', 'exportPhysicalCandidate', 'queryApprovedNotes', 'resolveQueryCitation', 'recordHumanGoldTranscription', 'reviewChart', 'resolveChartReviewEvidence']);
+const allowed = new Set(['status', 'unlock', 'lock', 'snapshot', 'addPatient', 'addEncounter', 'captureData', 'import', 'extract', 'previewSourceChange', 'reviewSource', 'generateDraft', 'approve', 'approvedNotes', 'revokeDevice', 'pair', 'pairWithHistory', 'pairLan', 'pairLanWithHistory', 'exportEvidence', 'exportPhysicalCandidate', 'queryApprovedNotes', 'resolveQueryCitation', 'recordHumanGoldTranscription', 'reviewChart', 'resolveChartReviewEvidence']);
 let goldGrant: { encounterId: string; text: string; expiresAt: number } | null = null;
 let physicalObserving = false;
 // These listeners run in the isolated preload world. Renderer arguments cannot

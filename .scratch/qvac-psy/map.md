@@ -1,5 +1,8 @@
 # QVAC Psy — Wayfinder map
 
+
+Current work: [mobile history and Hyperswarm integration](../../docs/handoffs/2026-09-10-mobile-history-integration.md). The combined APK is installed and hash-verified on the Fold. The history screen and production model preparation were observed; 37 native tests and one isolated real synthetic CPU lookup passed. Phone-to-PC Hyperswarm/history workflow acceptance remains pending. Earlier checkpoints below retain their historical status.
+
 ## Current Android capture UI
 
 The [Android UI handoff](../../docs/handoffs/2026-09-09-android-update-startup-fix.md) is the current pointer. Recovered capture design is implemented and APK `4c9d47a2...` is installed with matching device/build hashes. Mobile TypeScript, local build and 30-second startup survival passed. The phone locked before live visual inspection; full physical/human acceptance remains open. The existing desktop workspace reopened with Jeff's authorization. Preserve Claude's separate chart-review/runtime work.

@@ -1,9 +1,15 @@
+import { configureHyperswarm, closeHyperswarm } from './src/hyperswarm-transfer';
 import React, { useEffect, useRef, useState } from 'react';
 import { AppState, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as SecureStore from 'expo-secure-store';
 import { CameraHandle, Credentials, NativeCamera, Pending, Transfer, parseInvitation } from './src/transfer';
 import { Action, Disclosure, Header, Notice, SetupStep, color, NoticeValue, ui } from './src/capture-ui';
+import { HistoryScreen } from './src/history-screen';
+import { parseHistorySnapshot } from './src/history-client';
+import type { MobileHistorySnapshot } from '../../packages/contracts/mobile-history';
+import type { HistoryAnswer, ModelState } from './src/history-view-types';
+import { historyRuntime } from './src/history-runtime';
 
 const credentialKey = 'psyrec-paired-pc-v1';
 const secureOptions = { keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY };
@@ -28,7 +34,7 @@ export default function App() {
   const [preview, setPreview] = useState(false);
   const [syncedEncounterId, setSyncedEncounterId] = useState<string | null>(null);
   const [legacyEvidenceEncounterId, setLegacyEvidenceEncounterId] = useState<string | null>(null);
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(AppState.currentState === 'active');
   const [busy, setBusy] = useState(false);
   const [showChecks, setShowChecks] = useState(false);
   const [showConnection, setShowConnection] = useState(false);
@@ -37,27 +43,255 @@ export default function App() {
     title: 'Capture state',
     body: 'Loading encrypted capture queue…',
   });
+  const [showHistory, setShowHistory] = useState(false);
+  const [historySnapshot, setHistorySnapshot] = useState<MobileHistorySnapshot | null>(null);
+  const [historyBusy, setHistoryBusy] = useState(false);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyAnswer, setHistoryAnswer] = useState<HistoryAnswer | null>(null);
+  const [historyViewEpoch, setHistoryViewEpoch] = useState(0);
+  const [historyModelState, setHistoryModelState] = useState<ModelState>({
+    status: 'unavailable', label: 'Phone model unavailable',
+    reason: 'Prepare the local model to select passages from this patient’s history.',
+  });
 
   const { width } = useWindowDimensions();
   const coverScreen = width >= 700;
   const topInset = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
   const camera = useRef<CameraHandle>(null);
   const operation = useRef(false);
+  const activeRef = useRef(AppState.currentState === 'active');
+  const credentialsRef = useRef<Credentials | null>(null);
+  const showHistoryRef = useRef(false);
+  const historyGenerationRef = useRef(0);
+  const historyOperationRef = useRef<number | null>(null);
+  const historySnapshotRef = useRef<MobileHistorySnapshot | null>(null);
 
   const setNotice = (title: string, body: string, tone: NoticeValue['tone'] = 'info') =>
     setStatus({ tone, title, body });
+  const refreshPending = async () => { setPending(await Transfer.pending()); };
 
-  const refreshPending = async () => {
-    setPending(await Transfer.pending());
-  };
+  function updateCredentials(next: Credentials) {
+    configureHyperswarm(next);
+    credentialsRef.current = next;
+    setCredentials(next);
+  }
+
+  function updateHistorySnapshot(next: MobileHistorySnapshot | null) {
+    historySnapshotRef.current = next;
+    if (!next) setHistoryViewEpoch(epoch => epoch + 1);
+    setHistorySnapshot(next);
+    setHistoryAnswer(null);
+  }
+
+  function invalidateHistory() {
+    historyGenerationRef.current += 1;
+    historyOperationRef.current = null;
+    updateHistorySnapshot(null);
+    setHistoryError(null);
+    setHistoryBusy(false);
+  }
+
+  function lockNativeHistory() {
+    setHistoryAnswer(null);
+    setHistoryModelState({status: 'unavailable', label: 'Phone model unavailable',
+      reason: 'Prepare the local model to select passages from this patient’s history.'});
+    void historyRuntime.lock().catch(() => {
+      // UI remains unavailable; never expose provider errors or restore old readiness.
+    });
+    try { Transfer.historyLock?.(); } catch {
+      // Native foreground/background guards independently invalidate pending work.
+    }
+  }
+
+  function closeHistory() {
+    showHistoryRef.current = false;
+    setShowHistory(false);
+    invalidateHistory();
+    lockNativeHistory();
+  }
+
+  async function clearNativeHistoryForPairing() {
+    if (Transfer.historyClear) await Transfer.historyClear();
+  }
+
+  function isCurrentHistory(gen: number, creds: Credentials): boolean {
+    return gen === historyGenerationRef.current && activeRef.current
+      && showHistoryRef.current && credentialsRef.current === creds;
+  }
+
+  function openHistory() {
+    if (!activeRef.current || operation.current || busy || !storageReady
+      || !credentialsRef.current || showHistoryRef.current) return;
+    setPreview(false);
+    setScanning(false);
+    invalidateHistory();
+    showHistoryRef.current = true;
+    setShowHistory(true);
+    void readHistory('load');
+  }
+
+  async function prepareHistoryModel() {
+    const creds = credentialsRef.current;
+    if (!creds || !activeRef.current || !showHistoryRef.current
+      || historyOperationRef.current !== null) return;
+    const gen = ++historyGenerationRef.current;
+    historyOperationRef.current = gen;
+    setHistoryBusy(true);
+    setHistoryError(null);
+    setHistoryAnswer(null);
+    setHistoryModelState({status: 'loading', label: 'Preparing local model'});
+    try {
+      await historyRuntime.prepare();
+      if (!isCurrentHistory(gen, creds)) return;
+      if (!historyRuntime.ready) throw new Error('Model did not become ready.');
+      setHistoryModelState({status: 'ready', label: 'Qwen3 0.6B Q4 · on this phone',
+        reason: 'Experimental source lookup. Check the cited records.'});
+    } catch {
+      if (isCurrentHistory(gen, creds)) {
+        setHistoryModelState({status: 'unavailable', label: 'Phone model unavailable',
+          reason: 'The local model could not be prepared. Records and text search remain available.'});
+      }
+    } finally {
+      if (isCurrentHistory(gen, creds)) {
+        historyOperationRef.current = null;
+        setHistoryBusy(false);
+      }
+    }
+  }
+
+  async function askHistory(question: string) {
+    const creds = credentialsRef.current;
+    const snapshot = historySnapshotRef.current;
+    if (!creds || !snapshot || !question.trim() || !activeRef.current || !showHistoryRef.current
+      || historyOperationRef.current !== null || !historyRuntime.ready) return;
+    const gen = ++historyGenerationRef.current;
+    historyOperationRef.current = gen;
+    setHistoryBusy(true);
+    setHistoryError(null);
+    setHistoryAnswer(null);
+    setHistoryModelState({status: 'loading', label: 'Selecting passages on this phone'});
+    try {
+      const answer = await historyRuntime.ask(snapshot, question.trim(), creds);
+      if (!isCurrentHistory(gen, creds) || historySnapshotRef.current?.snapshotId !== snapshot.snapshotId) return;
+      if (answer.snapshotId !== snapshot.snapshotId || answer.question !== question.trim()) {
+        throw new Error('The lookup did not match the active snapshot and question.');
+      }
+      setHistoryAnswer(answer);
+      setHistoryModelState(historyRuntime.ready
+        ? {status: 'ready', label: 'Qwen3 0.6B Q4 · on this phone', reason: 'Experimental source lookup. Check the cited records.'}
+        : {status: 'unavailable', label: 'Phone model unavailable', reason: 'Prepare the model again for another lookup.'});
+    } catch {
+      if (isCurrentHistory(gen, creds)) {
+        setHistoryAnswer(null);
+        setHistoryError('The local lookup could not be completed. No passages were accepted. Records and text search remain available.');
+        setHistoryModelState(historyRuntime.ready
+          ? {status: 'ready', label: 'Qwen3 0.6B Q4 · on this phone', reason: 'Experimental source lookup. Check the cited records.'}
+          : {status: 'unavailable', label: 'Phone model unavailable', reason: 'Prepare the local model and try again.'});
+      }
+    } finally {
+      if (isCurrentHistory(gen, creds)) {
+        historyOperationRef.current = null;
+        setHistoryBusy(false);
+      }
+    }
+  }
+  async function readHistory(mode: 'load' | 'sync') {
+    const creds = credentialsRef.current;
+    if (!creds || !activeRef.current || !showHistoryRef.current
+      || historyOperationRef.current !== null) return;
+    if (!Transfer.historyLoad || !Transfer.historyClear || !Transfer.historyLock
+      || (mode === 'sync' && !Transfer.historySync)) {
+      setHistoryError('Patient history is unavailable in this platform build.');
+      return;
+    }
+    const gen = ++historyGenerationRef.current;
+    historyOperationRef.current = gen;
+    setHistoryBusy(true);
+    setHistoryError(null);
+    try {
+      const raw = mode === 'load'
+        ? await Transfer.historyLoad(creds.endpoint, creds.certificateFingerprint, creds.deviceId, creds.encounterId)
+        : await Transfer.historySync!(creds.endpoint, creds.certificateFingerprint, creds.deviceId, creds.token, creds.encounterId);
+      if (!isCurrentHistory(gen, creds)) return;
+      const parsed = parseHistorySnapshot(raw, creds);
+      if (isCurrentHistory(gen, creds)) updateHistorySnapshot(parsed);
+    } catch (error) {
+      if (!isCurrentHistory(gen, creds)) return;
+      const message = error instanceof Error ? error.message : '';
+      const authorizationFailure = [
+        'Device is not authorized for history.',
+        'History authorization belongs to another encounter.',
+        'Pair again with Allow patient history enabled on the PC.',
+        'Pair again with Allow patient history enabled on PC.',
+        'Authorized patient is unavailable.',
+        'History authorization denied.',
+      ].some(reason => message.includes(reason));
+      const unknownFailure = message.includes('History unavailable.');
+      const certificateFailure = message.includes(nativeCertificateMismatch);
+      if (authorizationFailure || unknownFailure || certificateFailure) {
+        updateHistorySnapshot(null);
+        lockNativeHistory();
+        try { await Transfer.historyClear?.(); } catch {
+          if (isCurrentHistory(gen, creds)) {
+            setHistoryError('History is hidden, but the encrypted phone copy could not be removed. Retry Remove history from phone.');
+          }
+          return;
+        }
+        if (!isCurrentHistory(gen, creds)) return;
+      }
+      if (authorizationFailure) {
+        setHistoryError('The PC did not authorize patient history. Finish any pending transfers and observations, then pair again with Allow patient history enabled on the PC.');
+      } else if (certificateFailure) {
+        setHistoryError(nativeCertificateMismatch);
+      } else if (message.includes('locked') || message.includes('Locked')) {
+        setHistoryError('The PC vault is locked. Unlock it on the PC and sync again.');
+      } else if (mode === 'load') {
+        updateHistorySnapshot(null);
+        setHistoryError('Encrypted phone history could not be opened. Sync again from the paired PC or remove the phone copy.');
+      } else if (unknownFailure) {
+        setHistoryError('History access could not be verified. The phone copy was removed. Check the paired PC and sync again.');
+      } else {
+        setHistoryError('History could not be synced. Check the connection to the paired PC and keep its vault unlocked. The last loaded snapshot is unchanged.');
+      }
+    } finally {
+      if (isCurrentHistory(gen, creds)) {
+        historyOperationRef.current = null;
+        setHistoryBusy(false);
+      }
+    }
+  }
+
+  async function clearHistory() {
+    const creds = credentialsRef.current;
+    if (!creds || !activeRef.current || !showHistoryRef.current) return;
+    invalidateHistory();
+    lockNativeHistory();
+    const gen = historyGenerationRef.current;
+    historyOperationRef.current = gen;
+    setHistoryBusy(true);
+    try {
+      if (!Transfer.historyClear) throw new Error('History clear is unavailable.');
+      await Transfer.historyClear();
+    } catch {
+      if (isCurrentHistory(gen, creds)) {
+        setHistoryError('The encrypted phone copy could not be removed. Records remain hidden. Retry Remove history from phone.');
+      }
+    } finally {
+      if (isCurrentHistory(gen, creds)) {
+        historyOperationRef.current = null;
+        setHistoryBusy(false);
+      }
+    }
+  }
 
   useEffect(() => {
+    activeRef.current = AppState.currentState === 'active';
     (async () => {
       try {
         const saved = await SecureStore.getItemAsync(credentialKey, secureOptions);
         if (saved) {
           const restored: Credentials = JSON.parse(saved);
-          setCredentials(restored);
+          updateCredentials(restored);
           const restoredCompleted = await Transfer.completed(restored.encounterId);
           setCompleted(restoredCompleted);
           setSyncedEncounterId(Platform.OS === 'android' ? null : restored.encounterId);
@@ -83,14 +317,23 @@ export default function App() {
     })();
 
     const subscription = AppState.addEventListener('change', state => {
-      setActive(state === 'active');
-      if (state !== 'active') {
+      const foreground = state === 'active';
+      activeRef.current = foreground;
+      if (!foreground) {
         setPreview(false);
         setScanning(false);
+        closeHistory();
       }
+      setActive(foreground);
     });
 
-    return () => subscription.remove();
+    return () => {
+      activeRef.current = false;
+      closeHyperswarm();
+      historyGenerationRef.current += 1;
+      lockNativeHistory();
+      subscription.remove();
+    };
   }, []);
 
   function setFailure(error: unknown, fallback: string) {
@@ -112,6 +355,9 @@ export default function App() {
     } catch (error) {
       setFailure(error, 'Operation failed. Encrypted pending captures are retained.');
     } finally {
+      // A failed tentative QR must not change the transport of the stored pairing.
+      if (credentialsRef.current) configureHyperswarm(credentialsRef.current);
+      else closeHyperswarm();
       operation.current = false;
       setBusy(false);
     }
@@ -133,14 +379,14 @@ export default function App() {
         : 'A clear record. Starts with the source.';
 
   async function openPairingScanner() {
-    if (!permission?.granted || operation.current || busy || !storageReady) return;
-
     if (scanning) {
       setScanning(false);
       setNotice('Pairing', 'Stopped pairing scan.');
       return;
     }
+    if (!activeRef.current || !permission?.granted || operation.current || busy || !storageReady) return;
 
+    closeHistory();
     await perform(async () => {
       const items = await Transfer.pending();
       if (items.length > 0) {
@@ -149,6 +395,8 @@ export default function App() {
       if (needsObservationSync) {
         throw new Error('Retry saving transfer observations before pairing another encounter.');
       }
+      await clearNativeHistoryForPairing();
+      if (!activeRef.current) return;
       setPending(items);
       setScanning(true);
       setNotice('Pairing', 'Scan only the QR shown on your unlocked PsyRec PC.');
@@ -156,9 +404,10 @@ export default function App() {
   }
 
   async function pair(data: string) {
-    if (operation.current || !permission?.granted || !storageReady) return;
+    if (!activeRef.current || operation.current || !permission?.granted || !storageReady) return;
 
     setScanning(false);
+    closeHistory();
     await perform(async () => {
       const items = await Transfer.pending();
       if (items.length > 0) {
@@ -169,6 +418,9 @@ export default function App() {
       }
 
       const invite = parseInvitation(data);
+      await clearNativeHistoryForPairing();
+      if (!activeRef.current) return;
+      configureHyperswarm(invite);
       setNotice('Pairing', 'Authenticating the PC certificate from scanned QR…');
       const result = JSON.parse(await Transfer.pair(invite.endpoint, invite.certificateFingerprint, invite.secret));
       if (
@@ -183,13 +435,14 @@ export default function App() {
         version: 1,
         endpoint: invite.endpoint,
         certificateFingerprint: invite.certificateFingerprint,
+        ...(invite.hyperswarmPublicKey ? { hyperswarmPublicKey: invite.hyperswarmPublicKey } : {}),
         encounterId: result.encounterId,
         deviceId: result.deviceId,
         token: result.token,
       };
       await SecureStore.setItemAsync(credentialKey, JSON.stringify(next), secureOptions);
       const restoredCompleted = await Transfer.completed(next.encounterId);
-      setCredentials(next);
+      updateCredentials(next);
       setCompleted(restoredCompleted);
       setSyncedEncounterId(Platform.OS === 'android' ? null : next.encounterId);
       setNotice('Paired', 'Paired to the selected PC encounter. Capture the printed synthetic English note.', 'success');
@@ -334,6 +587,7 @@ export default function App() {
     });
   }
 
+
   return (
     <SafeAreaView style={[styles.page, Platform.OS === 'android' ? { paddingTop: topInset } : undefined]}>
       <Header />
@@ -341,12 +595,34 @@ export default function App() {
         <View style={styles.lockState}>
           <Text style={styles.lockTitle}>PsyRec Capture locked</Text>
         </View>
+      ) : showHistory ? (
+        <HistoryScreen
+          key={historyViewEpoch}
+          snapshot={historySnapshot}
+          busy={historyBusy}
+          error={historyError}
+          onSync={() => void readHistory('sync')}
+          onClear={() => void clearHistory()}
+          onClose={() => closeHistory()}
+          modelState={historyModelState}
+          onPrepareModel={() => void prepareHistoryModel()}
+          onAskHistory={(question) => void askHistory(question)}
+          historyAnswer={historyAnswer}
+        />
       ) : (
         <ScrollView contentContainerStyle={[styles.content, coverScreen && styles.contentWide]}>
           <Text style={styles.title}>{mainHeadline}</Text>
           <Notice value={status} />
 
           {!permission?.granted && <Action label="Allow camera for QR and note capture" onPress={() => void requestPermission()} />}
+
+          {credentials && (
+            <Action
+              label="Patient history"
+              onPress={() => openHistory()}
+              disabled={busy || !storageReady}
+            />
+          )}
 
           {(!hasPending && !completed) ? (
             <Action
@@ -373,6 +649,7 @@ export default function App() {
               expanded={showConnection}
               onToggle={() => setShowConnection((open) => !open)}
             >
+              <Text style={ui.body}>Transport: {credentials.hyperswarmPublicKey ? 'Hyperswarm P2P' : 'Local Wi-Fi'}</Text>
               <Text style={ui.body}>Paired PC: {credentials.endpoint}</Text>
               <Text style={ui.body}>Encounter: {credentials.encounterId}</Text>
             </Disclosure>

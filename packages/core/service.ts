@@ -1,4 +1,5 @@
 import { isDeepStrictEqual } from 'node:util';
+import { buildMobileHistorySnapshot } from './mobile-history.js';
 import { queryHistory } from '../runtime/prompts.js';
 import { scoreTranscription, SCORING_METHODS } from '../runtime/transcription-scoring.js';
 import { selectApprovedQueryExcerpts, revalidateApprovedQuerySources, validateApprovedQueryOutput } from './approved-query.js';
@@ -45,7 +46,7 @@ export class PsyRecService {
   retrievalTimeoutMs: number;
   queue: Promise<unknown>;
   generation: number;
-  pairing: { secret: string; encounterId: string; expiresAt: number } | null;
+  pairing: { secret: string; encounterId: string; expiresAt: number; historyEnabled: boolean } | null;
   constructor(vault: Vault, runtime: InferencePort, options: { retriever?: import('../contracts/index.js').ApprovedNotesRetriever; retrievalTimeoutMs?: number } = {}) {
     this.vault = vault; this.runtime = runtime;
     this.retriever = options.retriever ?? null;
@@ -353,10 +354,10 @@ export class PsyRecService {
       return r;
     });
   }
-  startPairing(encounterId, endpoint, certificateFingerprint) {
+  startPairing(encounterId, endpoint, certificateFingerprint, historyEnabled = false) {
     this.encounter(this.state(), encounterId);
     const secret = randomBytes(32).toString('base64url');
-    this.pairing = { secret, encounterId, expiresAt: Date.now() + 120000 };
+    this.pairing = { secret, encounterId, expiresAt: Date.now() + 120000, historyEnabled: historyEnabled === true };
     return { version: 1, endpoint, certificateFingerprint, secret, encounterId, expiresAt: this.pairing.expiresAt };
   }
   async pair(secret, deviceName) {
@@ -365,10 +366,11 @@ export class PsyRecService {
     this.pairing = null;
     return this.change(s => {
       const token = randomBytes(32).toString('base64url'), id = randomUUID();
-      s.devices.push({ id, name: requiredText(deviceName, 'Device name', 80), tokenHash: digest(token), createdAt: now(), revoked: false, encounterId: p.encounterId });
+      s.devices.push({ id, name: requiredText(deviceName, 'Device name', 80), tokenHash: digest(token), createdAt: now(), revoked: false, encounterId: p.encounterId, historyEnabled: p.historyEnabled === true });
       return { deviceId: id, token, encounterId: p.encounterId };
     });
   }
+  mobileHistory(input: { deviceId: unknown; token: unknown; encounterId: unknown }) { return buildMobileHistorySnapshot(this.state(), input); }
   async revokeDevice(deviceId) { return this.change(s => { const d = s.devices.find(d => d.id === deviceId); if (!d) throw new Error('Device not found.'); d.revoked = true; }); }
   async receivePhoneEvidence({ deviceId, token, transferId, encounterId, evidence }: { deviceId: string; token: string; transferId: string; encounterId: string; evidence: PhoneLifecycleEvidence }) {
     // Clone at the boundary so caller mutation cannot change a queued commit.

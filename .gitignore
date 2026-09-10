@@ -21,3 +21,8 @@ artifacts/private/
 *.gguf
 evidencia/rendimiento.jsonl
 datos/*.jsonl
+
+apps/mobile/qvac/
+apps/mobile/assets/models/
+
+apps/mobile/p2p/worker.bundle.js

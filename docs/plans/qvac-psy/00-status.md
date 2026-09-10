@@ -1,5 +1,8 @@
 # Status: PsyRec QVAC Psy
 
+
+Current work: [mobile history and Hyperswarm integration](../../handoffs/2026-09-10-mobile-history-integration.md). The combined APK is installed and hash-verified on the Fold. The history screen and production model preparation were observed; 37 native tests and one isolated real synthetic CPU lookup passed. Phone-to-PC Hyperswarm/history workflow acceptance remains pending. Earlier checkpoints below retain their historical status.
+
 ## Current Android capture UI
 
 See the [Android UI handoff](../../handoffs/2026-09-09-android-update-startup-fix.md) and [installation receipt](../../../apps/mobile/evidence/mobile-ui-install-20260909.json). The recovered standalone design now supplies the native capture flow. APK `4c9d47a2...` is installed and hash-verified at 23:00:20 UTC; mobile TypeScript, offline Release build and delayed 30-second startup checks passed. Six native JVM checks passed after the earlier lifecycle crash fix. Live visual inspection remains pending because the phone locked. The existing desktop workspace was reopened with Jeff's authorization; its UI was the study's design authority. Claude's separate changes are preserved. Phone history/local inference and full physical workflow acceptance remain open. Earlier states below are historical.

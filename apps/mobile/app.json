@@ -3,7 +3,7 @@
     "name": "PsyRec Capture",
     "slug": "psyrec-capture",
     "version": "0.1.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "userInterfaceStyle": "light",
     "android": {
       "package": "tech.adwen.psyrec.capture",
@@ -24,6 +24,7 @@
       ]
     },
     "plugins": [
+      "@qvac/sdk/expo-plugin",
       [
         "expo-camera",
         {
@@ -38,7 +39,8 @@
         }
       ],
       "./plugins/with-private-android.cjs",
-      "./plugins/with-private-ios.cjs"
+      "./plugins/with-private-ios.cjs",
+      "expo-asset"
     ],
     "extra": {
       "eas": {

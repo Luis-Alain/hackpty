@@ -6,20 +6,33 @@
   "license": "MIT",
   "scripts": {
     "start": "expo start --dev-client",
-    "prebuild": "expo prebuild --platform android --no-install",
+    "prebuild": "node scripts/provision-history-model.mjs && expo prebuild --platform android --no-install",
     "android": "expo run:android",
     "check": "tsc --noEmit",
-    "eas-build-post-install": "node scripts/eas-ios-post-install.cjs"
+    "eas-build-post-install": "node scripts/eas-ios-post-install.cjs",
+    "model:provision": "node scripts/provision-history-model.mjs",
+    "postprebuild": "node scripts/bundle-hyperswarm.cjs"
   },
   "dependencies": {
+    "@qvac/sdk": "0.18.2",
+    "b4a": "1.8.1",
+    "bare-link": "3.1.0",
+    "bare-net": "2.3.3",
     "expo": "55.0.31",
+    "expo-asset": "~55.0.20",
+    "expo-build-properties": "55.0.18",
     "expo-camera": "~55.0.23",
+    "expo-device": "55.0.21",
+    "expo-file-system": "55.0.26",
     "expo-secure-store": "~55.0.18",
+    "hyperswarm": "4.17.1",
     "react": "19.2.0",
-    "react-native": "0.83.10"
+    "react-native": "0.83.10",
+    "react-native-bare-kit": "0.14.0"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "bare-pack": "2.2.2",
     "typescript": "5.9.3"
   }
 }

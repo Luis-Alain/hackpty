@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "mobile-history-prebuild-checkpoint",
+  "scope": "Generated source/assets and synthetic checks only; no APK/native/device acceptance",
+  "sdkVersion": "0.18.2",
+  "requiredAncestor": "21f7f40736c201f8d3c14a36ced4cdb426639122",
+  "commands": {
+    "mobileTypeScript": "npm --prefix apps/mobile run check",
+    "expo": "npm --prefix apps/mobile run prebuild",
+    "assets": "gradlew.bat :app:createBundleReleaseJsAndAssets :app:processReleaseMainManifest -PreactNativeArchitectures=arm64-v8a --console=plain --max-workers=2",
+    "rootSuite": "tsc -p tsconfig.json --outDir .local/mobile-history-check; node --test .local/mobile-history-check/tests/*.test.js"
+  },
+  "checks": {
+    "expoPrebuild": true,
+    "qvacBundleVerified": true,
+    "hyperswarmAddonsMatching": 7,
+    "mobileTypeScript": true,
+    "fullRootSuite": {
+      "passed": 162,
+      "failed": 0,
+      "skipped": 1,
+      "skip": "Explicit real GPU test"
+    },
+    "finalIncremental": {
+      "consent": 5,
+      "policy": 7,
+      "runtimeLifecycle": 6,
+      "uiHarnessGroups": 20,
+      "failed": 0
+    },
+    "sourceMapMatchesCurrentSource": [
+      "App.tsx",
+      "src/history-screen.tsx",
+      "src/history-runtime.ts",
+      "src/history-runtime-policy.ts"
+    ],
+    "nativeCompilation": false,
+    "finalApkAssembly": false,
+    "deviceInstallation": false,
+    "liveUiVerification": false,
+    "phoneInference": false
+  },
+  "model": {
+    "id": "QWEN3_600M_INST_Q4",
+    "name": "Qwen3-0.6B-Q4_0.gguf",
+    "bytes": 382156480,
+    "sha256": "33bcc57074ec7b6eada5a90651ee546ec0c2b271002c22baf9f1b2dd1e8f75cb",
+    "revision": "50968a4468ef4233ed78cd7c3de230dd1d61a56b",
+    "status": "Public bundled candidate; not hardware-validated",
+    "generatedAndroidAssetMatches": true
+  },
+  "manifest": {
+    "package": "tech.adwen.psyrec.capture",
+    "minSdk": 29,
+    "allowBackup": false,
+    "usesCleartextTraffic": false,
+    "noAudioOrStoragePermissions": true
+  },
+  "providers": {
+    "glm": {
+      "requested": "glm-5.3-flash",
+      "served": "glm-5.3-flash",
+      "scope": "One conceptual contract review",
+      "secondDetailedReview": "Rejected before transmission; not retried"
+    },
+    "kimi": {
+      "cliVersion": "0.40.1",
+      "requestedAlias": "kimi-code/kimi-for-coding-highspeed",
+      "servedModel": "not independently reported",
+      "scope": "Initial native/UI/source-selection drafts with separately attributed Codex review corrections"
+    },
+    "spark": {
+      "scope": "History checkpoint dispatch",
+      "status": "Usage limit before work; prior capture checkpoint used Spark"
+    },
+    "fableUsed": false
+  },
+  "blockers": [
+    "Automatic approval review twice rejected the remaining native model-journal generation gate; explicit trusted user confirmation pending.",
+    "Module references pending MobileModelStore.newRunId()/lock(); source is intermediate and not ready to publish/install.",
+    "ADB device list empty; reconnect/unlock requested."
+  ],
+  "gpuJobsRun": 0,
+  "realModelRuns": 0,
+  "desktopRestarted": false,
+  "privateVaultAccessed": false,
+  "gitPublicationPerformed": false,
+  "lastVerifiedInstalledApkSha256": "4c9d47a2a26621da7c1d17eb63fe3922bd7d7b7544396693fa47e87326c34db2",
+  "observedAt": "2026-09-10T01:56:56.9269277Z",
+  "currentHead": "f2fbf80148cde9584e169d91fa383f9f60dccc9c",
+  "sourceSha256": {
+    "apps/mobile/App.tsx": "8ccbbd9ba47644b1fa1568fcbc5e27ff3dae112c38395165dc2386e92e5fb635",
+    "apps/mobile/app.json": "c904d629017d985e12bd3b2db84a18884748be4c484998d07337eeae8adc4e82",
+    "apps/mobile/package.json": "eab3a2b068d906d8db72d167ca0da009113fa2421a0656ba9f701bda52a74330",
+    "apps/mobile/package-lock.json": "8a171b4f93ed9a032562bc6111fda9fe2cf41b0d5ef6e4a8824e1bf48b00b287",
+    "apps/mobile/src/history-runtime.ts": "8b33b4609c6f54121bf4291a069e0f172ac4816c4bf969ae3c637cfc0a8f8163",
+    "apps/mobile/src/history-runtime-policy.ts": "4301410500ab447c0d1ef34c54feee659e15b723d12760359e038f1503b18557",
+    "apps/mobile/src/history-client.ts": "d9274685336fd3f80f9f1c302e26322ad35252a4586182d3d69c7b249fa43c37",
+    "apps/mobile/src/history-screen.tsx": "eb0f9dd5dcbffea3cb23fe836ae01f31bf6c4f7ca864f22498938c85a59f728a",
+    "apps/mobile/src/transfer.ts": "3508fb24e511331ea1ce28579fe5989913b6aac33e2241a882cbc1fc2fc50f07",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/MobileModelStore.kt": "40a859982bf196a856e76db20b8e8170b92ea58d13fe229dfab5e81adae59d52",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/PsyRecTransferModule.kt": "848198f91228a7801782fbd76590f79da7678fc15ac67ec2b6697d47c2fcfa8a",
+    "packages/core/mobile-history.ts": "99f3a40817f558dc86fc2945deafde72692e58666711b2310a0b9c6a2d7fac95",
+    "packages/transport/server.ts": "817748becb621f19623724ddbda2060a69056e0da1991275eaf47efd842b21a1",
+    "tests/mobile-history.test.ts": "b43cd410809685731b30a73cc49dddffc6e0a4fb946193bc795a97d3b68b07a4",
+    "tests/mobile-history-runtime-policy.test.ts": "9c6425d41aa2261b72b52db38250d45893f9a1c9732c2f839c72e4f8a8431c37",
+    "tests/mobile-history-runtime-lifecycle.test.ts": "3564a60e0f66de90578364ce9e6e502eb5a26917da07dee37fbbc341edd5dc19",
+    "tests/mobile-history-consent.test.ts": "efddb943072208cf9b1143476be45d2054ba6eed0a4be5ece372a2f23f3f0c4f"
+  }
+}

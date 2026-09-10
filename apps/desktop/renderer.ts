@@ -143,6 +143,7 @@ function refreshButtons() {
   $<HTMLButtonElement>('newEncounter').disabled = busy || !patientId;
   $<HTMLButtonElement>('importImage').disabled = busy || !e || Boolean(e.capture);
   $<HTMLButtonElement>('pairPhone').disabled = busy || !e || Boolean(e.capture);
+  if ($('pairHistoryPhone')) $<HTMLButtonElement>('pairHistoryPhone').disabled = busy || !e;
   $<HTMLButtonElement>('extract').disabled = busy || !e?.capture || Boolean(e.source.revision);
   $<HTMLButtonElement>('reviewSource').disabled = busy || !e?.source.revision || !$<HTMLTextAreaElement>('sourceText').value.trim();
   $<HTMLButtonElement>('draft').disabled = busy || !e?.source.reviewed || $<HTMLTextAreaElement>('sourceText').value.trim() !== e?.source.text;
@@ -280,9 +281,52 @@ $('draftText').oninput = resetApproval;
 $('approve').onclick = () => void action(async () => { const e = current(); if (sourceDirty()) throw new Error('Save and review the source correction first.'); await call('approve', e.id, e.draft.id, e.draft.sourceRevision, $<HTMLTextAreaElement>('draftText').value); edits.delete(e.id); await refresh(); $('history').hidden = false; notice('Exact reviewed record approved and encrypted.'); });
 $('historyToggle').onclick = () => { $('history').hidden = !$('history').hidden; };
 $('showSuperseded').onchange = () => void renderHistory();
-$('pairPhone').onclick = () => void action(async () => { await status(); $('pairQr').hidden = true; $('pairStatus').textContent = ''; $<HTMLDialogElement>('pairDialog').showModal(); });
-$('createInvite').onclick = () => void action(async () => { const invite = await call('pair', encounterId, $<HTMLSelectElement>('lanAddress').value); $<HTMLImageElement>('pairQr').src = invite.qr; $('pairQr').hidden = false; $('pairStatus').textContent = `Invitation expires ${new Date(invite.expiresAt).toLocaleTimeString()}. Bound to this encounter. Server identity: ${invite.certificateFingerprint.slice(0, 16)}…`; });
-$('closePair').onclick = () => $<HTMLDialogElement>('pairDialog').close();
+let phonePairingSelectionGeneration = 0;
+function invalidatePhonePairing() {
+  phonePairingSelectionGeneration++;
+  $<HTMLImageElement>('pairQr').removeAttribute('src');
+  $('pairQr').hidden = true;
+  $('pairStatus').textContent = '';
+}
+function openPhonePairing(history: boolean) { return action(async () => {
+  invalidatePhonePairing();
+  const generation = sessionGeneration, pairingEncounter = encounterId;
+  const selectionGeneration = phonePairingSelectionGeneration;
+  await status();
+  if (generation !== sessionGeneration || selectionGeneration !== phonePairingSelectionGeneration
+    || !state || pairingEncounter !== encounterId || !current()) return;
+  if ($('allowPhoneHistory')) $<HTMLInputElement>('allowPhoneHistory').checked = history;
+  $<HTMLDialogElement>('pairDialog').showModal();
+}); }
+$('pairPhone').onclick = () => void openPhonePairing(false);
+if ($('pairHistoryPhone')) $('pairHistoryPhone').onclick = () => void openPhonePairing(true);
+$('allowPhoneHistory').onchange = invalidatePhonePairing;
+$('phoneTransport').onchange = invalidatePhonePairing;
+$('lanAddress').onchange = invalidatePhonePairing;
+$('createInvite').onclick = () => void action(async () => {
+  if (!state || !current() || !$<HTMLDialogElement>('pairDialog').open) return;
+  invalidatePhonePairing();
+  const generation = sessionGeneration, pairingEncounter = encounterId;
+  const selectionGeneration = phonePairingSelectionGeneration;
+  const transport = $<HTMLSelectElement>('phoneTransport').value;
+  const address = $<HTMLSelectElement>('lanAddress').value;
+  const history = $<HTMLInputElement>('allowPhoneHistory').checked === true;
+  const local = transport === 'lan';
+  const invite = await call(local ? (history ? 'pairLanWithHistory' : 'pairLan') : (history ? 'pairWithHistory' : 'pair'), pairingEncounter, address);
+  if (generation !== sessionGeneration || selectionGeneration !== phonePairingSelectionGeneration
+    || !state || pairingEncounter !== encounterId || !$<HTMLDialogElement>('pairDialog').open
+    || transport !== $<HTMLSelectElement>('phoneTransport').value
+    || address !== $<HTMLSelectElement>('lanAddress').value
+    || history !== ($<HTMLInputElement>('allowPhoneHistory').checked === true)) return;
+  $<HTMLImageElement>('pairQr').src = invite.qr;
+  $('pairQr').hidden = false;
+  const scope = history ? 'Patient history included.' : 'Capture only; patient history not included.';
+  $('pairStatus').textContent = `Invitation expires ${new Date(invite.expiresAt).toLocaleTimeString()}. ${invite.hyperswarmPublicKey ? 'Hyperswarm P2P selected.' : 'Local Wi-Fi selected.'} ${scope} Bound to this encounter. Server identity: ${invite.certificateFingerprint.slice(0, 16)}…`;
+});
+$('pairDialog').oncancel = invalidatePhonePairing;
+$('pairDialog').onclose = invalidatePhonePairing;
+$('closePair').onclick = () => { invalidatePhonePairing(); $<HTMLDialogElement>('pairDialog').close(); };
+
 $('exportEvidence').onclick = () => void action(async () => { const result = await call('exportEvidence', $<HTMLInputElement>('syntheticOnly').checked); if (result) notice(`${result.count} complete synthetic run records exported.`); });
 $('exportPhysicalCandidate').onclick = () => void action(async () => { const result = await call('exportPhysicalCandidate', encounterId, $<HTMLInputElement>('syntheticOnly').checked); if (result) notice(`Workflow candidate exported for independent review. ${result.reviewFailures} outstanding evidence checks. Acceptance remains pending.`); });
 // Poll only capture receipt; never overwrite unsaved clinician edits.

@@ -12,7 +12,7 @@ export interface Context { status: 'disabled' | 'available' | 'unavailable'; exc
 export interface Draft { id: string; sourceRevision: number; text: string; createdAt: string; metrics: Evidence; context: Context }
 export interface Encounter { id: string; patientId: string; createdAt: string; capture: Capture | null; source: Source; draft: Draft | null; status: 'empty' | 'received' | 'source-review' | 'source-reviewed' | 'draft-review' | 'approved' }
 export interface ApprovedRecord { id: string; patientId: string; encounterId: string; sourceRevision: number; sourceText: string; text: string; draftId: string; modelDraftText: string; clinicianEdited: boolean; approvedAt: string; supersededAt: string | null; context: Excerpt[]; extractionMetrics?: Evidence; draftingMetrics: Evidence }
-export interface Device { id: string; name: string; tokenHash: string; createdAt: string; revoked: boolean; encounterId: string }
+export interface Device { id: string; name: string; tokenHash: string; createdAt: string; revoked: boolean; encounterId: string; historyEnabled?: boolean }
 export type Receipt = CaptureReceipt;
 export type RunRecord = { encounterId: string; sourceRevision: number; operation: 'extract' | 'draft' } & ({ status?: 'succeeded'; metrics: Evidence; outputText?: string } | { status: 'failed'; evidence: RuntimeFailure; metrics?: never });
 export interface ChartReviewRunRecord {

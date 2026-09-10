@@ -134,12 +134,26 @@ async function dispatch(method: string, args: any[]) {
     case 'resolveChartReviewEvidence': return service.resolveChartReviewEvidence(args[0], args[1], args[2]);
     case 'recordHumanGoldTranscription': return service.recordHumanGoldTranscription(args[0], args[1], args[2], args[3]);
     case 'revokeDevice': return service.revokeDevice(args[0]);
+    case 'pairLan':
+    case 'pairLanWithHistory':
+    case 'pairWithHistory':
     case 'pair': {
+      const pairingGeneration = service.generation;
+      const requirePairingSession = () => { if (locking || !service.vault.state || service.generation !== pairingGeneration) throw new Error('Vault session changed during pairing.'); };
+      requirePairingSession();
       if (!addresses().includes(args[1])) throw new Error('Select this PC’s private LAN address.');
       if (!receiverInfo) receiverInfo = await receiver.start(args[1]);
       if (receiverInfo.endpoint !== `https://${args[1]}:9443`) throw new Error('Lock and unlock the vault before switching networks.');
-      const invite = service.startPairing(args[0], receiverInfo.endpoint, receiverInfo.certificateFingerprint);
-      return { ...invite, qr: await QRCode.toDataURL(JSON.stringify(invite), { width: 320, margin: 2 }) };
+      requirePairingSession();
+      const useP2p = method === 'pair' || method === 'pairWithHistory';
+      const hyperswarmPublicKey = useP2p ? await receiver.startHyperswarm() : undefined;
+      requirePairingSession();
+      const invite = { ...service.startPairing(args[0], receiverInfo.endpoint, receiverInfo.certificateFingerprint, method === 'pairWithHistory' || method === 'pairLanWithHistory'),
+        ...(hyperswarmPublicKey ? { hyperswarmPublicKey } : {}) };
+      const qr = await QRCode.toDataURL(JSON.stringify(invite), { width: 320, margin: 2 });
+      requirePairingSession();
+      if (service.pairing?.secret !== invite.secret) throw new Error('Pairing invitation changed. Create another invitation.');
+      return { ...invite, qr };
     }
     case 'exportPhysicalCandidate': {
       if (!physicalObserver || !process.env.PSYREC_FOLD_SESSION_ID || args[1] !== true) throw new Error('Confirm this fresh physical-session vault contains reviewed synthetic data only.');

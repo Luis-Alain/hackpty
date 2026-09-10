@@ -1,14 +1,22 @@
 # PsyRec native Android capture
 
-This Expo SDK 55 / React Native 0.83 app captures a printed synthetic English note on Android and transfers it to the paired Windows PsyRec vault. Inference is on the PC. Expo Go cannot run the local Kotlin module. Android builds remain local. The iPhone port also has an optional EAS simulator validation build; inference remains on the paired PC.
+This Expo SDK 55 / React Native 0.83 app captures a printed synthetic English note on Android and transfers it to the paired Windows PsyRec vault. Capture extraction and drafting run on the PC. The Android history screen also offers experimental phone-local source selection. Expo Go cannot run the local Kotlin module. Android builds remain local. The iPhone port also has an optional EAS simulator validation build; inference remains on the paired PC.
 
 The existing local app is linked to [@hackpty/psyrec-capture](https://expo.dev/accounts/hackpty/projects/psyrec-capture), project ID `b57b65cb-66a6-454f-8301-72259ee2a828`. Expo account membership was verified as Owner before linking. `app.json` records the account/project association; Android package identity and local build scripts are preserved. Linking the project did not run a cloud build, publish an update, or enable cloud inference. `eas project:info` verifies the association when signed in.
 
 The current source also includes a [capture detail candidate](docs/capture-quality-candidate.md): a 2048 × 1536 resolution preference, JPEG quality 100, encrypted dimensions/settings metadata and bounded image buffers. It is compiled, policy-tested, reviewed, packaged and verified installed by APK hash. Physical capture evaluation and OCR improvement remain unverified. The linked candidate record distinguishes the currently installed APK from the latest built APK; no OCR improvement is claimed.
 
+## History and Hyperswarm update
+
+The [current integration checkpoint](../../docs/handoffs/2026-09-10-mobile-history-integration.md) distinguishes source, generated assets and device verification. The working tree contains native history browsing, explicit patient-history pairing grants and Hyperswarm transport, plus an experimental phone-local source-selection runtime. The combined APK is installed and hash-verified on the Fold. The actual history UI and production model preparation were observed; all 37 native storage tests and one real isolated synthetic CPU lookup passed. Phone-to-PC history sync and Hyperswarm device acceptance remain pending.
+
+History is a bounded encrypted snapshot of the paired patient's current approved revisions at sync time. Later PC changes cannot be checked offline. Record browsing remains separate from model readiness. Asking history selects exact canonical passages and does not approve or change records.
+
+The new build bundles a public Qwen3-0.6B Q4_0 model (382 MB) after checksum verification. `npm run prebuild` provisions it, runs Expo CLI and validates both native worker bundles; generated model/bundle files stay out of Git. The model remains an experimental candidate. The isolated check records one measured synthetic lookup; it does not establish clinical quality or sustained performance.
+
 ## Local build
 
-Install Node 22.17+, JDK 17, Android SDK platform 36, build tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1 and Android platform tools. Set `JAVA_HOME` and `ANDROID_HOME` to your local installations. From this directory:
+Install Node 22.17+, JDK 17, Android SDK platform 36, build tools 36.0.0, NDK 29.0.14206865 (app) and 27.0.12077973 (BareKit), SDK platform 34 for BareKit, CMake 3.22.1 and Android platform tools. Set `JAVA_HOME` and `ANDROID_HOME` to your local installations. From this directory:
 
 ```powershell
 npm ci
@@ -22,7 +30,7 @@ The debug APK is `android/app/build/outputs/apk/debug/app-debug.apk`. It require
 
 SDK and Gradle dependency downloads are provisioning. After provisioning, the capture workflow uses private LAN TLS and local PC inference only. The current session installed its optional toolchain beneath the repository's ignored `.local/android-tools/`; that path is not a product dependency.
 
-With `JAVA_HOME` and `ANDROID_HOME` set, `./scripts/build-android.ps1` performs dependency installation, TypeScript validation, Expo generation and a self-contained arm64 Release build, then prints the APK size and SHA-256. Use `-Variant Debug` for a Metro-dependent build.
+With `JAVA_HOME` and `ANDROID_HOME` set, `./scripts/build-android.ps1` performs dependency installation, TypeScript validation, Expo generation and a self-contained arm64 Release build, then prints the APK size and SHA-256. Use `-Variant Debug` for a Metro-dependent build. The release script defaults to `-GradleHeapMb 4096` after R8 exceeded 2 GB; it accepts 2048–8192 MB. The separate [synthetic phone check](checks/README.md) preserves production app storage.
 
 ## Prepared Android lifecycle verification
 

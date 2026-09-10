@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "kind": "mobile-history-navigation-installed-checkpoint",
+  "observedAt": "2026-09-10T02:58:06.092Z",
+  "sdkVersion": "0.18.2",
+  "requiredAncestor": "21f7f40736c201f8d3c14a36ced4cdb426639122",
+  "scope": "Final source-navigation UI correction; data-preserving replacement of the already verified history build.",
+  "build": {
+    "observedAt": "2026-09-10T02:53:15.6808556Z",
+    "apkSha256": "421506b37d9af37ca9f4dda6e87a04ff254733632b484bf122628d14f41e256e",
+    "apkBytes": 621893278,
+    "modelSha256": "33bcc57074ec7b6eada5a90651ee546ec0c2b271002c22baf9f1b2dd1e8f75cb",
+    "modelBytes": 382156480,
+    "signerSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+    "nativeBareLibraries": [
+      "lib/arm64-v8a/libbare-buffer.3.7.1.so",
+      "lib/arm64-v8a/libbare-cpu-info.0.1.1.so",
+      "lib/arm64-v8a/libbare-crypto.1.15.3.so",
+      "lib/arm64-v8a/libbare-dns.2.2.0.so",
+      "lib/arm64-v8a/libbare-fs.4.8.1.so",
+      "lib/arm64-v8a/libbare-gpu-info.0.1.1.so",
+      "lib/arm64-v8a/libbare-hrtime.2.1.2.so",
+      "lib/arm64-v8a/libbare-inspect.3.1.10.so",
+      "lib/arm64-v8a/libbare-kit.so",
+      "lib/arm64-v8a/libbare-os.3.9.3.so",
+      "lib/arm64-v8a/libbare-path.3.1.2.so",
+      "lib/arm64-v8a/libbare-performance.2.1.1.so",
+      "lib/arm64-v8a/libbare-pipe.4.3.1.so",
+      "lib/arm64-v8a/libbare-signals.4.2.0.so",
+      "lib/arm64-v8a/libbare-tcp.2.6.1.so",
+      "lib/arm64-v8a/libbare-tls.3.1.10.so",
+      "lib/arm64-v8a/libbare-type.1.1.1.so",
+      "lib/arm64-v8a/libbare-url.2.5.4.so",
+      "lib/arm64-v8a/libbare-zlib.1.4.1.so"
+    ],
+    "sourceMapMatched": true
+  },
+  "installation": {
+    "schemaVersion": 1,
+    "kind": "android-install-identity",
+    "observedAt": "2026-09-10T02:54:38.4720195Z",
+    "packageName": "tech.adwen.psyrec.capture",
+    "deviceManufacturer": "samsung",
+    "deviceModel": "SM-F966B",
+    "apkSha256": "421506b37d9af37ca9f4dda6e87a04ff254733632b484bf122628d14f41e256e",
+    "beforeInstalledApkSha256": "a1454f4e226d7b628553c3f7668ab4abf55a3e01a4497c09af3c93d12da50603",
+    "installedApkSha256": "421506b37d9af37ca9f4dda6e87a04ff254733632b484bf122628d14f41e256e",
+    "installedHashMatchesBuild": true,
+    "replacementInstallPerformed": true,
+    "matchingInstallSkipped": false,
+    "verificationOnly": false,
+    "method": "Read installed identity first; adb install -r for absent/different APK, then pm path, adb pull and host SHA-256 comparison; no uninstall or data clear",
+    "packageVersionObservations": [
+      "versionCode=1 minSdk=29 targetSdk=36",
+      "versionName=0.1.0",
+      "lastUpdateTime=2026-09-09 21:54:35",
+      "firstInstallTime=2026-09-09 13:15:05",
+      "firstInstallTime=2026-09-09 13:15:05"
+    ],
+    "physicalWorkflowAccepted": false
+  },
+  "startup": {
+    "observedAt": "2026-09-10T02:55:13.8522835Z",
+    "launchSucceeded": true,
+    "pidAt5Seconds": "19513",
+    "sameProcessAfterAtLeast30Seconds": true,
+    "checkedAt": "2026-09-10T02:56:57.3596208Z",
+    "stayOnWhilePluggedIn": "0",
+    "knownLabelsObserved": [
+      "Approved history",
+      "Ask history",
+      "Phone model unavailable",
+      "Prepare phone model"
+    ],
+    "productionModelReadyObserved": true,
+    "productionQuestionSubmitted": false,
+    "inspection": "Known static UI labels only; patient text not retained; screenshot protection preserved"
+  },
+  "bundleSourceChecks": [
+    {
+      "file": "App.tsx",
+      "match": true,
+      "sha256": "8ccbbd9ba47644b1fa1568fcbc5e27ff3dae112c38395165dc2386e92e5fb635"
+    },
+    {
+      "file": "src/history-screen.tsx",
+      "match": true,
+      "sha256": "de3f932b5c46b51aac2e1b5fd3c05df8dbc6b156309db72548a122a9f11beceb"
+    },
+    {
+      "file": "src/history-runtime.ts",
+      "match": true,
+      "sha256": "8b33b4609c6f54121bf4291a069e0f172ac4816c4bf969ae3c637cfc0a8f8163"
+    },
+    {
+      "file": "src/history-runtime-policy.ts",
+      "match": true,
+      "sha256": "4301410500ab447c0d1ef34c54feee659e15b723d12760359e038f1503b18557"
+    }
+  ],
+  "checks": {
+    "mobileTypeScript": true,
+    "targetedHistoryConsentHyperswarm": {
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "479bf151d98f2949d71503f4e66c2a352ac6f1da16d2aa89d0d5e1cedf2190b8"
+    },
+    "existingSyntheticUiGroupsPassed": 20,
+    "navigation": {
+      "status": "passed",
+      "checks": [
+        "narrow source selection waits for measured detail layout below tall status content",
+        "repeated same-source opening scrolls retained measured offset",
+        "back-to-records cancels queued source scroll",
+        "Open selected record uses the same measured navigation path",
+        "snapshot/patient context reset cancels queued scroll and removes selected detail",
+        "close/unmount cancels queued frame before any scroll call",
+        "wide record changes and source opening reset the detail pane to zero"
+      ],
+      "sourcePath": "apps/mobile/src/history-screen.tsx",
+      "sourceSha256": "de3f932b5c46b51aac2e1b5fd3c05df8dbc6b156309db72548a122a9f11beceb",
+      "scope": "Synthetic React hook, layout-event, ref and animation-frame scheduling checks against production HistoryScreen. No native geometry, device gestures, inference or clinical validation."
+    },
+    "buildLogSha256": "3707cfeb761b1413a6f0265235899ec7e8ab20edb56fd0edec3b3f7f472b14a4"
+  },
+  "runtimeAndNativeSourceUnchangedFromMeasuredCheckpoint": {
+    "apps/mobile/src/history-runtime.ts": "8b33b4609c6f54121bf4291a069e0f172ac4816c4bf969ae3c637cfc0a8f8163",
+    "apps/mobile/src/history-runtime-policy.ts": "4301410500ab447c0d1ef34c54feee659e15b723d12760359e038f1503b18557",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/MobileModelStore.kt": "15c36b7097b6721665f01c48b3b9df746513599828cd7a98d2e91032eafa0e7d",
+    "apps/mobile/modules/psyrec-transfer/android/src/main/java/expo/modules/psyrectransfer/PsyRecTransferModule.kt": "848198f91228a7801782fbd76590f79da7678fc15ac67ec2b6697d47c2fcfa8a"
+  },
+  "priorInstalledCheckpoint": "mobile-history-install-20260910.json",
+  "measuredSyntheticRun": "mobile-history-synthetic-run-20260910.json",
+  "modelCompletionRerunForNavigationBuild": false,
+  "provenance": {
+    "navigation": "Actual Codex CLI gpt-5.3-codex-spark draft; bounded Codex layout-timing corrections.",
+    "desktopConsent": "Actual Spark attempt stopped after Windows helper write failures; final renderer fix and synthetic tests authored by Codex integration."
+  },
+  "desktopRestarted": false,
+  "privateVaultAccessed": false,
+  "gpuJobsRun": 0,
+  "physicalHistorySyncAccepted": false,
+  "physicalHyperswarmAccepted": false,
+  "physicalSourceGestureAccepted": false,
+  "clinicalAcceptance": false
+}

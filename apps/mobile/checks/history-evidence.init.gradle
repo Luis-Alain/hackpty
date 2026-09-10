@@ -1,0 +1,73 @@
+// Explicit evidence build only. No production files are rewritten.
+// From apps/mobile/android, after other Gradle work has stopped:
+// .\gradlew.bat -I ..\checks\history-evidence.init.gradle :app:assembleRelease :app:assembleReleaseAndroidTest --offline
+// Install ONLY the two resulting evidence APKs, then run:
+// adb shell am instrument -w tech.adwen.psyrec.capture.evidence.test/tech.adwen.psyrec.historycheck.HistoryEvidenceInstrumentation
+// The runner refuses existing evidence journals and never clears app data.
+
+gradle.beforeProject { p ->
+    if (p.path != ':app') return
+    def mobile = p.rootProject.projectDir.parentFile.canonicalFile
+    def checks = new File(mobile, 'checks').canonicalFile
+    def entry = new File(checks, 'history-evidence.tsx').canonicalFile
+    def reader = new File(checks, 'androidTest/java').canonicalFile
+    if (mobile.name != 'mobile' || !entry.isFile() || !reader.isDirectory()) {
+        throw new GradleException('Evidence init script requires this mobile project and its checked-in harness.')
+    }
+    if (System.getenv('ENTRY_FILE') != null) {
+        throw new GradleException('Unset ENTRY_FILE for the evidence build; it overrides the explicit React entry.')
+    }
+    def repository = mobile.parentFile.parentFile.canonicalFile
+    def output = new File(repository, '.local/mobile-history-evidence/android-app-build').canonicalFile
+    p.layout.buildDirectory.set(output)
+    p.pluginManager.withPlugin('com.android.application') {
+        p.extensions.getByName('androidComponents').finalizeDsl { android ->
+            if (android.namespace != 'tech.adwen.psyrec.capture') {
+                throw new GradleException('Unexpected app namespace; refusing evidence overrides.')
+            }
+            // Keep every production manifest byte except this isolated application's label.
+            def mainSources = android.sourceSets.getByName('main')
+            def sourceManifest = mainSources.manifest.srcFile.canonicalFile
+            if (sourceManifest != new File(p.projectDir, 'src/main/AndroidManifest.xml').canonicalFile) {
+                throw new GradleException('Unexpected main manifest; refusing evidence label override.')
+            }
+            def manifestText = sourceManifest.getText('UTF-8')
+            def application = (manifestText =~ /(?s)<application\b[^>]*>/)
+            if (!application.find()) throw new GradleException('Application tag missing from evidence source manifest.')
+            def appStart = application.start()
+            def appEnd = application.end()
+            def appTag = application.group()
+            if (application.find()) throw new GradleException('Multiple application tags in evidence source manifest.')
+            def label = (appTag =~ /android:label\s*=\s*"[^"]*"/)
+            if (!label.find()) throw new GradleException('Application label missing from evidence source manifest.')
+            def labelStart = label.start()
+            def labelEnd = label.end()
+            if (label.find()) throw new GradleException('Multiple application labels in evidence source manifest.')
+            def evidenceTag = appTag.substring(0, labelStart) + 'android:label="PsyRec synthetic check"' + appTag.substring(labelEnd)
+            def evidenceText = manifestText.substring(0, appStart) + evidenceTag + manifestText.substring(appEnd)
+            def evidenceManifest = new File(output, 'evidence-main-manifest.xml').canonicalFile
+            if (evidenceManifest.parentFile != output || evidenceManifest == sourceManifest) {
+                throw new GradleException('Evidence manifest output escaped its isolated directory.')
+            }
+            if (!output.isDirectory() && !output.mkdirs()) throw new GradleException('Cannot create evidence build directory.')
+            if (!evidenceManifest.isFile() || evidenceManifest.getText('UTF-8') != evidenceText) {
+                evidenceManifest.setText(evidenceText, 'UTF-8')
+            }
+            mainSources.manifest.srcFile(evidenceManifest)
+            android.defaultConfig.applicationId = 'tech.adwen.psyrec.capture.evidence'
+            android.defaultConfig.testApplicationId = 'tech.adwen.psyrec.capture.evidence.test'
+            android.defaultConfig.testInstrumentationRunner = 'tech.adwen.psyrec.historycheck.HistoryEvidenceInstrumentation'
+            android.testBuildType = 'release'
+            android.buildTypes.getByName('release').debuggable = false
+            android.sourceSets.getByName('androidTest').java.srcDir(reader)
+            android.externalNativeBuild.cmake.buildStagingDirectory = new File(output.parentFile, 'android-app-cxx')
+            def react = p.extensions.getByName('react')
+            react.entryFile.set(entry)
+            if (react.debuggableVariants.get().any { it.equalsIgnoreCase('release') }) {
+                throw new GradleException('Evidence release must bundle its JS and model; Metro variants are forbidden.')
+            }
+        }
+    }
+}
+
+
