@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "523c8ecdd645d0cb43310b835223407a2618adeafe308c01e36b954b216460d8",
+  "d8": "iii",
+  "caseId": "CR-01",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-01-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-01-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 327,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nBlood pressure in clinic 132/84 mmHg, seated, right arm.\nWeight 82.6 kg.\nAssessment: blood pressure improved but still above the 130/80 mmHg target.\nPlan: continue amlodipine 5 mg once daily, recheck in three months.",
+      "textSha256": "948a80e6b19650a68c5e48e72d26dbd7619bc0363c7dfa888c8bdcf6921f0186"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-01-H1",
+        "recordId": "REC-CR-01-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-12",
+        "approvedAt": "2026-06-12T00:00:00.000Z",
+        "start": 0,
+        "end": 240,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nBlood pressure in clinic 148/92 mmHg, seated, right arm.\nWeight 84.0 kg.\nAssessment: blood pressure above the 130/80 mmHg target.",
+        "textSha256": "e7b76d98f57fe3987b0dcdc6038dfaa2543efbfdf9c6046a278402877c525a3d"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 1,
+      "historicalRecordsSupplied": 1,
+      "dateRange": {
+        "from": "2026-06-12",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 567,
+      "omitted": []
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-01",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F3",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":51476,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true}]"
+  }
+}

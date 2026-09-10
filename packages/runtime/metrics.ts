@@ -2,6 +2,7 @@ import { basename, isAbsolute } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import type { RunMetrics } from './types.js';
 import { QUERY_PROMPT_VERSION, QUERY_LEGACY_PROMPT_VERSION, QUERY_STRUCTURED_PROMPT_VERSION, queryResponseFormat, queryHistory, validateQueryInput } from './prompts.js';
+import { CHART_REVIEW_PROMPT_VERSION, CHART_REVIEW_GENERATION, CHART_REVIEW_CAPTURE_THINKING } from './chart-review-prompts.js';
 
 export class IncompleteEvidenceError extends Error {
   constructor(public field: string) {
@@ -26,7 +27,7 @@ function object(value: unknown, field: string): asserts value is Record<string, 
 export function assertCompleteMetrics(candidate: unknown): asserts candidate is RunMetrics {
   object(candidate, 'metrics'); const m = candidate;
   if (m.schemaVersion !== 1 || m.status !== 'succeeded') fail('schemaVersion/status');
-  if (!['extract', 'draft', 'query'].includes(m.operation)) fail('operation');
+  if (!['extract', 'draft', 'query', 'review'].includes(m.operation)) fail('operation');
   for (const key of ['runId', 'requestId', 'model', 'sdkVersion', 'measurementMethod', 'startedAt', 'endedAt']) text(m[key], key);
   if (!Number.isFinite(Date.parse(m.startedAt)) || !Number.isFinite(Date.parse(m.endedAt)) || Date.parse(m.endedAt) < Date.parse(m.startedAt)) fail('timestamps');
   for (const key of ['loadMs', 'durationMs', 'ttftMs', 'tokensPerSecond']) number(m[key], key, Number.MIN_VALUE);
@@ -72,26 +73,44 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   if (!m.request.history.some(message => message.role === 'user')) fail('request.history.user');
   object(m.request.generationParams, 'request.generationParams');
   for (const key of ['temp','seed','predict']) number(m.request.generationParams[key], `generationParams.${key}`);
-  if(m.request.generationParams.temp!==0||m.request.generationParams.seed!==42||m.request.generationParams.predict!==768)fail('generationParams.configuration');
+  if(m.request.generationParams.temp!==0||m.request.generationParams.seed!==42)fail('generationParams.configuration');
+  if(m.operation==='review'){if(!isDeepStrictEqual(m.request.generationParams,{...CHART_REVIEW_GENERATION}))fail('generationParams.reviewConfiguration');}
+  else if(m.request.generationParams.predict!==768)fail('generationParams.configuration');
   if (m.operation === 'extract') {
     object(m.request.attachment, 'request.attachment'); digest(m.request.attachment.sha256, 'attachment.sha256'); number(m.request.attachment.bytes, 'attachment.bytes', 1, true);
     if (!['image/png','image/jpeg'].includes(m.request.attachment.mime) || !m.request.history.some(message => message.attachments?.length)) fail('attachment');
     if ('image_no_upscale' in config || typeof config.projectionModelSrc!=='string' || !isAbsolute(config.projectionModelSrc) || config['mmproj-use-gpu']!==true || !assets.some(asset=>asset.role==='projector'&&asset.path===config.projectionModelSrc)) fail('base.projector.config');
-  } else {
+  } else if (m.operation === 'review') {
+    if(m.request.captureThinking!==CHART_REVIEW_CAPTURE_THINKING)fail('review.captureThinking');
+    if(m.request.promptTemplateVersion!==CHART_REVIEW_PROMPT_VERSION||m.request.history.length!==2)fail('review.profile');
+    const user=m.request.history[1];
+    if(user.role!=='user'||!user.content.startsWith('Evidence JSON (permitted evidenceIds: '))fail('review.history');
+    const format:any=m.request.responseFormat;
+    if(format?.type!=='json_schema'||format?.json_schema?.name!=='chart_review'||format?.json_schema?.strict!==true)fail('review.responseFormat');
+    const permitted=user.content.slice('Evidence JSON (permitted evidenceIds: '.length,user.content.indexOf('):')).split(', ');
+    const enumIds=format?.json_schema?.schema?.properties?.findings?.items?.properties?.evidenceIds?.items?.enum;
+    if(!Array.isArray(permitted)||!permitted.length||!isDeepStrictEqual(enumIds,permitted))fail('review.evidenceIdBinding');
+    const thinking=m.output?.thinking;
+    if(!thinking||thinking.captured!==true)fail('review.thinking');
+    number(thinking.textLength,'review.thinking.textLength',0,true);number(thinking.deltaCount,'review.thinking.deltaCount',0,true);
+  } else if (m.operation === 'draft') {
     if(config.reasoning_budget!==0||m.request.generationParams.reasoning_budget!==0)fail('text.reasoning_budget');
     if(m.request.attachment||m.request.history.some(message=>message.attachments?.length))fail('text.attachment');
-    if(m.operation==='query') {
-      if(![QUERY_PROMPT_VERSION,QUERY_STRUCTURED_PROMPT_VERSION,QUERY_LEGACY_PROMPT_VERSION].includes(m.request.promptTemplateVersion)||m.request.sourceId!==undefined||m.request.history.length!==2)fail('query.profile');
-      const user=m.request.history[1];
-      const prefix='Select exact supporting quotations for this JSON-encoded question and source data:\n';
-      const suffix='\n/no_think';
-      let payload:any;
-      try {if(user.role!=='user'||!user.content.startsWith(prefix)||!user.content.endsWith(suffix))fail('query.history');payload=JSON.parse(user.content.slice(prefix.length,-suffix.length));validateQueryInput(payload.question,payload.sources);} catch {fail('query.sources');}
-      if(!isDeepStrictEqual(m.request.responseFormat,queryResponseFormat(payload.sources,m.request.promptTemplateVersion)))fail('query.responseFormat');
-      if(!isDeepStrictEqual(payload.sources,m.request.context)||!isDeepStrictEqual(queryHistory(payload.question,payload.sources,m.request.promptTemplateVersion),m.request.history))fail('query.contextBinding');
-    } else text(m.request.sourceId, 'request.sourceId');
+    text(m.request.sourceId, 'request.sourceId');
   }
-  if(m.operation!=='query'&&m.request.responseFormat!==undefined)fail('request.unexpectedResponseFormat');
+  if(m.operation==='query') {
+    if(config.reasoning_budget!==0||m.request.generationParams.reasoning_budget!==0)fail('text.reasoning_budget');
+    if(m.request.attachment||m.request.history.some(message=>message.attachments?.length))fail('text.attachment');
+    if(![QUERY_PROMPT_VERSION,QUERY_STRUCTURED_PROMPT_VERSION,QUERY_LEGACY_PROMPT_VERSION].includes(m.request.promptTemplateVersion)||m.request.sourceId!==undefined||m.request.history.length!==2)fail('query.profile');
+    const user=m.request.history[1];
+    const prefix='Select exact supporting quotations for this JSON-encoded question and source data:\n';
+    const suffix='\n/no_think';
+    let payload:any;
+    try {if(user.role!=='user'||!user.content.startsWith(prefix)||!user.content.endsWith(suffix))fail('query.history');payload=JSON.parse(user.content.slice(prefix.length,-suffix.length));validateQueryInput(payload.question,payload.sources);} catch {fail('query.sources');}
+    if(!isDeepStrictEqual(m.request.responseFormat,queryResponseFormat(payload.sources,m.request.promptTemplateVersion)))fail('query.responseFormat');
+    if(!isDeepStrictEqual(payload.sources,m.request.context)||!isDeepStrictEqual(queryHistory(payload.question,payload.sources,m.request.promptTemplateVersion),m.request.history))fail('query.contextBinding');
+  }
+  if(m.operation!=='query'&&m.operation!=='review'&&m.request.responseFormat!==undefined)fail('request.unexpectedResponseFormat');
   object(m.native, 'native');
   for (const key of ['promptTokens','generatedTokens','emittedTokens']) number(m.native[key], `native.${key}`, 1, true);
   number(m.native.cacheTokens, 'native.cacheTokens', 0, true);
@@ -100,7 +119,13 @@ export function assertCompleteMetrics(candidate: unknown): asserts candidate is 
   if (m.inputTokens !== m.native.promptTokens || m.outputTokens !== m.native.emittedTokens || m.tokensPerSecond !== m.native.tokensPerSecond || m.ttftMs !== m.native.timeToFirstToken) fail('native.aliases');
   if(m.operation==='query'&&(m.native.promptTokens+m.request.generationParams.predict>config.ctx_size||m.output?.stopReason==='length'))fail('query.contextOrOutputTruncated');
   object(m.output, 'output'); digest(m.output.sha256, 'output.sha256'); number(m.output.characters, 'output.characters', 1, true); number(m.output.contentDeltaCount, 'output.contentDeltaCount', 1, true);
-  if (m.output.stopReason !== undefined && !['eos','length','stopSequence'].includes(m.output.stopReason)) fail('output.stopReason');
+  // Fix round 3: worker.ts now always writes this key (null when the SDK supplied none;
+  // verify3-evidence.txt SS3), so null is an explicitly accepted value here. Presence itself
+  // stays optional in this gate (not required) because the read-only verifier must keep
+  // validating the already-retained (i)/(iii) held-out records, which predate the fix and
+  // genuinely lack the key (artifacts/evidence/ is never edited); the verifier enforces
+  // presence directly, scoped to records produced after the fix (see its header comment).
+  if (m.output.stopReason !== undefined && m.output.stopReason !== null && !['eos','length','stopSequence'].includes(m.output.stopReason)) fail('output.stopReason');
   if(m.output.completionDoneObserved!==true || m.output.finalPromiseResolved!==true)fail('output.termination');
   text(m.output.terminationMethod,'output.terminationMethod');
   object(m.timings, 'timings');

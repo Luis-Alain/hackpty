@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "d988e840ed234499672dbe25cc66bab9d9337139946380e767231ae4c8264b55",
+  "d8": "i",
+  "caseId": "CR-16",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-16-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-16-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 246,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nBlood pressure in clinic 132/84 mmHg, seated, right arm.\nWeight 82.6 kg.\nThe patient did not bring the home blood-pressure diary today.",
+      "textSha256": "65eaecbbb11f3ff3fbd0cefee11903f841500a1036fa3d412b74735c11c7ba1f"
+    },
+    "historical": [],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 1,
+      "historicalRecordsSupplied": 0,
+      "dateRange": {
+        "from": null,
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 246,
+      "omitted": [
+        "Excluded record REC-CR-16-H1: evidence budget 6000 characters would be exceeded."
+      ]
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-16",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [
+      {
+        "id": "Q1",
+        "covered": false
+      }
+    ],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":51476,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true}]"
+  }
+}

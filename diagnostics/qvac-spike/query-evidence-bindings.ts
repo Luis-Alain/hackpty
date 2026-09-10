@@ -11,9 +11,9 @@ export function assertCanonicalModelComparison(protocol:any,inputs:any){
   assert.equal(new Set(inputs.cases.map(c=>c.id)).size,10);assert.equal(inputs.cases.length,10);
   assert.deepEqual(protocol.cases,inputs.cases.map(c=>({...c,split:'model-selection-'+c.split})),'Model comparison must preserve the exact frozen cases; only the explicit split label may change.');
 }
-export function assertProtocolModel(metrics:any,manifest:any,operation:'extract'|'query'){
+export function assertProtocolModel(metrics:any,manifest:any,operation:'extract'|'query'|'review'){
   assert.equal(metrics.operation,operation);assert.equal(metrics.sdkVersion,manifest.sdk.version);
-  const roles=operation==='extract'?['extract','projector']:['draft'];const expected=manifest.models.filter(asset=>roles.includes(asset.role));assert.equal(expected.length,roles.length);assert.equal(metrics.modelDetails.assets.length,roles.length);
+  const roles=operation==='extract'?['extract','projector']:operation==='review'?['review']:['draft'];const expected=manifest.models.filter(asset=>roles.includes(asset.role));assert.equal(expected.length,roles.length);assert.equal(metrics.modelDetails.assets.length,roles.length);
   for(const asset of metrics.modelDetails.assets){const canonical=expected.find(a=>a.role===asset.role);assert.ok(canonical,'Asset role must be in the frozen protocol.');for(const key of ['id','role','constant','filename','modelType','expectedBytes','sha256'])assert.equal(asset[key],canonical[key],'Frozen model asset '+key);}
   assert.equal(metrics.model,expected.find(a=>a.role===roles[0]).constant);
 }

@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "leaseObservation": {
+    "observedForeignGpuProcesses": [],
+    "rawGpuComputeLines": [],
+    "checkedAt": "2026-09-10T02:19:52.209Z"
+  },
+  "model": {
+    "constant": "QWEN3_1_7B_INST_Q4",
+    "filename": "Qwen3-1.7B-Q4_0.gguf",
+    "sha256": "c876f159707a4e4f70e045106c69db15bfc935a4981706fd4f65c6e7ea1e81c5",
+    "quantization": "Q4_0"
+  },
+  "loadMs": 7114.7959,
+  "loadConfig": {
+    "ctx_size": 8192,
+    "device": "gpu",
+    "gpu_layers": 99,
+    "main-gpu": "dedicated",
+    "parallel": 1,
+    "verbosity": 0
+  },
+  "loadedModelInfo": {
+    "modelId": "3b6aa9771898197d",
+    "isDelegated": false,
+    "modelType": "llamacpp-completion",
+    "handlers": [
+      "batchCompletionStream",
+      "completionStream",
+      "finetune",
+      "translate"
+    ],
+    "displayName": "LLM (llama.cpp)",
+    "addonPackage": "@qvac/llm-llamacpp",
+    "loadedAt": "2026-09-10T02:19:59.802Z",
+    "path": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\Qwen3-1.7B-Q4_0.gguf",
+    "toolDialect": "hermes"
+  },
+  "performanceRows": [
+    {
+      "schema_version": 1,
+      "run_id": "chart-review-20260910T0215Z-heldout-iv-r2",
+      "timestamp_utc": "2026-09-10T02:19:59.844Z",
+      "host": "Jeff",
+      "stage": "load",
+      "sdk_version": "0.18.2",
+      "model": "QWEN3_1_7B_INST_Q4",
+      "hardware_id": "win32-x64",
+      "execution_mode": "local",
+      "model_source": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\Qwen3-1.7B-Q4_0.gguf",
+      "model_config": {
+        "device": "gpu",
+        "gpu_layers": 99,
+        "ctx_size": 8192,
+        "main-gpu": "dedicated",
+        "parallel": 1,
+        "verbosity": 0
+      },
+      "status": "ok",
+      "load_ms": 7114.7959,
+      "model_id": "3b6aa9771898197d",
+      "load_request_id": "4df53f26-b347-4b4f-9211-331c9c016f0f",
+      "loaded_model_info": {
+        "modelId": "3b6aa9771898197d",
+        "isDelegated": false,
+        "modelType": "llamacpp-completion",
+        "handlers": [
+          "batchCompletionStream",
+          "completionStream",
+          "finetune",
+          "translate"
+        ],
+        "displayName": "LLM (llama.cpp)",
+        "addonPackage": "@qvac/llm-llamacpp",
+        "loadedAt": "2026-09-10T02:19:59.802Z",
+        "path": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\Qwen3-1.7B-Q4_0.gguf",
+        "toolDialect": "hermes"
+      },
+      "fallback_a_local": false
+    }
+  ],
+  "method": "performance.now around await loadModel; single load serves every review case of this unstructured D8 run.",
+  "endedAt": "2026-09-10T02:23:29.622Z",
+  "leaseAfterObservation": {
+    "observedForeignGpuProcesses": [],
+    "rawGpuComputeLines": [
+      "52864, C:\\Users\\jeffe\\Code\\hackpty\\node_modules\\bare-runtime-win32-x64\\bin\\bare.exe, [N/A]"
+    ],
+    "checkedAt": "2026-09-10T02:23:30.941Z"
+  }
+}

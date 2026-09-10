@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "523c8ecdd645d0cb43310b835223407a2618adeafe308c01e36b954b216460d8",
+  "d8": "iii",
+  "caseId": "CR-07",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-07-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-07-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 265,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nFamily history: the sister of the patient was diagnosed with hypertension in 2025.\nBlood pressure in clinic 132/84 mmHg.\nFasting glucose still not tested.",
+      "textSha256": "16462d490d6ec05bb4b2e462d32196b9417fbdee9ca7244f783411374ce752e1"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-07-H1",
+        "recordId": "REC-CR-07-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-12",
+        "approvedAt": "2026-06-12T00:00:00.000Z",
+        "start": 0,
+        "end": 183,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nFamily history: father with type 2 diabetes.\nFasting glucose not tested.",
+        "textSha256": "abdd7bcdb7bc2ca0aff229f760177328f60399b1e1af9f2fd9a3973fac62babc"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 1,
+      "historicalRecordsSupplied": 1,
+      "dateRange": {
+        "from": "2026-06-12",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 448,
+      "omitted": []
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-07",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [
+      {
+        "id": "Q1",
+        "covered": false
+      }
+    ],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":51476,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true},{\"pid\":66248,\"parent\":51476,\"name\":\"bare.exe\",\"runtime\":true}]"
+  }
+}

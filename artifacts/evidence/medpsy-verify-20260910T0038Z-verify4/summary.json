@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": false,
+  "releaseAccepted": false,
+  "kind": "medpsy-runtime-verification",
+  "createdAt": "2026-09-10T00:38:52.536Z",
+  "id": "20260910T0038Z-verify4",
+  "asset": {
+    "id": "medpsy-1.7b-q4_k_m-imat-review",
+    "constant": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+    "filename": "medpsy-1.7b-q4_k_m-imat.gguf",
+    "expectedBytes": 1282439360,
+    "sha256": "41ee947d9cce72ec657577219fd1798fabeabf0d832217fe23c9d6d3d18d5880",
+    "actualBytes": 1282439360,
+    "actualSha256": "41ee947d9cce72ec657577219fd1798fabeabf0d832217fe23c9d6d3d18d5880",
+    "verifiedAt": "2026-09-10T00:38:52.531Z"
+  },
+  "sdkVersion": "0.18.2",
+  "loadConfig": {
+    "ctx_size": 4096,
+    "device": "gpu",
+    "gpu_layers": 99,
+    "main-gpu": "dedicated",
+    "parallel": 1,
+    "verbosity": 0
+  },
+  "runs": [
+    {
+      "label": "a-default-thinking",
+      "status": "succeeded",
+      "thinkingTextLength": 2290,
+      "emittedVsGenerated": {
+        "promptTokens": 376,
+        "generatedTokens": 691,
+        "emittedTokens": 691,
+        "cacheTokens": 0,
+        "backendDevice": "gpu"
+      },
+      "wallMs": 15034.525899999999
+    },
+    {
+      "label": "b1-budget-0",
+      "status": "succeeded",
+      "thinkingTextLength": 0,
+      "emittedVsGenerated": {
+        "promptTokens": 380,
+        "generatedTokens": 163,
+        "emittedTokens": 163,
+        "cacheTokens": 0,
+        "backendDevice": "gpu"
+      },
+      "wallMs": 2653.5707999999977
+    },
+    {
+      "label": "b2-budget-512-remove-context",
+      "status": "succeeded",
+      "thinkingTextLength": 1937,
+      "emittedVsGenerated": {
+        "promptTokens": 376,
+        "generatedTokens": 610,
+        "emittedTokens": 610,
+        "cacheTokens": 0,
+        "backendDevice": "gpu"
+      },
+      "wallMs": 9063.041799999999
+    },
+    {
+      "label": "c-no-think-suffix",
+      "status": "succeeded",
+      "stopReason": "length",
+      "thinkingTextLength": 4088,
+      "emittedVsGenerated": {
+        "promptTokens": 352,
+        "generatedTokens": 1024,
+        "emittedTokens": 1024,
+        "cacheTokens": 0,
+        "backendDevice": "gpu"
+      },
+      "wallMs": 15234.485200000003
+    },
+    {
+      "label": "d-structured-thinking",
+      "status": "failed",
+      "error": "Unexpected empty grammar stack after accepting piece: <|im_start|> (151644)"
+    },
+    {
+      "label": "d2-structured-budget-0",
+      "status": "succeeded",
+      "jsonValid": true,
+      "thinkingTextLength": 0,
+      "emittedVsGenerated": {
+        "promptTokens": 388,
+        "generatedTokens": 348,
+        "emittedTokens": 348,
+        "cacheTokens": 0,
+        "backendDevice": "gpu"
+      },
+      "wallMs": 6159.856
+    },
+    {
+      "label": "e-termination-length",
+      "status": "succeeded",
+      "stopReason": "length",
+      "thinkingTextLength": 213,
+      "emittedVsGenerated": {
+        "promptTokens": 376,
+        "generatedTokens": 48,
+        "emittedTokens": 48,
+        "cacheTokens": 0,
+        "backendDevice": "gpu"
+      },
+      "wallMs": 871.0094000000026
+    }
+  ],
+  "lease": {
+    "before": {
+      "checkedAt": "2026-09-10T00:38:53.597Z",
+      "foreignRuntimeCount": 0,
+      "foreignGpuProcessCount": 1,
+      "observedForeignGpuProcesses": [
+        {
+          "pid": 65412,
+          "name": "Cursor.exe",
+          "usedMemory": "[N/A]"
+        }
+      ],
+      "rawGpuComputeLines": [
+        "65412, C:\\Users\\jeffe\\AppData\\Local\\Programs\\cursor\\Cursor.exe, [N/A]"
+      ]
+    },
+    "after": {
+      "checkedAt": "2026-09-10T00:39:48.404Z",
+      "foreignRuntimeCount": 0,
+      "foreignGpuProcessCount": 1,
+      "observedForeignGpuProcesses": [
+        {
+          "pid": 65412,
+          "name": "Cursor.exe",
+          "usedMemory": "[N/A]"
+        }
+      ],
+      "rawGpuComputeLines": [
+        "65412, C:\\Users\\jeffe\\AppData\\Local\\Programs\\cursor\\Cursor.exe, [N/A]",
+        "65088, C:\\Users\\jeffe\\Code\\hackpty\\node_modules\\bare-runtime-win32-x64\\bin\\bare.exe, [N/A]"
+      ]
+    },
+    "monitorIntervalMs": 1000,
+    "method": "Read-only Windows runtime ancestry and nvidia-smi compute PID sampling; abort on observed foreign runtime job. A non-runtime GUI process shared the GPU during the run: Cursor.exe (PID 65412, [N/A]). Every run record from this lease carries that observation and the evaluation report must disclose it. Coordinator observed idle GPU before lease and notified the user. Not a global mutex or offline-enforcement proof."
+  },
+  "endedAt": "2026-09-10T00:39:48.641Z"
+}

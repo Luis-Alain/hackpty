@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "9018503206545cdd1548c2eed1f7fe1db75408f12a339da4a1acf534de96ab08",
+  "d8": "i",
+  "caseId": "CR-14",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-14-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-14-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 167,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nBlood pressure in clinic 132/84 mmHg, seated, right arm.",
+      "textSha256": "62193d885ede85c82d18a9ea3766434354e76df3385956e1aba93934cbb0d59f"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-14-H1",
+        "recordId": "REC-CR-14-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-15",
+        "approvedAt": "2026-06-15T00:00:00.000Z",
+        "start": 0,
+        "end": 265,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-15\nThis note amends the record of the 2026-06-12 visit.\nBlood pressure in clinic 148/92 mmHg, seated, right arm; the earlier entry was a transcription error.",
+        "textSha256": "79faee83d8b1ad4c74a75da5f8871c19ce9cc00dcb718cb34fd56b609a5af439"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 2,
+      "historicalRecordsSupplied": 1,
+      "dateRange": {
+        "from": "2026-06-15",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 432,
+      "omitted": [
+        "Excluded superseded record REC-CR-14-H0."
+      ]
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-14",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":60008,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true}]"
+  }
+}

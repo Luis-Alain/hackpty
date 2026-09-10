@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "9018503206545cdd1548c2eed1f7fe1db75408f12a339da4a1acf534de96ab08",
+  "d8": "i",
+  "caseId": "CR-13",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-13-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-13-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 222,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nBlood pressure in clinic 132/84 mmHg.\nMedication: amlodipine 5 mg once daily, prescribed and reported as taken.",
+      "textSha256": "ab281ae4d58864943e9a416e21f01df767162307c4c682a11c8a5002fe550595"
+    },
+    "historical": [],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 1,
+      "historicalRecordsSupplied": 0,
+      "dateRange": {
+        "from": null,
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 222,
+      "omitted": [
+        "Excluded record REC-CR-13-H1: patient binding mismatch."
+      ]
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-13",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [
+      {
+        "id": "Q1",
+        "covered": false
+      }
+    ],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":60008,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true}]"
+  }
+}

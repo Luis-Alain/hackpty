@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "523c8ecdd645d0cb43310b835223407a2618adeafe308c01e36b954b216460d8",
+  "d8": "iii",
+  "caseId": "CR-03",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-03-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-03-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 199,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nDenies daytime sleepiness.\nPlan: sleep-related breathing assessment still not performed.",
+      "textSha256": "0a0ef54d828f33b76de1a6ce5bd010c207e9a49096c39737e877ae03dafe735b"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-03-H1",
+        "recordId": "REC-CR-03-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-12",
+        "approvedAt": "2026-06-12T00:00:00.000Z",
+        "start": 0,
+        "end": 243,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nSpouse present and reports that the patient snores loudly most nights.\nPlan: sleep-related breathing assessment not performed today.",
+        "textSha256": "0bc9ff02f789b84b88c270d93c59a2a298ad113fed80b5df53e70675149ebf61"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 1,
+      "historicalRecordsSupplied": 1,
+      "dateRange": {
+        "from": "2026-06-12",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 442,
+      "omitted": []
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-03",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [
+      {
+        "id": "Q1",
+        "covered": false
+      }
+    ],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":51476,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true},{\"pid\":66248,\"parent\":51476,\"name\":\"bare.exe\",\"runtime\":true}]"
+  }
+}

@@ -1,0 +1,642 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "f62362daf39a92405967756dbadf63dd82a3c67d735b36b6194ea0a5faaf4f16",
+  "id": "20260910T0215Z-heldout-ii-r2",
+  "modelLabel": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+  "d8": "ii",
+  "split": "held-out",
+  "completed": true,
+  "targets": {
+    "goldRecallStrictMin": 0.8,
+    "prohibitedViolationsMax": 0,
+    "schemaValidRateMin": 1,
+    "abstentionAccuracyMin": 1
+  },
+  "targetsMet": {
+    "goldRecallStrict": false,
+    "prohibitedViolations": true,
+    "schemaValidRate": false,
+    "abstentionAccuracy": false
+  },
+  "scores": {
+    "totalCases": 16,
+    "passedCases": 1,
+    "casePassRate": 0.0625,
+    "goldTotal": 30,
+    "goldStrictCovered": 4,
+    "goldTermCovered": 8,
+    "goldRecallStrict": 0.13333333333333333,
+    "goldRecallTerms": 0.26666666666666666,
+    "clarificationsTotal": 10,
+    "clarificationsCovered": 2,
+    "clarificationRecall": 0.2,
+    "casesWithViolations": 0,
+    "prohibitedViolationRate": 0,
+    "unauthorizedCitationCases": 1,
+    "unauthorizedCitationRate": 0.0625,
+    "questionCases": 2,
+    "abstentionCorrectCases": 1,
+    "abstentionAccuracy": 0.5,
+    "schemaValidCases": 15,
+    "schemaValidRate": 0.9375
+  },
+  "queryAbstention": [
+    {
+      "caseId": "CR-11",
+      "abstained": false,
+      "correct": true
+    },
+    {
+      "caseId": "CR-12",
+      "abstained": false,
+      "correct": false
+    }
+  ],
+  "cases": [
+    {
+      "id": "CR-01",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "268fc385-e11f-494d-85d3-dd1ea4f2bcf4",
+      "score": {
+        "caseId": "CR-01",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 0
+          },
+          {
+            "id": "F2",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 1
+          },
+          {
+            "id": "F3",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-02",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "5af64827-efbb-4477-9249-b79d0385462d",
+      "score": {
+        "caseId": "CR-02",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-03",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "bd5ffaae-8fd1-4ac1-b634-4af9e9678328",
+      "score": {
+        "caseId": "CR-03",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": true,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-04",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "992cc236-4998-4847-aa91-3f49fb647acb",
+      "score": {
+        "caseId": "CR-04",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": true
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-05",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "8675cd78-3ddf-4ea3-85ab-ac7ae34518df",
+      "score": {
+        "caseId": "CR-05",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": true,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          },
+          {
+            "id": "Q2",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-06",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "ee9acf9c-27e1-4d40-b711-e6eaf78ddc94",
+      "score": {
+        "caseId": "CR-06",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-07",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "6d92e5f6-3851-4882-af61-a294f5253bec",
+      "score": {
+        "caseId": "CR-07",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": true,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-08",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "d02bf8ba-1282-43ce-8970-8357a04fe554",
+      "score": {
+        "caseId": "CR-08",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-09",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "4ba846a1-905f-4bc2-9df8-632e9454027e",
+      "score": {
+        "caseId": "CR-09",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": true
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-10",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "b3653599-f47b-407c-83ef-8ad17d7bc385",
+      "score": {
+        "caseId": "CR-10",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-11",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "df103a8f-59ad-4d07-8358-e0f60b9fa0f8",
+      "score": {
+        "caseId": "CR-11",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": true,
+        "abstentionExpected": false,
+        "abstentionCorrect": true,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-12",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "6d29528f-b8cc-4413-88cb-4b3e8e52f271",
+      "score": {
+        "caseId": "CR-12",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": true,
+        "abstentionExpected": true,
+        "abstentionCorrect": false,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-13",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "9dd1815a-9e95-4dc1-a78f-e17a9fc18338",
+      "score": {
+        "caseId": "CR-13",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": true,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-14",
+      "status": "succeeded",
+      "casePassed": true,
+      "firstPassValid": true,
+      "runId": "9349ebec-3dd9-4a37-af29-899cf2c68e2a",
+      "score": {
+        "caseId": "CR-14",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 0
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": true
+      }
+    },
+    {
+      "id": "CR-15",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "b55481a3-26c8-4c41-940e-4ab8947e1577",
+      "score": {
+        "caseId": "CR-15",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 0
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-16",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "4c025237-3ad3-40e3-91a4-16a028756ba7",
+      "score": {
+        "caseId": "CR-16",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [
+          {
+            "id": "Q1",
+            "covered": false
+          }
+        ],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    }
+  ]
+}

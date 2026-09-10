@@ -24,18 +24,19 @@ export async function cargar(sdk:SDK, options:CargarInput, sink:EvidenceSink) {
     return {modelId,etiqueta,hardware,device:config.device,delegado:false,loadMs,info,fila,config,runId,sdkVersion};
   }catch(error){registrar({...base,status:'error',error:String((error as Error).message),load_ms:ms(t0)},runId,sink);throw error;}
 }
-export async function completar(sdk:SDK, modelo:Awaited<ReturnType<typeof cargar>>, {history,generationParams,responseFormat}:{history:PromptMessage[];generationParams:Record<string,number>;responseFormat?:Record<string,any>},sink:EvidenceSink) {
-  const t0=performance.now();let tPrimero:number|undefined;let contentDeltaCount=0;let completionDoneObserved=false;
-  const run=sdk.completion({modelId:modelo.modelId,stream:true,history,kvCache:false,generationParams,...(responseFormat?{responseFormat:responseFormat as any}:{})});
-  const base={stage:'completion' as const,request_id:run.requestId,sdk_version:modelo.sdkVersion,model:modelo.etiqueta,hardware_id:modelo.hardware,execution_mode:'local',history,generation_params:generationParams,kv_cache:false,prompt_chars:history.reduce((n,m)=>n+m.content.length,0),response_format:responseFormat??'text'};
+export async function completar(sdk:SDK, modelo:Awaited<ReturnType<typeof cargar>>, {history,generationParams,responseFormat,captureThinking}:{history:PromptMessage[];generationParams:Record<string,number>;responseFormat?:Record<string,any>;captureThinking?:boolean},sink:EvidenceSink) {
+  const t0=performance.now();let tPrimero:number|undefined;let contentDeltaCount=0;let thinkingDeltaCount=0;let completionDoneObserved=false;
+  const run=sdk.completion({modelId:modelo.modelId,stream:true,history,kvCache:false,generationParams,...(responseFormat?{responseFormat:responseFormat as any}:{}),...(captureThinking?{captureThinking:true}:{})});
+  const base={stage:'completion' as const,request_id:run.requestId,sdk_version:modelo.sdkVersion,model:modelo.etiqueta,hardware_id:modelo.hardware,execution_mode:'local',history,generation_params:generationParams,kv_cache:false,prompt_chars:history.reduce((n,m)=>n+m.content.length,0),response_format:responseFormat??'text',capture_thinking:captureThinking===true};
   try {
     for await(const event of run.events){
       if(event.type==='contentDelta'&&event.text){tPrimero??=performance.now();contentDeltaCount++;}
+      if(event.type==='thinkingDelta'&&event.text)thinkingDeltaCount++;
       if(event.type==='completionDone')completionDoneObserved=true;
     }
     const final=await run.final;const total=ms(t0);const stats=final.stats;
-    const fila=registrar({...base,status:'ok',ttft_ms:tPrimero===undefined?undefined:tPrimero-t0,ttft_ms_sdk:stats?.timeToFirstToken,input_tokens:stats?.promptTokens,output_tokens:stats?.emittedTokens,generated_tokens:stats?.generatedTokens,emitted_tokens:stats?.emittedTokens,cache_tokens:stats?.cacheTokens,token_count_source:'sdk',output_count_method:'SDK emittedTokens (nonempty addon pieces); generatedTokens retained separately',throughput_tps:stats?.tokensPerSecond,backend_actual:stats?.backendDevice,end_to_end_ms:total,native_stats:stats,stop_reason:final.stopReason},modelo.runId,sink);
-    return {id:run.requestId,texto:final.contentText,stats,ms:total,fila,final,firstContentMs:tPrimero===undefined?undefined:tPrimero-t0,contentDeltaCount,completionDoneObserved};
+    const fila=registrar({...base,status:'ok',ttft_ms:tPrimero===undefined?undefined:tPrimero-t0,ttft_ms_sdk:stats?.timeToFirstToken,input_tokens:stats?.promptTokens,output_tokens:stats?.emittedTokens,generated_tokens:stats?.generatedTokens,emitted_tokens:stats?.emittedTokens,cache_tokens:stats?.cacheTokens,token_count_source:'sdk',output_count_method:'SDK emittedTokens (nonempty addon pieces); generatedTokens retained separately',throughput_tps:stats?.tokensPerSecond,backend_actual:stats?.backendDevice,end_to_end_ms:total,native_stats:stats,stop_reason:final.stopReason,...(captureThinking?{thinking_text_length:final.thinkingText?.length??0,thinking_delta_count:thinkingDeltaCount}:{})},modelo.runId,sink);
+    return {id:run.requestId,texto:final.contentText,stats,ms:total,fila,final,firstContentMs:tPrimero===undefined?undefined:tPrimero-t0,contentDeltaCount,thinkingDeltaCount,completionDoneObserved};
   }catch(error){registrar({...base,status:'error',error:String((error as Error).message),end_to_end_ms:ms(t0)},modelo.runId,sink);throw error;}
 }
 export async function descargar(sdk:SDK, modelo:{modelId:string}) {

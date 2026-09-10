@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "leaseObservation": {
+    "observedForeignGpuProcesses": [],
+    "rawGpuComputeLines": [],
+    "checkedAt": "2026-09-10T01:57:23.702Z"
+  },
+  "model": {
+    "constant": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+    "filename": "medpsy-1.7b-q4_k_m-imat.gguf",
+    "sha256": "41ee947d9cce72ec657577219fd1798fabeabf0d832217fe23c9d6d3d18d5880",
+    "quantization": "q4_k_m imatrix"
+  },
+  "loadMs": 4519.371399999999,
+  "loadConfig": {
+    "ctx_size": 8192,
+    "device": "gpu",
+    "gpu_layers": 99,
+    "main-gpu": "dedicated",
+    "parallel": 1,
+    "verbosity": 0
+  },
+  "loadedModelInfo": {
+    "modelId": "053c70f73521492d",
+    "isDelegated": false,
+    "modelType": "llamacpp-completion",
+    "handlers": [
+      "batchCompletionStream",
+      "completionStream",
+      "finetune",
+      "translate"
+    ],
+    "displayName": "LLM (llama.cpp)",
+    "addonPackage": "@qvac/llm-llamacpp",
+    "loadedAt": "2026-09-10T01:57:28.406Z",
+    "path": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\medpsy-1.7b-q4_k_m-imat.gguf",
+    "toolDialect": "hermes"
+  },
+  "performanceRows": [
+    {
+      "schema_version": 1,
+      "run_id": "chart-review-20260910T0152Z-heldout-ii",
+      "timestamp_utc": "2026-09-10T01:57:28.439Z",
+      "host": "Jeff",
+      "stage": "load",
+      "sdk_version": "0.18.2",
+      "model": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+      "hardware_id": "win32-x64",
+      "execution_mode": "local",
+      "model_source": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\medpsy-1.7b-q4_k_m-imat.gguf",
+      "model_config": {
+        "device": "gpu",
+        "gpu_layers": 99,
+        "ctx_size": 8192,
+        "main-gpu": "dedicated",
+        "parallel": 1,
+        "verbosity": 0
+      },
+      "status": "ok",
+      "load_ms": 4519.371399999999,
+      "model_id": "053c70f73521492d",
+      "load_request_id": "6bf48f59-3ac3-4895-b043-000b094a3b6a",
+      "loaded_model_info": {
+        "modelId": "053c70f73521492d",
+        "isDelegated": false,
+        "modelType": "llamacpp-completion",
+        "handlers": [
+          "batchCompletionStream",
+          "completionStream",
+          "finetune",
+          "translate"
+        ],
+        "displayName": "LLM (llama.cpp)",
+        "addonPackage": "@qvac/llm-llamacpp",
+        "loadedAt": "2026-09-10T01:57:28.406Z",
+        "path": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\medpsy-1.7b-q4_k_m-imat.gguf",
+        "toolDialect": "hermes"
+      },
+      "fallback_a_local": false
+    }
+  ],
+  "method": "performance.now around await loadModel; single load serves every review case of this unstructured D8 run.",
+  "endedAt": "2026-09-10T02:00:01.365Z",
+  "leaseAfterObservation": {
+    "observedForeignGpuProcesses": [],
+    "rawGpuComputeLines": [
+      "30376, C:\\Users\\jeffe\\Code\\hackpty\\node_modules\\bare-runtime-win32-x64\\bin\\bare.exe, [N/A]"
+    ],
+    "checkedAt": "2026-09-10T02:00:02.733Z"
+  }
+}

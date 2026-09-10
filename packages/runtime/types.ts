@@ -42,7 +42,7 @@ export interface RunMetrics {
     sourceId?: string; context: unknown[]; captureThinking?: true;
     attachment?: { sha256: string; bytes: number; mime: string };
   };
-  output: { sha256: string; characters: number; stopReason?: string; contentDeltaCount: number; completionDoneObserved:true; finalPromiseResolved:true; terminationMethod:string;
+  output: { sha256: string; characters: number; stopReason: string | null; contentDeltaCount: number; completionDoneObserved:true; finalPromiseResolved:true; terminationMethod:string;
     /** Reasoning is retained only as counts/lengths; thinking text itself is never clinical evidence. */
     thinking?: { captured: true; textLength: number; deltaCount: number };
   };

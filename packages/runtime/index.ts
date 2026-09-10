@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { assertWithin, manifest } from './models.js';
 import { assertCompleteMetrics } from './metrics.js';
 import { validateQueryInput } from './prompts.js';
+import { validateChartReviewPacket } from './chart-review-prompts.js';
+import type { ChartReviewPacket } from '../contracts/chart-review.js';
 import type { QuerySource } from './types.js';
 import { OWNER_MARKER, recoverAbandonedTemporaryFiles } from './temporary-files.js';
 import { RuntimeEvidenceError, type RuntimeResult, type JobRequest, type Operation, type RuntimeFailure } from './types.js';
@@ -61,6 +63,11 @@ export class QvacRuntime {
     validateQueryInput(question,sources);
     const retained=sources.map(source=>({sourceId:source.sourceId,text:source.text}));
     return this.enqueue({operation:'query',text:question,querySources:retained,context:retained},signal);
+  }
+  /** MedPsy chart review over an application-bound packet. Model identity is in result.metrics (model + modelDetails). */
+  async reviewChart({packet,signal}:{packet:ChartReviewPacket;signal?:AbortSignal}):Promise<RuntimeResult> {
+    validateChartReviewPacket(packet);
+    return this.enqueue({operation:'review',reviewPacket:packet,context:[]},signal);
   }
   private enqueue(input: Pick<JobRequest,'operation'|'context'> & Partial<JobRequest>,signal?:AbortSignal): Promise<RuntimeResult> {
     const generation=this.generation;

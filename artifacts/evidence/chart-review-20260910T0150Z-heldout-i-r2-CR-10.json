@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "5c305882f27f88d487a58eaf8123fc653df884dea73423c6f9acfffdf537e6bb",
+  "d8": "i",
+  "caseId": "CR-10",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-10-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-10-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 158,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nHistory: reports no headaches since 2026-07-01.",
+      "textSha256": "d3714d12eb944c024c6a3f85cc23ef0bfe6b53f329e6ceeda86b3a09ad574604"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-10-H1",
+        "recordId": "REC-CR-10-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-01-15",
+        "approvedAt": "2026-01-15T00:00:00.000Z",
+        "start": 0,
+        "end": 159,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-01-15\nHistory: reports headaches about once per month.",
+        "textSha256": "e4af77039512faf236958d64b36092f585cbf3a5cb5e77c930775a0faba76e8f"
+      },
+      {
+        "evidenceId": "H2",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-10-H2",
+        "recordId": "REC-CR-10-H2",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-12",
+        "approvedAt": "2026-06-12T00:00:00.000Z",
+        "start": 0,
+        "end": 177,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nHistory: reports headaches about twice per week, dull and frontal.",
+        "textSha256": "dc13da9ce45c6baa56a901175e1e1a583710e2e7244d977d77603e88f0f9972d"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 2,
+      "historicalRecordsSupplied": 2,
+      "dateRange": {
+        "from": "2026-01-15",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 494,
+      "omitted": []
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-10",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":39564,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true}]"
+  }
+}

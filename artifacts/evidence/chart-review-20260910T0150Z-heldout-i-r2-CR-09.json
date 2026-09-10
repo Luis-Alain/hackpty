@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "5c305882f27f88d487a58eaf8123fc653df884dea73423c6f9acfffdf537e6bb",
+  "d8": "i",
+  "caseId": "CR-09",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-09-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-09-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 217,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nAllergies: the patient is unsure and asks that the chart be checked.\nBlood pressure in clinic 132/84 mmHg.",
+      "textSha256": "a5a8bb0814025abdd36a24cd014301c5e10cf9e5200577b22e689f1ce2f1004c"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-09-H1",
+        "recordId": "REC-CR-09-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-03-04",
+        "approvedAt": "2026-03-04T00:00:00.000Z",
+        "start": 0,
+        "end": 158,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-03-04\nAllergies: penicillin, rash documented in 2019.",
+        "textSha256": "88c8dedfe2df1be952cce9b7fed96a05cb97669b0ce8900c65428219feff324c"
+      },
+      {
+        "evidenceId": "H2",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-09-H2",
+        "recordId": "REC-CR-09-H2",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-12",
+        "approvedAt": "2026-06-12T00:00:00.000Z",
+        "start": 0,
+        "end": 146,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nAllergies: no known drug allergies.",
+        "textSha256": "9d6c1a6681fe514da032f19802309f484a9121a812ccdcdfdc535e074152770c"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 2,
+      "historicalRecordsSupplied": 2,
+      "dateRange": {
+        "from": "2026-03-04",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 521,
+      "omitted": []
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-09",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [
+      {
+        "id": "Q1",
+        "covered": false
+      }
+    ],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":39564,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true}]"
+  }
+}

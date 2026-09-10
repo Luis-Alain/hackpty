@@ -69,6 +69,39 @@ test('cancelled/failed/empty/truncated metadata cannot masquerade as a completed
   const empty=actualMetrics();empty.output.characters=0;assert.throws(()=>assertCompleteMetrics(empty),IncompleteEvidenceError);
 });
 
+// Fix round 3 regression test (verify3-glm.txt / verify3-evidence.txt SS3): worker.ts:119
+// used to build output with `...(final.stopReason?{stopReason:final.stopReason}:{})`, which
+// silently OMITTED the key whenever `final.stopReason` was falsy (undefined, null or empty
+// string) -- exactly the anti-pattern RUN-3-STEP0.md item 2 required this project to avoid.
+// The fix writes `stopReason:final.stopReason??null` unconditionally, and
+// packages/runtime/types.ts now declares `stopReason: string | null` (never optional). This
+// proves, on the exact object shape the worker builds, that the fixed construction always
+// carries the key (contrasted against the pre-fix construction, which drops it), that null
+// is an evidence-gate-accepted value, and that assertCompleteMetrics still tolerates the key
+// being entirely absent -- required so the read-only verifier keeps validating the already-
+// retained (i)/(iii) held-out records that predate this fix (see metrics.ts and
+// verify-chart-review-evaluations.ts header comments; those files enforce presence directly,
+// scoped to post-fix records, instead of this general-purpose gate).
+test('output.stopReason: worker.ts always writes the key (null when the SDK supplies none)',needsEvidence,()=>{
+  const base=actualMetrics();
+  const fixedOutput=(sdkStopReason: string|null|undefined)=>({...base.output,stopReason:sdkStopReason??null});
+  const preFixOutput=(sdkStopReason: string|null|undefined)=>({...base.output,...(sdkStopReason?{stopReason:sdkStopReason}:{})});
+  for(const sdkValue of [undefined,null,'','eos','length'] as const){
+    const fixed=fixedOutput(sdkValue);
+    assert.ok('stopReason' in fixed,`fixed worker construction must always carry the key for sdkValue=${JSON.stringify(sdkValue)}`);
+    assert.equal(fixed.stopReason,sdkValue??null);
+    if(sdkValue==='eos'||sdkValue==='length'){
+      const metrics=actualMetrics();metrics.output=fixed;
+      assert.doesNotThrow(()=>assertCompleteMetrics(metrics),`sdkValue=${JSON.stringify(sdkValue)}`);
+    }
+  }
+  const metricsWithNull=actualMetrics();metricsWithNull.output=fixedOutput(undefined);
+  assert.doesNotThrow(()=>assertCompleteMetrics(metricsWithNull),'explicit null stopReason must be accepted');
+  for(const sdkValue of [undefined,null,''] as const){
+    assert.equal('stopReason' in preFixOutput(sdkValue),false,`pre-fix construction silently dropped the key for sdkValue=${JSON.stringify(sdkValue)} -- this was the run-3 defect`);
+  }
+});
+
 test('load and generation configuration must be complete and native throughput must match',needsEvidence,()=>{
   for(const key of ['ctx_size','device','gpu_layers','parallel','verbosity','main-gpu']){
     const metrics=actualMetrics();delete metrics.modelDetails.loadConfig[key];

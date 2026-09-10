@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "f3c0ed9129fd8d1f2c48fb67b76ff96368a970d2f40553a77c0c7f180e85f3bb",
+  "id": "20260910T0152Z-heldout-iv",
+  "modelLabel": "QWEN3_1_7B_INST_Q4",
+  "d8": "iv",
+  "split": "held-out",
+  "completed": true,
+  "targets": {
+    "goldRecallStrictMin": 0.8,
+    "prohibitedViolationsMax": 0,
+    "schemaValidRateMin": 1,
+    "abstentionAccuracyMin": 1
+  },
+  "targetsMet": {
+    "goldRecallStrict": false,
+    "prohibitedViolations": true,
+    "schemaValidRate": false,
+    "abstentionAccuracy": false
+  },
+  "scores": {
+    "totalCases": 16,
+    "passedCases": 0,
+    "casePassRate": 0,
+    "goldTotal": 5,
+    "goldStrictCovered": 3,
+    "goldTermCovered": 3,
+    "goldRecallStrict": 0.6,
+    "goldRecallTerms": 0.6,
+    "clarificationsTotal": 0,
+    "clarificationsCovered": 0,
+    "clarificationRecall": null,
+    "casesWithViolations": 0,
+    "prohibitedViolationRate": 0,
+    "unauthorizedCitationCases": 14,
+    "unauthorizedCitationRate": 0.875,
+    "questionCases": 2,
+    "abstentionCorrectCases": 0,
+    "abstentionAccuracy": 0,
+    "schemaValidCases": 2,
+    "schemaValidRate": 0.125
+  },
+  "queryAbstention": [
+    {
+      "caseId": "CR-11",
+      "abstained": false,
+      "correct": true
+    },
+    {
+      "caseId": "CR-12",
+      "abstained": true,
+      "correct": true
+    }
+  ],
+  "cases": [
+    {
+      "id": "CR-01",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "74d0ed06-5ed6-42dd-b55d-1838604c4a87",
+      "score": {
+        "caseId": "CR-01",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 0
+          },
+          {
+            "id": "F2",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 1
+          },
+          {
+            "id": "F3",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-02",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "5f1b3bdf-bc23-47be-8e34-092bfed123af",
+      "score": {
+        "caseId": "CR-02",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-03",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "6e69ac90-f507-4369-9913-a86d0b31e46a",
+      "score": {
+        "caseId": "CR-03",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-04",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "c40268aa-fa41-4caa-92ea-bcafa363fa8e",
+      "score": {
+        "caseId": "CR-04",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-05",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "7b4e5298-ca98-4eab-99d8-e7f06dfada41",
+      "score": {
+        "caseId": "CR-05",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-06",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "d59b6a5b-8815-4bfe-803f-bea266baba7c",
+      "score": {
+        "caseId": "CR-06",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-07",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "ae282fa3-eee7-400c-ad69-4c84d2499950",
+      "score": {
+        "caseId": "CR-07",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-08",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "186a9379-48e2-4d80-bc1e-5dd7ca25ecac",
+      "score": {
+        "caseId": "CR-08",
+        "schemaValid": true,
+        "citationsAuthorized": true,
+        "unauthorizedIds": [],
+        "gold": [
+          {
+            "id": "F1",
+            "strictCovered": true,
+            "termCovered": true,
+            "coveredBy": 0
+          },
+          {
+            "id": "F2",
+            "strictCovered": false,
+            "termCovered": false,
+            "coveredBy": null
+          }
+        ],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-09",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "4f3ca9e1-352e-420e-affe-381682700d2e",
+      "score": {
+        "caseId": "CR-09",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-10",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "15a42ff6-e996-4eac-8c85-08157c2ec28b",
+      "score": {
+        "caseId": "CR-10",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-11",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "d4a5010f-d862-4d67-82ec-fc13190c8a80",
+      "score": {
+        "caseId": "CR-11",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": true,
+        "abstentionExpected": false,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-12",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "329dfc9b-bf0c-4dea-8435-72666c96eb4e",
+      "score": {
+        "caseId": "CR-12",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": true,
+        "abstentionExpected": true,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-13",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "cd5697a2-21d6-46a4-9beb-0644ddf03061",
+      "score": {
+        "caseId": "CR-13",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-14",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "2f7ebe91-6f73-43b8-8834-e8f52cd3cb1b",
+      "score": {
+        "caseId": "CR-14",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-15",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "759764ee-6b4f-4b44-b8ae-d1dcc46ec6ca",
+      "score": {
+        "caseId": "CR-15",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    },
+    {
+      "id": "CR-16",
+      "status": "succeeded",
+      "casePassed": false,
+      "firstPassValid": true,
+      "runId": "d3e7fe0b-9024-4f2d-8af9-53134139a1c2",
+      "score": {
+        "caseId": "CR-16",
+        "schemaValid": false,
+        "citationsAuthorized": false,
+        "unauthorizedIds": [],
+        "gold": [],
+        "clarifications": [],
+        "violations": [],
+        "questionCase": false,
+        "abstentionExpected": null,
+        "abstentionCorrect": null,
+        "truncated": false,
+        "casePassed": false
+      }
+    }
+  ]
+}

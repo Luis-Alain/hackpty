@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "heldOut": true,
+  "releaseAccepted": false,
+  "goldConfirmedByHuman": true,
+  "protocolSha256": "523c8ecdd645d0cb43310b835223407a2618adeafe308c01e36b954b216460d8",
+  "d8": "iii",
+  "caseId": "CR-04",
+  "packet": {
+    "schemaVersion": 1,
+    "task": "what-changed-and-unclear",
+    "patientId": "SYN-CHART-A",
+    "currentEncounterId": "ENC-CR-04-CUR",
+    "current": {
+      "evidenceId": "C1",
+      "kind": "current",
+      "patientId": "SYN-CHART-A",
+      "encounterId": "ENC-CR-04-CUR",
+      "recordId": null,
+      "sourceRevision": 1,
+      "sourceDate": "2026-09-09",
+      "approvedAt": null,
+      "start": 0,
+      "end": 280,
+      "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-09-09\nMedication: amlodipine 5 mg once daily, prescribed and reported as taken.\nMedication: cetirizine stopped by the patient in July 2026; reason for stopping not documented.",
+      "textSha256": "10e1bf1ea1cc6c524e38b2ada7d709cfc2d2aded54973f15e75ed9ba6881c61c"
+    },
+    "historical": [
+      {
+        "evidenceId": "H1",
+        "kind": "historical",
+        "patientId": "SYN-CHART-A",
+        "encounterId": "ENC-CR-04-H1",
+        "recordId": "REC-CR-04-H1",
+        "sourceRevision": 1,
+        "sourceDate": "2026-06-12",
+        "approvedAt": "2026-06-12T00:00:00.000Z",
+        "start": 0,
+        "end": 259,
+        "text": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nPatient: SYNTHETIC CHART A (SYN-CHART-A)\nVisit date: 2026-06-12\nMedication: amlodipine 5 mg once daily, prescribed and reported as taken.\nMedication: cetirizine at night for seasonal allergy, dose not documented.",
+        "textSha256": "c0487d47c08b1e7646823115fd3dc8e7a664becfff98af4c02df1fa704af67a1"
+      }
+    ],
+    "coverage": {
+      "method": "application-bound-approved-history-v1",
+      "historicalRecordsAvailable": 1,
+      "historicalRecordsSupplied": 1,
+      "dateRange": {
+        "from": "2026-06-12",
+        "to": "2026-09-09"
+      },
+      "charactersSupplied": 539,
+      "omitted": []
+    }
+  },
+  "status": "failed",
+  "score": {
+    "caseId": "CR-04",
+    "schemaValid": false,
+    "citationsAuthorized": false,
+    "unauthorizedIds": [],
+    "gold": [
+      {
+        "id": "F1",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      },
+      {
+        "id": "F2",
+        "strictCovered": false,
+        "termCovered": false,
+        "coveredBy": null
+      }
+    ],
+    "clarifications": [
+      {
+        "id": "Q1",
+        "covered": false
+      }
+    ],
+    "violations": [],
+    "questionCase": false,
+    "abstentionExpected": null,
+    "abstentionCorrect": null,
+    "truncated": false,
+    "casePassed": false
+  },
+  "failure": {
+    "error": "Foreign QVAC/Bare runtime detected; GPU lease stopped: [{\"pid\":51476,\"parent\":60612,\"name\":\"electron.exe\",\"runtime\":true},{\"pid\":66248,\"parent\":51476,\"name\":\"bare.exe\",\"runtime\":true}]"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "leaseObservation": {
+    "observedForeignGpuProcesses": [],
+    "rawGpuComputeLines": [],
+    "checkedAt": "2026-09-10T00:49:34.397Z"
+  },
+  "loadMs": 4741.0635999999995,
+  "loadConfig": {
+    "ctx_size": 4096,
+    "device": "gpu",
+    "gpu_layers": 99,
+    "main-gpu": "dedicated",
+    "parallel": 1,
+    "verbosity": 0
+  },
+  "loadedModelInfo": {
+    "modelId": "aec330c0525b0247",
+    "isDelegated": false,
+    "modelType": "llamacpp-completion",
+    "handlers": [
+      "batchCompletionStream",
+      "completionStream",
+      "finetune",
+      "translate"
+    ],
+    "displayName": "LLM (llama.cpp)",
+    "addonPackage": "@qvac/llm-llamacpp",
+    "loadedAt": "2026-09-10T00:49:39.363Z",
+    "path": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\medpsy-1.7b-q4_k_m-imat.gguf",
+    "toolDialect": "hermes"
+  },
+  "performanceRows": [
+    {
+      "schema_version": 1,
+      "run_id": "medpsy-verify-20260909T2330Z-verify4",
+      "timestamp_utc": "2026-09-10T00:49:39.406Z",
+      "host": "Jeff",
+      "stage": "load",
+      "sdk_version": "0.18.2",
+      "model": "HEALTHCARE_1_7B_MEDICAL_Q4_K_M",
+      "hardware_id": "win32-x64",
+      "execution_mode": "local",
+      "model_source": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\medpsy-1.7b-q4_k_m-imat.gguf",
+      "model_config": {
+        "device": "gpu",
+        "gpu_layers": 99,
+        "ctx_size": 4096,
+        "main-gpu": "dedicated",
+        "parallel": 1,
+        "verbosity": 0
+      },
+      "status": "ok",
+      "load_ms": 4741.0635999999995,
+      "model_id": "aec330c0525b0247",
+      "load_request_id": "887711be-73c4-4454-8896-cd8c63e56234",
+      "loaded_model_info": {
+        "modelId": "aec330c0525b0247",
+        "isDelegated": false,
+        "modelType": "llamacpp-completion",
+        "handlers": [
+          "batchCompletionStream",
+          "completionStream",
+          "finetune",
+          "translate"
+        ],
+        "displayName": "LLM (llama.cpp)",
+        "addonPackage": "@qvac/llm-llamacpp",
+        "loadedAt": "2026-09-10T00:49:39.363Z",
+        "path": "C:\\Users\\jeffe\\Code\\hackpty\\.local\\models\\medpsy-1.7b-q4_k_m-imat.gguf",
+        "toolDialect": "hermes"
+      },
+      "fallback_a_local": false
+    }
+  ],
+  "method": "performance.now around await loadModel; getLoadedModelInfo recorded verbatim for chat template and model identity. Full before/after lease is in summary.json."
+}
