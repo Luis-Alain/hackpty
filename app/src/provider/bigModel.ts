@@ -13,14 +13,20 @@ export async function cargar(opts: {
   hardware: string;
   device?: 'gpu' | 'cpu';
   ctx?: number;
-  // Fuerza el idioma de transcripción (whisperConfig.language) en vez de dejar
-  // que Whisper auto-detecte — el auto-detect puede fallar en clips cortos o
-  // con ruido, incluso usando un modelo etiquetado para ese idioma.
+  // Fuerza el idioma de transcripción (language) en vez de dejar que Whisper
+  // auto-detecte — el auto-detect puede fallar en clips cortos o con ruido,
+  // incluso usando un modelo etiquetado para ese idioma.
   idioma?: string;
+  // Modelo VAD (ej. VAD_SILERO_5_1_2) para recortar silencio antes de
+  // transcribir. Sin esto, Whisper procesa el clip completo en ventanas de
+  // 30s rellenadas con silencio, y es conocido que alucina frases repetidas
+  // (típicamente frases de cierre de video de YouTube, por los datos de
+  // entrenamiento) cuando el silencio domina el clip.
+  vadModelSrc?: any;
   // 'llm' (default): completion, usa modelConfig snake_case (gpu_layers, ctx_size).
   // 'embedding': modelConfig con claves distintas (camelCase), sin ctx_size.
   // 'vision': modelType explícito, sin modelConfig (defaults del SDK).
-  // 'stt': modelType explícito + whisperConfig.language si se pasa `idioma`.
+  // 'stt': modelType explícito + language/vadModelSrc si se pasan.
   tipo?: 'llm' | 'embedding' | 'stt' | 'vision';
 }): Promise<LoadedModel> {
   const t0 = performance.now();
@@ -32,11 +38,23 @@ export async function cargar(opts: {
       modelConfig = { device: opts.device ?? 'gpu', gpuLayers: opts.device === 'cpu' ? 0 : 99 };
     } else if (opts.tipo === 'stt') {
       modelType = ModelType.whispercppTranscription;
+      // modelConfig de whispercpp-transcription es plano (language/vadModelSrc
+      // van directo, no anidados bajo whisperConfig como en bci-whispercpp).
+      const sttConfig: Record<string, unknown> = {};
       if (opts.idioma) {
-        // modelConfig de whispercpp-transcription es plano (language/detect_language
-        // van directo, no anidados bajo whisperConfig como en bci-whispercpp).
-        modelConfig = { language: opts.idioma, detect_language: false };
+        sttConfig.language = opts.idioma;
+        sttConfig.detect_language = false;
       }
+      if (opts.vadModelSrc) {
+        sttConfig.vadModelSrc = opts.vadModelSrc;
+        sttConfig.vad_params = {
+          threshold: 0.5,
+          min_speech_duration_ms: 250,
+          min_silence_duration_ms: 300,
+          speech_pad_ms: 200,
+        };
+      }
+      if (Object.keys(sttConfig).length > 0) modelConfig = sttConfig;
     } else if (opts.tipo === 'vision') {
       modelType = ModelType.ggmlOcr;
     } else {

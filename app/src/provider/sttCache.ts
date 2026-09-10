@@ -7,8 +7,8 @@
 // en precisión a un "tiny" especializado simplemente por tener más parámetros,
 // así que usamos WHISPER_SMALL_Q8_0 forzando idioma='es' vía modelConfig en
 // vez del "tiny" en español.
-import { WHISPER_SMALL_Q8_0 } from '@qvac/sdk';
-import { cargar, type LoadedModel } from './bigModel.js';
+import { WHISPER_SMALL_Q8_0, VAD_SILERO_5_1_2 } from "@qvac/sdk";
+import { cargar, type LoadedModel } from "./bigModel.js";
 
 let modeloCache: LoadedModel | null = null;
 let cargaPromesa: Promise<LoadedModel> | null = null;
@@ -18,11 +18,12 @@ export async function obtenerModeloSTT(): Promise<LoadedModel> {
   if (!cargaPromesa) {
     cargaPromesa = cargar({
       modelSrc: WHISPER_SMALL_Q8_0,
-      etiqueta: 'Whisper-Small-Q8_0',
-      hardware: 'laptop',
-      device: 'gpu',
-      tipo: 'stt',
-      idioma: 'es',
+      etiqueta: "Whisper-Small-Q8_0",
+      hardware: "laptop",
+      device: "gpu",
+      tipo: "stt",
+      idioma: "es",
+      vadModelSrc: VAD_SILERO_5_1_2,
     }).then((m) => {
       modeloCache = m;
       return m;
