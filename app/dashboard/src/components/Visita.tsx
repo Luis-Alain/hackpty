@@ -267,6 +267,21 @@ export function Visita() {
       offset += b.length;
     }
 
+    // Si el pico de amplitud es casi cero, el micrófono no está entregando audio
+    // real (causa típica en macOS: Chrome obtiene un stream válido de getUserMedia
+    // aunque el permiso de micrófono a nivel de sistema operativo esté bloqueado,
+    // entregando silencio puro sin ningún error de JS). Avisamos antes de subir
+    // en vez de mandar silencio y fallar sin explicación.
+    let pico = 0;
+    for (let i = 0; i < combinado.length; i++) {
+      const abs = Math.abs(combinado[i]);
+      if (abs > pico) pico = abs;
+    }
+    if (pico < 0.01) {
+      setError("No se detectó audio del micrófono");
+      return;
+    }
+
     const wavBlob = crearWavDesdeFloat32(combinado, sampleRate);
     await subirAudio(wavBlob);
   };
@@ -284,6 +299,13 @@ export function Visita() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+      if (!data.transcripcion || !data.transcripcion.trim()) {
+        setError(
+          "El modelo no detectó voz en el audio grabado. Intenta hablar más " +
+            "cerca del micrófono, o escribe la observación manualmente.",
+        );
+        return;
+      }
       agregarAObservacion(data.transcripcion);
     } catch (e) {
       setError(String(e));
