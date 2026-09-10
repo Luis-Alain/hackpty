@@ -1,5 +1,38 @@
 # PsyRec first-cut execution report
 
+## Task 4 — complete
+
+Delivered [out/psyrec-demo-cut2.mp4](out/psyrec-demo-cut2.mp4): **1920x1080, 30 fps, H.264/AAC, 177.700 s (2:57.7)**, 10,222,846 bytes. Strict lint: **zero errors/warnings**. Layout/evidence gate: **194 boxes, 45 browser samples, 49 numeric bindings, zero failures**. Reviewed [review/contact-sheet-cut2.png](review/contact-sheet-cut2.png), containing 36 frames every five seconds. Both S7 completed-results tables and S8 passed encoded-frame visual review. No cut2b was necessary. Audio mean **-23.3 dBFS**, sample peak **-5.0 dBFS**. Cut1 MP4 and contact-sheet hashes are unchanged.
+
+[data/delivery.json](data/delivery.json) now records cut2 hashes and measurements and retains the complete historical delivery metadata. Video SHA-256: `044afb7e0149484b3a9198d29b6469c2c9063be6a8bba47ebbad858454310310`. Contact-sheet SHA-256: `e07368963a2ab09a9bf5c86d0c26b1c73411b5f6e2d320664cac7fd2091644af`.
+
+Coordinator still supplies synthetic-reviewed phone S3 and desktop S4/S5/S6 captures; these four slots remain explicitly pending. A human listening pass must check pronunciation, narration joins, listening level and the estimated sentence-caption timing. A human playback review should judge S7 reading time (about 11.98 s accuracy and 11.06 s performance, with a dense but legible disclosure). No TTS regeneration, new B-roll or replacement results data was needed. Physical/human workflow acceptance remains a separate open gate.
+
+Authored changes: `scripts/run.mjs`, `scripts/frames.mjs`, `README.md`, `REPORT.md`, `data/delivery.json`; project-local finalization helper `.cache/finalize-cut2.mjs`. Generated artifacts: cut2 video/log, 36 cut2 frames/contact sheet, cut2 probe/frame index/audio levels/lint/check/results trace, and the existing build/layout-preview/cache outputs. The composition source, clinical text, narration, results values and source media were preserved. All writes stayed inside this directory; no Git command, device operation, inference run, secret access or external publication occurred.
+
+Final independent file check: `node --input-type=module -e "import {readFileSync} from 'node:fs'; import {createHash} from 'node:crypto'; const d=JSON.parse(readFileSync('data/delivery.json','utf8')); for (const f of d.files) { if (createHash('sha256').update(readFileSync(f.file)).digest('hex')!==f.sha256) throw new Error('Hash mismatch: '+f.file); } console.log('Verified '+d.files.length+' cut2 artifact/source hashes; duration '+d.duration+' s; results pending='+d.pendingResults);"` exited 0: all 19 hashes match, duration 177.7 s, pending=false. Final `Get-FileHash out/psyrec-demo-cut1.mp4,review/contact-sheet.png -Algorithm SHA256` also exited 0 with both original hashes unchanged.
+
+Read CODEX-TASK-4.md, CODEX-TASK.md, BRIEF.md, the existing report and captures/manifest.json before execution. The supplied working agreement applies; no local AGENTS.md exists (initial read returned exit 1). The ten required repository checkpoints were accessed read-only from ../..; no Git or secret access is needed. Three required read-only cells review runtime evidence, transport and clinical presentation; the coordinator owns all writes.
+
+Step 1 complete: captures/manifest.json has zero captures and zero recordings, with all four selectedFile values null. Keep the honest S3/S4/S5/S6 placeholders; no trimming, capture encoding or fabricated capture is required. Existing data/results.json is completed (pending: false).
+
+Step 2 started: add validated --cut output naming to the existing runner/frame extractor because both currently hard-code cut1. Preserve historical cut1 MP4, numbered frames, contact sheet and metadata. Render cut2 with existing 1920x1080/30 fps/software-browser/strict-lint settings and project-local caches, then extract every five seconds.
+
+Step 2 commands so far:
+
+- `node --check scripts/run.mjs` and `node --check scripts/frames.mjs`: exit 0. Added only validated cut naming, cut-specific logs/frame/probe paths, and refusal to overwrite an existing non-cut1 render. Defaults remain compatible with the original commands.
+- Read installed `node_modules/hyperframes/README.md`; `node --input-type=module -e "import {command,cli} from './scripts/lib.mjs'; console.log(command(process.execPath,[cli,'--help'])); console.log(command(process.execPath,[cli,'render','--help']));"`: exit 0, HyperFrames 0.8.33, localEnv confinement. No installation.
+- `Get-FileHash out/psyrec-demo-cut1.mp4,review/contact-sheet.png -Algorithm SHA256`: exit 0; matches both historical hashes below.
+- `$env:npm_config_cache = Join-Path (Get-Location) '.cache/npm'; $env:TEMP = Join-Path (Get-Location) '.cache/tmp'; $env:TMP = $env:TEMP; npm.cmd run render -- --cut cut2`: exit 0. Embedded pre-render check passed (194 boxes, 45 browser samples, 177.700 s, all nine audio hashes/durations and numeric bindings). Renderer uses four software browser workers, not an inference job.
+
+Read-only review cells: all four score/performance sets match source summaries/raw native metrics at supplied rounding. The target is 0.8 and configuration (iii) has the largest strict recall (0.333); S8 matches. `firstPassValidity` represents the scored strict schema-valid rate of the first output, not the separate parse-only extraction flag; current screen wording follows the frozen checkpoint. Zero forbidden-term matches do not prove absence of hallucinations. S5 examples are human-reference suite examples, not successful model captures. Transport review confirms exact labelled placeholders with correct aspect ratios and pending physical/human acceptance. No evidence values or narration changed.
+
+Step 2 complete: render exit 0, HyperFrames 0.8.33 strict render succeeded in 6m 27.3s. `npm.cmd run frames -- --cut cut2` (same project-local npm/TEMP/TMP environment): exit 0. Generated `review/frame-cut2-001.png` through `frame-cut2-036.png`, at 0, 5, …, 175 seconds, and `review/contact-sheet-cut2.png`. `review/output-probe-cut2.json` confirms 1920x1080, 30/1 fps, H.264/AAC and 177.700 s. Exact underlying ffmpeg commands were appended automatically below. Historical cut1 frame/probe/contact-sheet names were not reused.
+
+Step 3 complete: visually inspected the entire contact sheet plus original-resolution encoded frames `review/frame-cut2-027.png` (130 s, S7 accuracy), `review/frame-cut2-030.png` (145 s, S7 performance), and `review/frame-cut2-033.png` (160 s, S8). Text stays inside the 5% safe zones; captions occupy their separate bottom rail, with no overlap on UI/diagrams. Palette and contrast are consistent. Each scene retains its storyboard topic; S7 presents one table at a time. Both completed-results screens show full configuration labels and readable metrics; the entire hardware/disclosure block fits. S8 matches the supplied results and retains pending physical/human acceptance. Synthetic chips remain visible. No visual defect requiring a correction render was found, so no cut2b was produced. The complete performance disclosure is dense and warrants a human playback/pacing judgment, although it is legible at 1080p. This review is not a human listening pass.
+
+Step 4 started: measure decoded audio with the same ffmpeg volumedetect method as cut1, retaining the full diagnostic output; verify final duration against the 300 s maximum.
+
 ## Task 3 — complete; capture helpers validated, no render
 
 Delivered in the requested order: `scripts/record-desktop.ps1`, `scripts/record-phone.ps1`, `scripts/captures-manifest.mjs`, then `captures/README.md`. Updated `README.md` and this report. Required dry modes passed; the real empty-folder scan produced a valid manifest with **0 recordings and 0 selected captures**. `npm.cmd run check -- --no-layout-previews` exited **0**, with **194 text boxes, 45 browser samples, 177.700 seconds and zero failures**. No render, screenshot, device call, real recording, Git operation or secret access occurred. All writes stayed inside this project.
@@ -446,3 +479,19 @@ S7@151.100 {"id":"box-147","kind":"overflow","text":"Salida\ntokens","scroll":70
 `npm run check -- --no-layout-previews`: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
 
 `npm run check -- `: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
+
+`npm run check -- render --cut cut2`: PASS. Palette, 194 declared text boxes, 45 browser samples (actual glyph bounds, overflow, caption/media separation), nine audio hashes/durations, 177.700 s <= 300 s, and every results-scene numeral traced to data/results.json. Details: review/check.json and review/results-trace.json.
+
+Command: `node node_modules\hyperframes\bin\hyperframes.mjs render . -o out/psyrec-demo-cut2.mp4 --fps 30 --resolution landscape --quality standard --workers 4 --no-browser-gpu --no-best-effort --strict` (local cache/profile/temp environment; telemetry disabled).
+
+Command render exit code: 0; log: `out/render-cut2.log`.
+
+`ffmpeg '-hide_banner' '-loglevel' 'error' '-y' '-i' 'out/psyrec-demo-cut2.mp4' '-vf' 'select=not(mod(n\,150))' '-fps_mode' 'vfr' 'review/frame-cut2-%03d.png'`
+
+`ffmpeg '-hide_banner' '-loglevel' 'error' '-y' '-framerate' '1' '-i' 'review/frame-cut2-%03d.png' '-vf' 'scale=480:270,tile=4x9:nb_frames=36:padding=8:margin=8:color=0xf3f5f5' '-frames:v' '1' '-update' '1' 'review/contact-sheet-cut2.png'`
+
+`npm run frames -- --cut cut2`: PASS. 36 frames at five-second intervals; contact sheet `review/contact-sheet-cut2.png`. ffprobe: 177.700 s, 1920x1080, 30/1 fps, video h264, audio aac. Metadata: review/output-probe-cut2.json; frame/time index: review/frames-cut2.json.
+
+Step 4 complete: `ffmpeg -hide_banner -nostats -i out/psyrec-demo-cut2.mp4 -vn -af volumedetect -f null NUL 2> review/audio-levels-cut2.txt` exited 0. Mean -23.3 dBFS; sample peak -5 dBFS; no sample clipping. Total duration 177.700 s <= 300 s (2:57.7; 122.3 s headroom). PowerShell diagnostic redirection is UTF-16LE. This is decoded audio level measurement, not a human listening or true-peak/LUFS assessment.
+
+Step 5: `node .cache/finalize-cut2.mjs` ran HyperFrames `lint . --json` through localEnv, retained `review/lint-cut2.json` (zero errors/warnings), checked the final probe/check/frame schedule, preserved both cut1 hashes, and wrote cut2 file hashes/measurement metadata to `data/delivery.json`. Prior delivery metadata is retained under historicalDeliveries; current source hashes belong to cut2. Final video: 10222846 bytes, SHA-256 044afb7e0149484b3a9198d29b6469c2c9063be6a8bba47ebbad858454310310. Contact sheet: 1257233 bytes, SHA-256 e07368963a2ab09a9bf5c86d0c26b1c73411b5f6e2d320664cac7fd2091644af. 49 exact numeric bindings; 45 browser samples; zero failures.

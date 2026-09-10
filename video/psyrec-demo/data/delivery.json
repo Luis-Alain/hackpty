@@ -1,25 +1,76 @@
 {
-  "generatedAt": "2026-09-10T02:26:18.089Z",
+  "generatedAt": "2026-09-10T03:40:22.504Z",
+  "cut": "cut2",
   "files": [
     {
-      "file": "out/psyrec-demo-cut1.mp4",
-      "bytes": 10015010,
-      "sha256": "5cd1cef324e04cdf3e9930f45d8f5d820a5f2acd689050ee0e5ca406a6f1fdad"
+      "file": "out/psyrec-demo-cut2.mp4",
+      "bytes": 10222846,
+      "sha256": "044afb7e0149484b3a9198d29b6469c2c9063be6a8bba47ebbad858454310310"
     },
     {
-      "file": "review/contact-sheet.png",
-      "bytes": 1159908,
-      "sha256": "96db4899585369057ba83e85375cc0e17f796255448fe1fecd432afec32aacd3"
+      "file": "review/contact-sheet-cut2.png",
+      "bytes": 1257233,
+      "sha256": "e07368963a2ab09a9bf5c86d0c26b1c73411b5f6e2d320664cac7fd2091644af"
+    },
+    {
+      "file": "review/frames-cut2.json",
+      "bytes": 2663,
+      "sha256": "1af8e61adbc04a675b375518f2e01643492e8cd505689f511b5b2fcf95babd78"
+    },
+    {
+      "file": "review/output-probe-cut2.json",
+      "bytes": 3755,
+      "sha256": "4c73c98fff319f13ef7e2f3e60fac5d38c067d170a32d9039298e4b0bd53bbcd"
+    },
+    {
+      "file": "review/audio-levels-cut2.txt",
+      "bytes": 5136,
+      "sha256": "ebb9a5d08707b5a46cec42c51390cfe74c23bb30748fe81c0565f90f8ba60620"
+    },
+    {
+      "file": "review/lint-cut2.json",
+      "bytes": 186,
+      "sha256": "a14df95f0a1861bcaa98b2b47c303a90bc6a9a05eeed595c7718077e39b9e619"
+    },
+    {
+      "file": "review/check-cut2.json",
+      "bytes": 3994,
+      "sha256": "9b96179038aa2123cc7c2f7ec0c87b52b36b6701b11324bfc678681d44c27847"
+    },
+    {
+      "file": "review/results-trace-cut2.json",
+      "bytes": 10138,
+      "sha256": "827f5598713683f93a605eab45b7b021ba48220509c73da64dce328f242c07ea"
+    },
+    {
+      "file": "out/render-cut2.log",
+      "bytes": 37899,
+      "sha256": "d6dc858425650b91e8b6a0f07e8506ef132a6de2b2ffa4e6bec130e3732388e5"
     },
     {
       "file": "index.html",
-      "bytes": 39952,
-      "sha256": "e54d2d77fb16495662e6d4d9bcc828502a66721f8daacebae11a74a784d5bdc8"
+      "bytes": 52509,
+      "sha256": "613707715f0301618a37e718730c7155029b2d33d7b36a11964281cd44330bc4"
     },
     {
       "file": "scenes.css",
-      "bytes": 2351,
-      "sha256": "58661fe60882b0950650eaa16971146c4055c909a552dcb5bb5fa4a7c9f711eb"
+      "bytes": 2658,
+      "sha256": "66eaf0e73e1f2b8c66284778e3c1d3af4511910cb8aed6379aa7fdaba948c0d5"
+    },
+    {
+      "file": "scripts/build.mjs",
+      "bytes": 20008,
+      "sha256": "a19bdc51f9c78cd1de9053300fe4c823ab333fcfe4740ebbbf44754b350451e3"
+    },
+    {
+      "file": "scripts/run.mjs",
+      "bytes": 1785,
+      "sha256": "7076acd5239c595babee986ece628994aa3e2b529423d9a91db6f1c5f00c5555"
+    },
+    {
+      "file": "scripts/frames.mjs",
+      "bytes": 3003,
+      "sha256": "0d49fdb9aee2bf903a544fe165a12c5cd59a2e90bfe01896c5fed8e13ae0ecd0"
     },
     {
       "file": "audio/manifest.json",
@@ -28,13 +79,111 @@
     },
     {
       "file": "data/results.json",
-      "bytes": 338,
-      "sha256": "f3b58b557ba41d3abaafecee719b6932015da181bd72185b8346f5e554ff31d9"
+      "bytes": 4197,
+      "sha256": "90745218d1939f09b366438667874cb4a5329974cd40846778a7a81c30e81c68"
+    },
+    {
+      "file": "data/build.json",
+      "bytes": 45984,
+      "sha256": "d5316debcaf77a4f3aeb68c42dbc7693c7eaa3dbf527fd5a0d757199ef37b056"
+    },
+    {
+      "file": "captures/manifest.json",
+      "bytes": 1737,
+      "sha256": "03fce41f0f1520bc6c4fc14a4821dfce3173ac0d34dd8a9dc0236d3a9da9b4b4"
+    },
+    {
+      "file": "broll/manifest.json",
+      "bytes": 3731,
+      "sha256": "1fb5b9a8bb2f4a1b94998b0824a057ab03dd1c4b91309e722697e9583362f829"
     }
   ],
   "duration": 177.7,
   "frameRate": 30,
   "width": 1920,
   "height": 1080,
-  "pendingResults": true
+  "pendingResults": false,
+  "captures": {
+    "selected": 0,
+    "placeholders": [
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ]
+  },
+  "audio": {
+    "method": "ffmpeg volumedetect over the decoded complete AAC track; mean and sample peak relative to full scale (dBFS), not LUFS or true peak.",
+    "meanDbfs": -23.3,
+    "peakDbfs": -5,
+    "log": "review/audio-levels-cut2.txt",
+    "humanListeningPass": "pending"
+  },
+  "review": {
+    "contactSheet": "review/contact-sheet-cut2.png",
+    "frameIntervalSeconds": 5,
+    "frameCount": 36,
+    "safeZoneBoxes": 194,
+    "browserSamples": 45,
+    "numericBindings": 49,
+    "strictLintErrors": 0,
+    "strictLintWarnings": 0,
+    "visualReview": "passed",
+    "correctionRenderRequired": false,
+    "detailFrames": [
+      "review/frame-cut2-027.png",
+      "review/frame-cut2-030.png",
+      "review/frame-cut2-033.png"
+    ],
+    "pacingNote": "Both S7 tables are legible at 1080p; full performance disclosure is dense. Human playback/reading-speed judgment remains pending."
+  },
+  "releaseAccepted": false,
+  "remainingCoordinatorInputs": [
+    "Synthetic-reviewed phone S3 and desktop S4/S5/S6 recordings",
+    "Human listening pass for Spanish pronunciation, sentence-caption alignment, joins and overall level",
+    "Human pacing review of both S7 screens and the full disclosure",
+    "Separate physical/human workflow acceptance evidence"
+  ],
+  "historicalDeliveries": [
+    {
+      "generatedAt": "2026-09-10T02:26:18.089Z",
+      "files": [
+        {
+          "file": "out/psyrec-demo-cut1.mp4",
+          "bytes": 10015010,
+          "sha256": "5cd1cef324e04cdf3e9930f45d8f5d820a5f2acd689050ee0e5ca406a6f1fdad"
+        },
+        {
+          "file": "review/contact-sheet.png",
+          "bytes": 1159908,
+          "sha256": "96db4899585369057ba83e85375cc0e17f796255448fe1fecd432afec32aacd3"
+        },
+        {
+          "file": "index.html",
+          "bytes": 39952,
+          "sha256": "e54d2d77fb16495662e6d4d9bcc828502a66721f8daacebae11a74a784d5bdc8"
+        },
+        {
+          "file": "scenes.css",
+          "bytes": 2351,
+          "sha256": "58661fe60882b0950650eaa16971146c4055c909a552dcb5bb5fa4a7c9f711eb"
+        },
+        {
+          "file": "audio/manifest.json",
+          "bytes": 10016,
+          "sha256": "bb5b7fed75e724353bf10071ebe14d450a3a1c463d06ccf468c214f6548ee464"
+        },
+        {
+          "file": "data/results.json",
+          "bytes": 338,
+          "sha256": "f3b58b557ba41d3abaafecee719b6932015da181bd72185b8346f5e554ff31d9"
+        }
+      ],
+      "duration": 177.7,
+      "frameRate": 30,
+      "width": 1920,
+      "height": 1080,
+      "pendingResults": true
+    }
+  ]
 }
