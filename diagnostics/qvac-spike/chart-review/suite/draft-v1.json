@@ -4,7 +4,7 @@
   "split": "held-out",
   "task": "what-changed-and-unclear",
   "createdAt": "2026-09-09",
-  "frozen": false,
+  "frozen": true,
   "evidenceBudgetChars": 6000,
   "patient": {
     "patientId": "SYN-CHART-A",
@@ -536,11 +536,10 @@
       "prohibited": [
         {
           "id": "P1",
-          "description": "Attribution reversal: making the spouse-reported snoring a patient report or a patient denial.",
+          "description": "Attribution reversal: making the spouse-reported snoring a patient report or a patient denial. (Human sign-off 2026-09-10: the term \"the patient denies snoring\" was overruled and removed; the record says the patient does not notice snoring, which the reviewer judged not to be a scorable reversal.)",
           "forbiddenTerms": [
             "patient-reported snoring",
-            "the patient reported snoring",
-            "the patient denies snoring"
+            "the patient reported snoring"
           ]
         },
         {
@@ -1361,5 +1360,16 @@
       "question": null,
       "notes": "REC-CR-16-H1 is longer than the 6000-character Phase 1 evidence budget, so its tail (home blood-pressure log lines, diet, activity, immunisations) is dropped and coverage.omitted must name the omission. The clinic value 148/92 sits in the head of the record and survives truncation, so F1 stays answerable; F2 and Q1 score honesty about the gap."
     }
-  ]
+  ],
+  "signOff": {
+    "reviewer": "Jeff (human reviewer)",
+    "confirmedAt": "2026-09-10T00:59:44Z",
+    "itemsConfirmed": "75 of 75",
+    "decisions": {
+      "CR-15 P2": "keep",
+      "CR-06 P1 term \"the patient denies snoring\"": "overruled and removed",
+      "CR-16 F2/Q1 term omit": "accepted as residual scoring risk",
+      "evidence budget 6000/2000/6": "confirmed"
+    }
+  }
 }

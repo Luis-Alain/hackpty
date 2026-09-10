@@ -4,7 +4,7 @@
   "split": "dev",
   "task": "what-changed-and-unclear",
   "createdAt": "2026-09-09",
-  "frozen": false,
+  "frozen": true,
   "evidenceBudgetChars": 6000,
   "patient": {
     "patientId": "SYN-CHART-A",
@@ -317,5 +317,17 @@
       "question": "What was the result of the most recent thyroid function test?",
       "notes": "Development abstention case, distinct content from CR-12."
     }
-  ]
+  ],
+  "signOff": {
+    "reviewer": "Jeff (human reviewer)",
+    "confirmedAt": "2026-09-10T00:59:44Z",
+    "itemsConfirmed": "75 of 75",
+    "decisions": {
+      "CR-15 P2": "keep",
+      "CR-06 P1 term \"the patient denies snoring\"": "overruled and removed",
+      "CR-16 F2/Q1 term omit": "accepted as residual scoring risk",
+      "evidence budget 6000/2000/6": "confirmed"
+    },
+    "note": "Development split frozen with the held-out split; used only for prompt iteration."
+  }
 }

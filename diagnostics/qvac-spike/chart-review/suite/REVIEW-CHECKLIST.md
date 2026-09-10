@@ -418,3 +418,7 @@ Reviewer notes to confirm: Development abstention case, distinct content from CR
 - [ ] The truncation case (CR-16) exceeds the evidence budget (measured: 8972 characters).
 
 Reviewer: ______________________  Date: ____________  Suite frozen as: ______________
+
+## Signed
+
+Reviewer: Jeff (human reviewer). Date: 2026-09-10T00:59:44Z. Items confirmed: 75 of 75. Decisions: CR-15 P2 keep; CR-06 P1 "the patient denies snoring" overruled and removed; CR-16 "omit" accepted as residual risk; evidence budget confirmed. Suite frozen as draft-v1.json sha256 2d4c67a9ea326cb69e510ae4f3378fcdcfc31088c96c8698accb869aa6d37a84 and dev-v1.json sha256 e6a2b4d27d3b98dd89234ac90a5a858f3f87b879d21f2a832d25d5df48f2899a (see REVIEW-LOG.md section 4).
