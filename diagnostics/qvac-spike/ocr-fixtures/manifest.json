@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "syntheticOnly": true,
+  "purpose": "OCR/transcription fixture registry for Track 2 OCR evaluation (steps B1-B3). Every fixture is synthetic and not a real patient. Printed-bitmap fixtures carry authored ground truth; paper-photo fixtures are scored only against a blinded human transcription entered by the user (method human-transcription-from-paper, see docs/OCR-TRANSCRIPTION-FORM.md).",
+  "rulesSchema": "packages/runtime/transcription-scoring.ts ClinicalRule {id, category: negation|number|uncertainty|omission|hallucination, required?, forbidden?}; phrases are matched after WER normalization (NFC, lowercase, letter/number runs).",
+  "printSources": [
+    { "noteId": "syn-cr-a-2026-06-12", "file": "../fixtures/print-synthetic-chart-A-2026-06-12.html", "sha256": "d800fe02ee4dbdf58657353f319228de9c21c92f6800096d9385e0d77631fa80" },
+    { "noteId": "syn-cr-a-2026-09-09", "file": "../fixtures/print-synthetic-chart-A-2026-09-09.html", "sha256": "1ed7d9071ce4848bb630a6f25229a695346f47a66e455b649b33b9cdb806fc41" },
+    { "noteId": "syn-ocr-stress-01", "file": "print/print-synthetic-ocr-stress-01.html", "sha256": "ce0df6e0c56dd391299fa13047f7670e25a4f4f2a1f4e0625f6674bee697f1fd" },
+    { "noteId": "syn-ocr-mask-01", "file": "print/print-synthetic-ocr-mask-01.html", "sha256": "366ef93f6aec58ef9559f22c33aef57d239524753428c7fa9aa62b98a10d81a2" }
+  ],
+  "fixtures": [
+    {
+      "id": "syn-ocr-stress-01-bitmap",
+      "noteId": "syn-ocr-stress-01",
+      "medium": "printed-bitmap",
+      "file": "bitmaps/syn-ocr-stress-01.png",
+      "sha256": "11cac7538717f5fe089e662803d8861033b8c51a287952bbb67afcd709fce199",
+      "status": "ready",
+      "groundTruth": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nSOURCE ID: SYN-OCR-STRESS-01\nVISIT DATE: 2026-08-14\nBLOOD PRESSURE 142/88 MMHG SEATED.\nWEIGHT 79.5 KG. HEART RATE 72 BPM.\nDENIES CHEST PAIN. DENIES DIZZINESS.\nMEDICATION: AMLODIPINE 5 MG ONCE DAILY.\nNO NEW MEDICATIONS SINCE 2026-05-02.\nPLAN: FOLLOW UP IN 3 MONTHS.",
+      "referenceMethod": "Original authored bitmap text, rendered pixel-exact by ocr-fixtures/generate-bitmaps.ts (deterministic, double-render hash asserted).",
+      "humanTranscription": null,
+      "split": "development",
+      "rules": [
+        { "id": "bp-value", "category": "number", "required": ["142/88 mmhg"] },
+        { "id": "weight-value", "category": "number", "required": ["79.5 kg"] },
+        { "id": "heart-rate-value", "category": "number", "required": ["72 bpm"] },
+        { "id": "visit-date", "category": "number", "required": ["2026-08-14"] },
+        { "id": "medication-since-date", "category": "number", "required": ["2026-05-02"] },
+        { "id": "negation-chest-pain", "category": "negation", "required": ["denies chest pain"] },
+        { "id": "negation-dizziness", "category": "negation", "required": ["denies dizziness"] },
+        { "id": "negation-no-new-medications", "category": "negation", "required": ["no new medications"] },
+        { "id": "medication-name-dose", "category": "omission", "required": ["amlodipine 5 mg once daily"] },
+        { "id": "amlodipine-dose-not-altered", "category": "hallucination", "forbidden": ["amlodipine 10 mg", "amlodipine 50 mg", "amlodipine 2.5 mg"] }
+      ]
+    },
+    {
+      "id": "syn-ocr-mask-01-bitmap",
+      "noteId": "syn-ocr-mask-01",
+      "medium": "printed-bitmap",
+      "file": "bitmaps/syn-ocr-mask-01.png",
+      "sha256": "9171daba3ba4d44562862f7dc539eaf9b9787fa957b41d9714935029d7d43c52",
+      "status": "ready",
+      "groundTruth": "SYNTHETIC OUTPATIENT NOTE - NOT A REAL PATIENT\nSOURCE ID: SYN-OCR-MASK-01\nVISIT DATE: 2026-09-01\nREPORTS HEADACHES TWICE PER WEEK.\n[unclear]\nNO DIAGNOSIS RECORDED.\nPLAN: REVIEW SYMPTOM LOG IN 2 WEEKS.",
+      "referenceMethod": "Visible authored lines plus required [unclear] abstention marker for one completely masked line. The hidden text is excluded from every reference and must never be recovered from the image.",
+      "humanTranscription": null,
+      "split": "held-out",
+      "rules": [
+        { "id": "visit-date", "category": "number", "required": ["2026-09-01"] },
+        { "id": "headache-frequency", "category": "number", "required": ["twice per week"] },
+        { "id": "negation-diagnosis", "category": "negation", "required": ["no diagnosis recorded"] },
+        { "id": "masked-line-abstention", "category": "omission", "required": ["unclear"] },
+        { "id": "hidden-line-not-recovered", "category": "hallucination", "forbidden": ["two weeks duration", "about two weeks", "duration about"] }
+      ]
+    },
+    {
+      "id": "syn-ocr-stress-01-paper-photo-01",
+      "noteId": "syn-ocr-stress-01",
+      "medium": "paper-photo",
+      "file": "photos/syn-ocr-stress-01-paper-photo-01.jpg",
+      "sha256": null,
+      "status": "awaiting-capture",
+      "groundTruth": null,
+      "referenceMethod": "human-transcription-from-paper",
+      "humanTranscription": "",
+      "split": "development",
+      "printSource": "print/print-synthetic-ocr-stress-01.html",
+      "rules": [
+        { "id": "bp-value", "category": "number", "required": ["142/88 mmhg"] },
+        { "id": "weight-value", "category": "number", "required": ["79.5 kg"] },
+        { "id": "heart-rate-value", "category": "number", "required": ["72 bpm"] },
+        { "id": "visit-date", "category": "number", "required": ["2026-08-14"] },
+        { "id": "medication-since-date", "category": "number", "required": ["2026-05-02"] },
+        { "id": "negation-chest-pain", "category": "negation", "required": ["denies chest pain"] },
+        { "id": "negation-dizziness", "category": "negation", "required": ["denies dizziness"] },
+        { "id": "negation-no-new-medications", "category": "negation", "required": ["no new medications"] },
+        { "id": "medication-name-dose", "category": "omission", "required": ["amlodipine 5 mg once daily"] },
+        { "id": "amlodipine-dose-not-altered", "category": "hallucination", "forbidden": ["amlodipine 10 mg", "amlodipine 50 mg", "amlodipine 2.5 mg"] }
+      ]
+    },
+    {
+      "id": "syn-ocr-mask-01-paper-photo-01",
+      "noteId": "syn-ocr-mask-01",
+      "medium": "paper-photo",
+      "file": "photos/syn-ocr-mask-01-paper-photo-01.jpg",
+      "sha256": null,
+      "status": "awaiting-capture",
+      "groundTruth": null,
+      "referenceMethod": "human-transcription-from-paper",
+      "humanTranscription": "",
+      "split": "held-out",
+      "printSource": "print/print-synthetic-ocr-mask-01.html",
+      "rules": [
+        { "id": "visit-date", "category": "number", "required": ["2026-09-01"] },
+        { "id": "headache-frequency", "category": "number", "required": ["twice per week"] },
+        { "id": "negation-diagnosis", "category": "negation", "required": ["no diagnosis recorded"] },
+        { "id": "masked-line-abstention", "category": "omission", "required": ["unclear"] },
+        { "id": "hidden-line-not-recovered", "category": "hallucination", "forbidden": ["two weeks duration", "about two weeks", "duration about"] }
+      ]
+    },
+    {
+      "id": "syn-cr-a-2026-09-09-paper-photo-01",
+      "noteId": "syn-cr-a-2026-09-09",
+      "medium": "paper-photo",
+      "file": "photos/syn-cr-a-2026-09-09-paper-photo-01.jpg",
+      "sha256": null,
+      "status": "awaiting-capture",
+      "groundTruth": null,
+      "referenceMethod": "human-transcription-from-paper",
+      "humanTranscription": "",
+      "split": "development",
+      "printSource": "../fixtures/print-synthetic-chart-A-2026-09-09.html",
+      "rules": [
+        { "id": "bp-value", "category": "number", "required": ["132/84 mmhg"] },
+        { "id": "weight-value", "category": "number", "required": ["82.6 kg"] },
+        { "id": "visit-date", "category": "number", "required": ["2026-09-09"] },
+        { "id": "headaches-since-date", "category": "number", "required": ["2026-07-01"] },
+        { "id": "negation-dizziness", "category": "negation", "required": ["denies dizziness"] },
+        { "id": "negation-chest-pain", "category": "negation", "required": ["denies chest pain"] },
+        { "id": "medication-name-dose", "category": "omission", "required": ["amlodipine 5 mg once daily"] },
+        { "id": "stopping-reason-not-documented", "category": "uncertainty", "required": ["reason for stopping not documented"] },
+        { "id": "amlodipine-dose-not-altered", "category": "hallucination", "forbidden": ["amlodipine 10 mg", "amlodipine 50 mg", "amlodipine 2.5 mg"] }
+      ]
+    }
+  ]
+}
