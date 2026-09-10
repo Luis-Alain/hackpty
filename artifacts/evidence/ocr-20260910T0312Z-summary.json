@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "checkedAt": "2026-09-10T03:11:22.206Z",
+  "runId": "20260910T0312Z",
+  "scope": "OCR extraction runs over registered synthetic fixtures with complete native metrics. Scoring is a separate offline step (ocr-score.ts). Not physical workflow acceptance.",
+  "fixtures": [
+    {
+      "fixtureId": "syn-ocr-stress-01-bitmap",
+      "medium": "printed-bitmap",
+      "split": "development",
+      "imageSha256": "11cac7538717f5fe089e662803d8861033b8c51a287952bbb67afcd709fce199"
+    },
+    {
+      "fixtureId": "syn-ocr-mask-01-bitmap",
+      "medium": "printed-bitmap",
+      "split": "held-out",
+      "imageSha256": "9171daba3ba4d44562862f7dc539eaf9b9787fa957b41d9714935029d7d43c52"
+    }
+  ],
+  "outcomes": [
+    {
+      "fixtureId": "syn-ocr-stress-01-bitmap",
+      "status": "metrics-accepted-quality-review-required",
+      "runId": "f6359b66-32d2-4f57-b971-8bb5991a7ac7"
+    },
+    {
+      "fixtureId": "syn-ocr-mask-01-bitmap",
+      "status": "metrics-accepted-quality-review-required",
+      "runId": "427df4b9-bb12-44f4-a8c6-9f3fe2d60ca8"
+    }
+  ],
+  "lease": {
+    "before": {
+      "checkedAt": "2026-09-10T03:11:03.222Z",
+      "foreignRuntimeCount": 0,
+      "foreignGpuProcessCount": 0,
+      "observedForeignGpuProcesses": [],
+      "rawGpuComputeLines": []
+    },
+    "after": {
+      "checkedAt": "2026-09-10T03:11:22.205Z",
+      "foreignRuntimeCount": 0,
+      "foreignGpuProcessCount": 0,
+      "observedForeignGpuProcesses": [],
+      "rawGpuComputeLines": []
+    },
+    "monitorIntervalMs": 1000,
+    "method": "Read-only Windows runtime ancestry and nvidia-smi compute PID sampling; abort on observed foreign runtime job. Coordinator observed idle GPU before lease and notified the user. Not a global mutex or offline-enforcement proof."
+  },
+  "preExistingRuntimeTmpEntries": [
+    "563fb787-29ee-4555-b71f-14c055df6634",
+    "6626ba07-6b52-4935-938b-c632ce1f8fc8"
+  ],
+  "newRuntimeTmpEntriesRemaining": []
+}
