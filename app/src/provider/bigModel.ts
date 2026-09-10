@@ -13,9 +13,14 @@ export async function cargar(opts: {
   hardware: string;
   device?: 'gpu' | 'cpu';
   ctx?: number;
+  // Fuerza el idioma de transcripción (whisperConfig.language) en vez de dejar
+  // que Whisper auto-detecte — el auto-detect puede fallar en clips cortos o
+  // con ruido, incluso usando un modelo etiquetado para ese idioma.
+  idioma?: string;
   // 'llm' (default): completion, usa modelConfig snake_case (gpu_layers, ctx_size).
   // 'embedding': modelConfig con claves distintas (camelCase), sin ctx_size.
-  // 'stt'/'vision': modelType explícito, sin modelConfig (defaults del SDK).
+  // 'vision': modelType explícito, sin modelConfig (defaults del SDK).
+  // 'stt': modelType explícito + whisperConfig.language si se pasa `idioma`.
   tipo?: 'llm' | 'embedding' | 'stt' | 'vision';
 }): Promise<LoadedModel> {
   const t0 = performance.now();
@@ -27,6 +32,11 @@ export async function cargar(opts: {
       modelConfig = { device: opts.device ?? 'gpu', gpuLayers: opts.device === 'cpu' ? 0 : 99 };
     } else if (opts.tipo === 'stt') {
       modelType = ModelType.whispercppTranscription;
+      if (opts.idioma) {
+        // modelConfig de whispercpp-transcription es plano (language/detect_language
+        // van directo, no anidados bajo whisperConfig como en bci-whispercpp).
+        modelConfig = { language: opts.idioma, detect_language: false };
+      }
     } else if (opts.tipo === 'vision') {
       modelType = ModelType.ggmlOcr;
     } else {
@@ -119,16 +129,26 @@ export async function completar(modelo: LoadedModel, opts: {
   }
 }
 
+// Prompt inicial en español: además de whisperConfig.language en la carga del
+// modelo, esto ayuda a Whisper a mantenerse en el idioma/vocabulario correcto
+// (útil para nombres de marcas y modalidades de equipos médicos).
+const PROMPT_ES_POR_DEFECTO =
+  'Observación de un equipo médico en un hospital: marca, modelo, modalidad y antigüedad.';
+
 export async function transcribirAudio(
   modelo: LoadedModel,
   audioChunk: Buffer,
-  opts: { timeout?: number } = {}
+  opts: { timeout?: number; prompt?: string } = {}
 ): Promise<{ texto: string; ms: number }> {
   const t0 = performance.now();
   const timeout = opts.timeout ?? 30000;
   try {
     const texto = await withTimeout(
-      transcribe({ modelId: modelo.modelId, audioChunk }),
+      transcribe({
+        modelId: modelo.modelId,
+        audioChunk,
+        prompt: opts.prompt ?? PROMPT_ES_POR_DEFECTO,
+      }),
       timeout,
       'Transcripción'
     );

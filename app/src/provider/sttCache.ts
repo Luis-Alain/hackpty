@@ -15,6 +15,7 @@ export async function obtenerModeloSTT(): Promise<LoadedModel> {
       hardware: 'laptop',
       device: 'gpu',
       tipo: 'stt',
+      idioma: 'es',
     }).then((m) => {
       modeloCache = m;
       return m;

@@ -1,5 +1,42 @@
-import { useEffect, useRef, useState } from 'react';
-import { crearWavDesdeFloat32 } from '../audioToWav';
+import { useEffect, useRef, useState } from "react";
+
+const crearWavDesdeFloat32 = (
+  muestras: Float32Array,
+  sampleRate: number,
+): Blob => {
+  const bytesPorMuestra = 2;
+  const buffer = new ArrayBuffer(44 + muestras.length * bytesPorMuestra);
+  const vista = new DataView(buffer);
+  const escribir = (offset: number, texto: string) => {
+    for (let i = 0; i < texto.length; i++)
+      vista.setUint8(offset + i, texto.charCodeAt(i));
+  };
+
+  escribir(0, "RIFF");
+  vista.setUint32(4, 36 + muestras.length * bytesPorMuestra, true);
+  escribir(8, "WAVE");
+  escribir(12, "fmt ");
+  vista.setUint32(16, 16, true);
+  vista.setUint16(20, 1, true);
+  vista.setUint16(22, 1, true);
+  vista.setUint32(24, sampleRate, true);
+  vista.setUint32(28, sampleRate * bytesPorMuestra, true);
+  vista.setUint16(32, bytesPorMuestra, true);
+  vista.setUint16(34, 16, true);
+  escribir(36, "data");
+  vista.setUint32(40, muestras.length * bytesPorMuestra, true);
+
+  for (let i = 0; i < muestras.length; i++) {
+    const muestra = Math.max(-1, Math.min(1, muestras[i]));
+    vista.setInt16(
+      44 + i * bytesPorMuestra,
+      muestra < 0 ? muestra * 0x8000 : muestra * 0x7fff,
+      true,
+    );
+  }
+
+  return new Blob([buffer], { type: "audio/wav" });
+};
 
 interface GrabadorPCM {
   audioCtx: AudioContext;
@@ -10,7 +47,7 @@ interface GrabadorPCM {
   stream: MediaStream;
 }
 
-type CampoEstado = 'Confirmed' | 'Reported' | 'Estimated' | 'Unknown';
+type CampoEstado = "Confirmed" | "Reported" | "Estimated" | "Unknown";
 
 interface CampoExtraido {
   valor: string | number | null;
@@ -49,89 +86,97 @@ interface DuplicadoCandidato {
   modelo: string | null;
   antiguedad: number | null;
   p: number;
-  veredicto: 'mismo' | 'revisar';
+  veredicto: "mismo" | "revisar";
 }
 
 const CAMPOS_LABEL: Record<keyof CamposExtraidos, string> = {
-  cliente: 'Cliente',
-  ciudad: 'Ciudad',
-  pais: 'País',
-  modalidad: 'Modalidad',
-  cantidad: 'Cantidad',
-  marca: 'Marca',
-  modelo: 'Modelo',
-  antiguedad: 'Antigüedad (años)',
+  cliente: "Cliente",
+  ciudad: "Ciudad",
+  pais: "País",
+  modalidad: "Modalidad",
+  cantidad: "Cantidad",
+  marca: "Marca",
+  modelo: "Modelo",
+  antiguedad: "Antigüedad (años)",
 };
 
 const ESTADO_LABEL: Record<CampoEstado, string> = {
-  Confirmed: 'Confirmado',
-  Reported: 'Reportado',
-  Estimated: 'Estimado',
-  Unknown: 'Desconocido',
+  Confirmed: "Confirmado",
+  Reported: "Reportado",
+  Estimated: "Estimado",
+  Unknown: "Desconocido",
 };
 
 const ESTADO_BADGE: Record<CampoEstado, string> = {
-  Confirmed: 'bg-green-100 text-green-800',
-  Reported: 'bg-amber-100 text-amber-800',
-  Estimated: 'bg-orange-100 text-orange-800',
-  Unknown: 'bg-gray-200 text-gray-600',
+  Confirmed: "bg-green-100 text-green-800",
+  Reported: "bg-amber-100 text-amber-800",
+  Estimated: "bg-orange-100 text-orange-800",
+  Unknown: "bg-gray-200 text-gray-600",
 };
 
 const CAMPO_ORDEN: Array<keyof CamposExtraidos> = [
-  'cliente',
-  'ciudad',
-  'pais',
-  'modalidad',
-  'cantidad',
-  'marca',
-  'modelo',
-  'antiguedad',
+  "cliente",
+  "ciudad",
+  "pais",
+  "modalidad",
+  "cantidad",
+  "marca",
+  "modelo",
+  "antiguedad",
 ];
 
-const API = 'http://localhost:8787';
+const API = "http://localhost:8787";
 
-type Paso = 'captura' | 'preguntas' | 'preview' | 'guardado';
+type Paso = "captura" | "preguntas" | "preview" | "guardado";
 
 const CAMPOS_VACIOS: Record<keyof CamposExtraidos, string> = {
-  cliente: '',
-  ciudad: '',
-  pais: '',
-  modalidad: '',
-  cantidad: '',
-  marca: '',
-  modelo: '',
-  antiguedad: '',
+  cliente: "",
+  ciudad: "",
+  pais: "",
+  modalidad: "",
+  cantidad: "",
+  marca: "",
+  modelo: "",
+  antiguedad: "",
 };
 
 const STATUSES_VACIOS: Record<keyof CamposExtraidos, CampoEstado> = {
-  cliente: 'Unknown',
-  ciudad: 'Unknown',
-  pais: 'Unknown',
-  modalidad: 'Unknown',
-  cantidad: 'Unknown',
-  marca: 'Unknown',
-  modelo: 'Unknown',
-  antiguedad: 'Unknown',
+  cliente: "Unknown",
+  ciudad: "Unknown",
+  pais: "Unknown",
+  modalidad: "Unknown",
+  cantidad: "Unknown",
+  marca: "Unknown",
+  modelo: "Unknown",
+  antiguedad: "Unknown",
 };
 
 export function Visita() {
-  const [paso, setPaso] = useState<Paso>('captura');
+  const [paso, setPaso] = useState<Paso>("captura");
   const [visitaId, setVisitaId] = useState<number | null>(null);
-  const [observacion, setObservacion] = useState('');
+  const [observacion, setObservacion] = useState("");
   const [extrayendo, setExtrayendo] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [verificandoDuplicados, setVerificandoDuplicados] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [estadoGlobal, setEstadoGlobal] = useState<CampoEstado>('Unknown');
-  const [valores, setValores] = useState<Record<keyof CamposExtraidos, string>>(CAMPOS_VACIOS);
-  const [statuses, setStatuses] = useState<Record<keyof CamposExtraidos, CampoEstado>>(STATUSES_VACIOS);
-  const [guardadoInfo, setGuardadoInfo] = useState<{ registro_id: number; estado: CampoEstado } | null>(null);
+  const [estadoGlobal, setEstadoGlobal] = useState<CampoEstado>("Unknown");
+  const [valores, setValores] =
+    useState<Record<keyof CamposExtraidos, string>>(CAMPOS_VACIOS);
+  const [statuses, setStatuses] =
+    useState<Record<keyof CamposExtraidos, CampoEstado>>(STATUSES_VACIOS);
+  const [guardadoInfo, setGuardadoInfo] = useState<{
+    registro_id: number;
+    estado: CampoEstado;
+  } | null>(null);
 
   const [preguntas, setPreguntas] = useState<Pregunta[]>([]);
-  const [respuestasLocal, setRespuestasLocal] = useState<Record<string, string | null>>({});
+  const [respuestasLocal, setRespuestasLocal] = useState<
+    Record<string, string | null>
+  >({});
   const [enviandoRespuestas, setEnviandoRespuestas] = useState(false);
 
-  const [duplicadoCandidato, setDuplicadoCandidato] = useState<DuplicadoCandidato | null>(null);
+  const [duplicadoCandidato, setDuplicadoCandidato] =
+    useState<DuplicadoCandidato | null>(null);
 
   const [grabando, setGrabando] = useState(false);
   const [transcribiendo, setTranscribiendo] = useState(false);
@@ -145,7 +190,9 @@ export function Visita() {
 
   const agregarAObservacion = (texto: string) => {
     if (!texto.trim()) return;
-    setObservacion((prev) => (prev.trim() ? `${prev.trim()}\n${texto.trim()}` : texto.trim()));
+    setObservacion((prev) =>
+      prev.trim() ? `${prev.trim()}\n${texto.trim()}` : texto.trim(),
+    );
   };
 
   const manejarGrabar = async () => {
@@ -157,7 +204,8 @@ export function Visita() {
     setError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const AudioContextCtor = window.AudioContext ?? (window as any).webkitAudioContext;
+      const AudioContextCtor =
+        window.AudioContext ?? (window as any).webkitAudioContext;
       const audioCtx: AudioContext = new AudioContextCtor();
       // Los navegadores crean el AudioContext en estado "suspended" por política
       // de autoplay; sin resume() explícito, onaudioprocess nunca dispara y no
@@ -180,10 +228,17 @@ export function Visita() {
       processor.connect(silencio);
       silencio.connect(audioCtx.destination);
 
-      grabadorRef.current = { audioCtx, source, processor, silencio, buffers, stream };
+      grabadorRef.current = {
+        audioCtx,
+        source,
+        processor,
+        silencio,
+        buffers,
+        stream,
+      };
       setGrabando(true);
     } catch (e) {
-      setError('No se pudo acceder al micrófono: ' + String(e));
+      setError("No se pudo acceder al micrófono: " + String(e));
     }
   };
 
@@ -202,7 +257,7 @@ export function Visita() {
 
     const totalMuestras = g.buffers.reduce((suma, b) => suma + b.length, 0);
     if (totalMuestras === 0) {
-      setError('No se capturó audio. Intenta grabar de nuevo.');
+      setError("No se capturó audio. Intenta grabar de nuevo.");
       return;
     }
     const combinado = new Float32Array(totalMuestras);
@@ -222,9 +277,9 @@ export function Visita() {
     setError(null);
     try {
       const formData = new FormData();
-      formData.append('audio', wavBlob, 'observacion.wav');
+      formData.append("audio", wavBlob, "observacion.wav");
       const res = await fetch(`${API}/api/visita/${visitaId}/captura/audio`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
       const data = await res.json().catch(() => ({}));
@@ -243,9 +298,9 @@ export function Visita() {
     setError(null);
     try {
       const formData = new FormData();
-      formData.append('foto', file);
+      formData.append("foto", file);
       const res = await fetch(`${API}/api/visita/${visitaId}/captura/foto`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
       const data = await res.json().catch(() => ({}));
@@ -255,15 +310,15 @@ export function Visita() {
       setError(String(e));
     } finally {
       setProcesandoFoto(false);
-      if (fotoInputRef.current) fotoInputRef.current.value = '';
+      if (fotoInputRef.current) fotoInputRef.current.value = "";
     }
   };
 
   const iniciarVisita = () => {
-    fetch(`${API}/api/visita/nueva`, { method: 'POST' })
+    fetch(`${API}/api/visita/nueva`, { method: "POST" })
       .then((res) => res.json())
       .then((data) => setVisitaId(data.visita_id))
-      .catch((e) => setError('No se pudo iniciar la visita: ' + String(e)));
+      .catch((e) => setError("No se pudo iniciar la visita: " + String(e)));
   };
 
   const aplicarExtraccion = (data: ExtraccionResultado) => {
@@ -271,7 +326,7 @@ export function Visita() {
     const nuevosStatuses = {} as Record<keyof CamposExtraidos, CampoEstado>;
     for (const campo of CAMPO_ORDEN) {
       const c = data.campos[campo];
-      nuevosValores[campo] = c.valor != null ? String(c.valor) : '';
+      nuevosValores[campo] = c.valor != null ? String(c.valor) : "";
       nuevosStatuses[campo] = c.status;
     }
     setValores(nuevosValores);
@@ -282,7 +337,7 @@ export function Visita() {
   const manejarExtraer = async () => {
     if (!visitaId || !observacion.trim()) return;
     if (new TextEncoder().encode(observacion).length > 10240) {
-      setError('Observación muy larga (max 10KB)');
+      setError("Observación muy larga (max 10KB)");
       return;
     }
 
@@ -291,8 +346,8 @@ export function Visita() {
 
     try {
       const res = await fetch(`${API}/api/visita/${visitaId}/extraer`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ observacion }),
       });
       if (!res.ok) {
@@ -303,14 +358,20 @@ export function Visita() {
       aplicarExtraccion(data);
 
       // Preguntamos por el dato faltante más valioso solo si algo quedó pendiente.
-      const resPreg = await fetch(`${API}/api/visita/${visitaId}/preguntas`, { method: 'POST' });
+      const resPreg = await fetch(`${API}/api/visita/${visitaId}/preguntas`, {
+        method: "POST",
+      });
       const dataPreg = await resPreg.json();
-      if (resPreg.ok && Array.isArray(dataPreg.preguntas) && dataPreg.preguntas.length > 0) {
+      if (
+        resPreg.ok &&
+        Array.isArray(dataPreg.preguntas) &&
+        dataPreg.preguntas.length > 0
+      ) {
         setPreguntas(dataPreg.preguntas);
         setRespuestasLocal({});
-        setPaso('preguntas');
+        setPaso("preguntas");
       } else {
-        setPaso('preview');
+        setPaso("preview");
       }
     } catch (e) {
       setError(String(e));
@@ -331,20 +392,22 @@ export function Visita() {
     if (!visitaId) return;
 
     if (omitir || Object.keys(respuestasLocal).length === 0) {
-      setPaso('preview');
+      setPaso("preview");
       return;
     }
 
     setEnviandoRespuestas(true);
     setError(null);
     try {
-      const respuestas = Object.entries(respuestasLocal).map(([campo, respuesta]) => ({
-        campo,
-        respuesta,
-      }));
+      const respuestas = Object.entries(respuestasLocal).map(
+        ([campo, respuesta]) => ({
+          campo,
+          respuesta,
+        }),
+      );
       const res = await fetch(`${API}/api/visita/${visitaId}/respuestas`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ respuestas }),
       });
       if (!res.ok) {
@@ -353,7 +416,7 @@ export function Visita() {
       }
       const data: ExtraccionResultado = await res.json();
       aplicarExtraccion(data);
-      setPaso('preview');
+      setPaso("preview");
     } catch (e) {
       setError(String(e));
     } finally {
@@ -364,7 +427,10 @@ export function Visita() {
   const manejarCambioValor = (campo: keyof CamposExtraidos, valor: string) => {
     setValores((prev) => ({ ...prev, [campo]: valor }));
     // Editar manualmente un campo lo marca como Confirmado (el usuario lo verificó).
-    setStatuses((prev) => ({ ...prev, [campo]: valor.trim() ? 'Confirmed' : 'Unknown' }));
+    setStatuses((prev) => ({
+      ...prev,
+      [campo]: valor.trim() ? "Confirmed" : "Unknown",
+    }));
     // Los datos cambiaron: cualquier chequeo de duplicado anterior queda obsoleto.
     setDuplicadoCandidato(null);
   };
@@ -387,8 +453,8 @@ export function Visita() {
     setError(null);
     try {
       const res = await fetch(`${API}/api/visita/${visitaId}/guardar`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ ...construirPayloadRegistro(), mergeConId }),
       });
       if (!res.ok) {
@@ -398,7 +464,7 @@ export function Visita() {
       const data = await res.json();
       setGuardadoInfo({ registro_id: data.registro_id, estado: data.estado });
       setDuplicadoCandidato(null);
-      setPaso('guardado');
+      setPaso("guardado");
     } catch (e) {
       setError(String(e));
     } finally {
@@ -408,8 +474,12 @@ export function Visita() {
 
   const manejarIntentarGuardar = async () => {
     if (!visitaId) return;
-    if (!valores.cliente.trim() || !valores.pais.trim() || !valores.modalidad.trim()) {
-      setError('Cliente, país y modalidad son obligatorios para guardar');
+    if (
+      !valores.cliente.trim() ||
+      !valores.pais.trim() ||
+      !valores.modalidad.trim()
+    ) {
+      setError("Cliente, país y modalidad son obligatorios para guardar");
       return;
     }
 
@@ -417,12 +487,16 @@ export function Visita() {
     setError(null);
     try {
       const res = await fetch(`${API}/api/visita/${visitaId}/duplicados`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify(construirPayloadRegistro()),
       });
       const data = await res.json();
-      if (res.ok && Array.isArray(data.duplicados) && data.duplicados.length > 0) {
+      if (
+        res.ok &&
+        Array.isArray(data.duplicados) &&
+        data.duplicados.length > 0
+      ) {
         setDuplicadoCandidato(data.duplicados[0]);
       } else {
         await guardarFinal();
@@ -435,8 +509,8 @@ export function Visita() {
   };
 
   const manejarNuevaVisita = () => {
-    setPaso('captura');
-    setObservacion('');
+    setPaso("captura");
+    setObservacion("");
     setVisitaId(null);
     setError(null);
     setGuardadoInfo(null);
@@ -452,13 +526,15 @@ export function Visita() {
     <div className="p-4 space-y-4 max-w-2xl">
       <h2 className="text-xl font-bold">Comenzar Visita</h2>
 
-      {error && <div className="p-2 bg-red-100 text-red-800 rounded">{error}</div>}
+      {error && (
+        <div className="p-2 bg-red-100 text-red-800 rounded">{error}</div>
+      )}
 
-      {paso === 'captura' && (
+      {paso === "captura" && (
         <div className="space-y-2">
           <p className="text-sm opacity-70">
-            Describe lo que observaste. No te preocupes si falta información: podrás
-            completarla después.
+            Describe lo que observaste. No te preocupes si falta información:
+            podrás completarla después.
           </p>
           <textarea
             value={observacion}
@@ -474,12 +550,18 @@ export function Visita() {
               onClick={manejarGrabar}
               disabled={transcribiendo || !visitaId}
               className={`px-3 py-2 rounded border text-sm disabled:opacity-50 ${
-                grabando ? 'bg-red-600 text-white border-red-600' : 'border-(--color-tinta)'
+                grabando
+                  ? "bg-red-600 text-white border-red-600"
+                  : "border-(--color-tinta)"
               }`}
             >
-              {grabando ? '⏹ Detener grabación' : '🎤 Grabar voz'}
+              {grabando ? "⏹ Detener grabación" : "🎤 Grabar voz"}
             </button>
-            {transcribiendo && <span className="text-sm opacity-70">Transcribiendo audio...</span>}
+            {transcribiendo && (
+              <span className="text-sm opacity-70">
+                Transcribiendo audio...
+              </span>
+            )}
 
             <button
               onClick={() => fotoInputRef.current?.click()}
@@ -488,7 +570,9 @@ export function Visita() {
             >
               📷 Tomar foto de placa
             </button>
-            {procesandoFoto && <span className="text-sm opacity-70">Leyendo placa...</span>}
+            {procesandoFoto && (
+              <span className="text-sm opacity-70">Leyendo placa...</span>
+            )}
             <input
               ref={fotoInputRef}
               type="file"
@@ -504,27 +588,33 @@ export function Visita() {
             disabled={extrayendo || !observacion.trim() || !visitaId}
             className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
           >
-            {extrayendo ? 'Extrayendo datos...' : 'Extraer datos'}
+            {extrayendo ? "Extrayendo datos..." : "Extraer datos"}
           </button>
         </div>
       )}
 
-      {paso === 'preguntas' && (
+      {paso === "preguntas" && (
         <div className="space-y-4">
           <p className="text-sm opacity-70">
-            Falta información. Responde lo que sepas, o marca "No sé" para lo demás.
+            Falta información. Responde lo que sepas, o marca "No sé" para lo
+            demás.
           </p>
           <div className="space-y-3">
             {preguntas.map((p) => {
               const respondida = respuestasLocal[p.campo];
               return (
-                <div key={p.campo} className="p-3 bg-(--color-superficie) rounded space-y-2">
+                <div
+                  key={p.campo}
+                  className="p-3 bg-(--color-superficie) rounded space-y-2"
+                >
                   <p className="text-sm font-medium">{p.pregunta}</p>
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={respondida ?? ''}
-                      onChange={(e) => manejarResponderPregunta(p.campo, e.target.value)}
+                      value={respondida ?? ""}
+                      onChange={(e) =>
+                        manejarResponderPregunta(p.campo, e.target.value)
+                      }
                       placeholder="Tu respuesta..."
                       disabled={respondida === null}
                       className="flex-1 p-1 border border-(--color-tinta) rounded text-sm disabled:opacity-40"
@@ -533,8 +623,8 @@ export function Visita() {
                       onClick={() => manejarNoSe(p.campo)}
                       className={`px-3 py-1 text-xs rounded border ${
                         respondida === null
-                          ? 'bg-gray-300 border-gray-400'
-                          : 'border-(--color-tinta)'
+                          ? "bg-gray-300 border-gray-400"
+                          : "border-(--color-tinta)"
                       }`}
                     >
                       No sé
@@ -557,17 +647,19 @@ export function Visita() {
               disabled={enviandoRespuestas}
               className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
             >
-              {enviandoRespuestas ? 'Guardando respuestas...' : 'Continuar'}
+              {enviandoRespuestas ? "Guardando respuestas..." : "Continuar"}
             </button>
           </div>
         </div>
       )}
 
-      {paso === 'preview' && (
+      {paso === "preview" && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-sm">Confianza general:</span>
-            <span className={`px-2 py-1 rounded text-xs font-mono ${ESTADO_BADGE[estadoGlobal]}`}>
+            <span
+              className={`px-2 py-1 rounded text-xs font-mono ${ESTADO_BADGE[estadoGlobal]}`}
+            >
               {ESTADO_LABEL[estadoGlobal]}
             </span>
           </div>
@@ -582,18 +674,29 @@ export function Visita() {
             </thead>
             <tbody>
               {CAMPO_ORDEN.map((campo) => (
-                <tr key={campo} className="border-b border-(--color-superficie)">
+                <tr
+                  key={campo}
+                  className="border-b border-(--color-superficie)"
+                >
                   <td className="p-2 text-sm">{CAMPOS_LABEL[campo]}</td>
                   <td className="p-2">
                     <input
-                      type={campo === 'cantidad' || campo === 'antiguedad' ? 'number' : 'text'}
+                      type={
+                        campo === "cantidad" || campo === "antiguedad"
+                          ? "number"
+                          : "text"
+                      }
                       value={valores[campo]}
-                      onChange={(e) => manejarCambioValor(campo, e.target.value)}
+                      onChange={(e) =>
+                        manejarCambioValor(campo, e.target.value)
+                      }
                       className="w-full p-1 border border-(--color-superficie) rounded text-sm"
                     />
                   </td>
                   <td className="p-2">
-                    <span className={`px-2 py-1 rounded text-xs font-mono ${ESTADO_BADGE[statuses[campo]]}`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-mono ${ESTADO_BADGE[statuses[campo]]}`}
+                    >
                       {ESTADO_LABEL[statuses[campo]]}
                     </span>
                   </td>
@@ -604,11 +707,14 @@ export function Visita() {
 
           {duplicadoCandidato ? (
             <div className="p-3 bg-amber-100 text-amber-900 rounded space-y-2">
-              <p className="text-sm font-medium">⚠️ Posible duplicado detectado</p>
+              <p className="text-sm font-medium">
+                ⚠️ Posible duplicado detectado
+              </p>
               <p className="text-sm">
                 Coincide con el registro #{duplicadoCandidato.registro_id}: "
-                {duplicadoCandidato.cliente}" — {duplicadoCandidato.modalidad}{' '}
-                {duplicadoCandidato.marca ?? ''} {duplicadoCandidato.modelo ?? ''} (
+                {duplicadoCandidato.cliente}" — {duplicadoCandidato.modalidad}{" "}
+                {duplicadoCandidato.marca ?? ""}{" "}
+                {duplicadoCandidato.modelo ?? ""} (
                 {Math.round(duplicadoCandidato.p * 100)}% de confianza)
               </p>
               <div className="flex gap-2">
@@ -624,14 +730,14 @@ export function Visita() {
                   disabled={guardando}
                   className="px-3 py-1 text-sm bg-amber-900 text-white rounded disabled:opacity-50"
                 >
-                  {guardando ? 'Combinando...' : 'Sí, combinar con éste'}
+                  {guardando ? "Combinando..." : "Sí, combinar con éste"}
                 </button>
               </div>
             </div>
           ) : (
             <div className="flex gap-2">
               <button
-                onClick={() => setPaso('captura')}
+                onClick={() => setPaso("captura")}
                 disabled={guardando || verificandoDuplicados}
                 className="px-4 py-2 border border-(--color-tinta) rounded disabled:opacity-50"
               >
@@ -643,21 +749,21 @@ export function Visita() {
                 className="px-4 py-2 bg-(--color-acento) text-white rounded disabled:opacity-50"
               >
                 {verificandoDuplicados
-                  ? 'Verificando duplicados...'
+                  ? "Verificando duplicados..."
                   : guardando
-                    ? 'Guardando...'
-                    : 'Guardar Registro'}
+                    ? "Guardando..."
+                    : "Guardar Registro"}
               </button>
             </div>
           )}
         </div>
       )}
 
-      {paso === 'guardado' && guardadoInfo && (
+      {paso === "guardado" && guardadoInfo && (
         <div className="space-y-4">
           <div className="p-3 bg-green-100 text-green-800 rounded">
-            ✅ Registro #{guardadoInfo.registro_id} guardado exitosamente. Confianza:{' '}
-            {ESTADO_LABEL[guardadoInfo.estado]}
+            ✅ Registro #{guardadoInfo.registro_id} guardado exitosamente.
+            Confianza: {ESTADO_LABEL[guardadoInfo.estado]}
           </div>
           <button
             onClick={manejarNuevaVisita}
